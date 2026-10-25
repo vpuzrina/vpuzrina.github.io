@@ -1,6 +1,4 @@
-# Varvara Puzrina: personal website
-
-Live at https://vpuzrina.github.io
+# Varvara Puzrina: portfolio
 
 A one-page portfolio built with Vite, vanilla JS and Chart.js. All page text lives in one file, so you can edit the copy without touching the layout.
 
@@ -15,6 +13,8 @@ A one-page portfolio built with Vite, vanilla JS and Chart.js. All page text liv
 | Yandex case study | `caseStudy` in `src/content.js` (findings and year stay hidden until filled) |
 | Featured project (Cobre Panamá) | `featuredProject.visible` in `src/content.js`, plus `src/data/cobre.json` |
 | Social preview image | `public/og.jpg` (1200×630) |
+| Photo next to About | add `public/photo.jpg` (square works best); hidden while the file is missing |
+| Colors and fonts | tokens at the top of `src/styles.css` (light default, dark via the header toggle or system setting) |
 
 ### Unfinished content is never shown
 
@@ -67,12 +67,12 @@ The workflow in `.github/workflows/deploy.yml` builds and publishes on every pus
 3. Push any commit, or run the workflow by hand from the **Actions** tab. The site appears at `https://<username>.github.io/<repo>/`.
 4. Put that URL into `meta.url` in `src/content.js`.
 
-This repository is the user site `vpuzrina.github.io`, so the build uses `base: '/'` and is served at https://vpuzrina.github.io. The workflow also fails the deploy if `resume.pdf` is missing from the build or if a `[TODO` or `[FILL` marker reaches the page. (The single-file build keeps relative paths so it opens from disk.)
+`vite.config.js` uses `base: './'`, so the same build works on a sub-path (Pages) and at the root (Vercel) without changes.
 
 ## How it is built
 
 - `vite.config.js` contains a small plugin that renders `src/content.js` into static HTML at build time (`src/render.js`). The page is readable before any JavaScript runs, which helps first load and SEO.
 - `src/main.js` handles scroll reveal, the active nav link, hero tilt, and lazy loading of the featured-project chart.
 - `src/charts.js` sets up the featured-project chart. It loads only when that chart is on the page. Data is bundled from `src/data/` through `src/data.js`, not fetched, so edits to the JSON need a rebuild (the dev server picks them up live).
-- All motion (reveal, tilt, card illustrations, chart animation) turns off under `prefers-reduced-motion`.
+- No scroll animations: everything is visible on load. A print stylesheet produces a two-page light summary with links written out.
 - Fonts (Manrope, Inter, JetBrains Mono) are self-hosted through Fontsource. The site makes no third-party requests.

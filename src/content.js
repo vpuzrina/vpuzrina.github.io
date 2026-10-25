@@ -36,7 +36,7 @@ export default {
   ],
 
   hero: {
-    eyebrow: 'Open to internships',
+    availability: 'Open to Summer 2027 internships and research roles',
     // Pick one with `headline` (0–3). Each option is two lines.
     headlineOptions: [
       ['I build the dataset', 'and test what it shows.'],
@@ -70,21 +70,23 @@ export default {
     ],
     degree: 'B.S. Computer Science and Economics (joint major), Boston University · expected May 2028 · Dean’s List',
     minor: '[FILL: yes/no] Minor in Business Administration', // shown only once the marker is removed
+    photo: 'photo.jpg', // add public/photo.jpg and it appears next to this text; hidden while the file is missing
+    photoAlt: 'Varvara Puzrina',
   },
 
   research: {
     title: 'Research',
     relevantLabel: 'Relevant to',
-    advisorsLabel: 'Supervised by',
     roles: [
       {
         org: 'National Bureau of Economic Research',
+        orgShort: 'NBER',
         role: 'Research Assistant',
         project: 'Racial Expulsions in the U.S.',
         supervisors: [
-          { name: 'Prof. Martin Fiszbein', affil: 'Boston University' },
+          { name: 'Prof. Martin Fiszbein', affil: 'Boston University', short: 'BU' },
           // Full name hidden until filled: replace with e.g. 'Prof. Firstname Ferrara'
-          { name: 'Prof. A. Ferrara', fullName: '[FILL: Prof. first name Ferrara]', affil: 'University of Pittsburgh' },
+          { name: 'Prof. A. Ferrara', fullName: '[FILL: Prof. first name Ferrara]', affil: 'University of Pittsburgh', short: 'Pitt' },
         ],
         dates: 'Mar 2026 – Present',
         relevant: 'Document review and coding',
@@ -96,9 +98,10 @@ export default {
       },
       {
         org: 'Boston University, Department of Economics',
+        orgShort: 'BU Economics',
         role: 'Grant-Funded Research Assistant',
         project: '1892–93 Cholera in Imperial Russia',
-        supervisors: [{ name: 'A. Vyshinskiy', fullName: '[FILL: first name Vyshinskiy]', affil: 'PhD researcher, BU Economics' }],
+        supervisors: [{ name: 'A. Vyshinskiy', fullName: '[FILL: first name Vyshinskiy]', affil: 'PhD researcher, BU Economics', short: 'PhD researcher, BU' }],
         dates: 'Aug 2026 – Present',
         funding: 'Funded by a Boston University research grant',
         relevant: 'Dataset construction',
@@ -110,9 +113,10 @@ export default {
       },
       {
         org: 'BU CAS Directed Study Program',
+        orgShort: 'BU Directed Study',
         role: 'Independent Researcher',
         project: 'Gender Gap in College Athlete NIL Compensation',
-        supervisors: [{ name: 'Prof. Onur Celik', affil: 'Advisor, BU Economics' }],
+        supervisors: [{ name: 'Prof. Onur Celik', affil: 'Advisor, BU Economics', short: 'BU' }],
         dates: 'Sep 2026 – Present',
         relevant: 'Empirical testing',
         bullets: [
@@ -187,7 +191,8 @@ export default {
     items: [
       {
         role: 'Marketing & Analytics Intern',
-        org: 'CarPot · Boston',
+        org: 'CarPot',
+        place: 'Boston',
         dates: 'May – Jul 2026',
         // If you add a number or result, put it in `result`; it is appended to the first bullet
         result: '[FILL: number or result]',

@@ -1,5 +1,5 @@
 // Builds the page markup from content.js at build/dev time (see vite.config.js).
-// Output is static HTML, so the page is readable before any JS runs.
+// Output is static HTML: everything is visible without JavaScript.
 
 const esc = (s = '') =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -31,21 +31,34 @@ const icon = {
     '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5V16M8 7.8v.01M11.5 16v-5.5M11.5 13c0-1.5 1-2.6 2.4-2.6s2.1 1 2.1 2.6V16"/></svg>',
   github:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1.3-4-2-6-2.5M15 21v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.6-1.3 5.6-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.6 2.6 5.6 2.9 5.6 2.9a4.3 4.3 0 0 0-.1 3.2 4.6 4.6 0 0 0-1.3 3.2c0 4.6 2.9 5.7 5.6 6a3 3 0 0 0-.8 2.3V21"/></svg>',
+  sun: '<svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
+  moon: '<svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
 };
 
 const sectionHead = (title, lead) => `
-  <header class="section-head reveal">
+  <header class="section-head">
     <h2 class="h2">${esc(title)}</h2>
     ${has(lead) ? `<p class="lead">${esc(lead)}</p>` : ''}
   </header>`;
 
-const chips = (items) => keep(items).map((m) => `<li class="chip">${esc(m)}</li>`).join('');
 const bullets = (items) => {
   const list = keep(items);
   return list.length ? `<ul class="bullets">${list.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : '';
 };
 const cvLink = (c, cls, label) =>
   `<a class="${cls}" href="${esc(c.person.cv)}" download="${esc(c.person.cvDownloadName)}">${icon.download}<span>${esc(label)}</span></a>`;
+const date = (d) => (has(d) ? `<span class="date">${esc(d)}</span>` : '');
+
+// "A (BU)", "A (BU) and B (Pitt)", "A, B and C"
+const joinPeople = (people) => {
+  const names = people.map((p) => `${esc(has(p.fullName) ? p.fullName : p.name)}${p.short ? ` (${esc(p.short)})` : ''}`);
+  return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+};
+const metaLine = (parts) => {
+  const list = parts.filter(Boolean);
+  return list.length ? `<p class="entry-meta">${list.join('<span class="sep" aria-hidden="true"> · </span>')}</p>` : '';
+};
+const entryTitle = (role, org) => `<h3 class="entry-title">${esc(role)}<span class="sep" aria-hidden="true"> · </span>${esc(org)}</h3>`;
 
 // Work-sample cards that are filled in (max 3): NIL abstract, GitHub, Cobre Panamá once visible
 function sampleCards(c) {
@@ -70,26 +83,24 @@ function nav(c) {
   return `
   <nav class="nav" aria-label="Main">
     <div class="container nav-inner">
-      <a class="brand" href="#top">
-        <span class="brand-mark" aria-hidden="true">${esc(c.person.short)}</span>
-        <span>${esc(c.person.name)}</span>
-      </a>
+      <a class="brand" href="#top">${esc(c.person.name)}</a>
       <ul class="nav-links">
         ${links.map((n) => `<li><a href="${n.href}">${esc(n.label)}</a></li>`).join('')}
       </ul>
-      <div class="nav-icons">
+      <div class="nav-tools">
+        <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">${icon.sun}${icon.moon}</button>
         <a class="icon-link" href="${esc(c.person.linkedin)}" target="_blank" rel="noopener" aria-label="LinkedIn">${icon.linkedin}</a>
         ${has(c.person.github) ? `<a class="icon-link" href="${esc(c.person.github)}" target="_blank" rel="noopener" aria-label="GitHub">${icon.github}</a>` : ''}
+        <a class="btn btn-sm btn-outline nav-cv" href="${esc(c.person.cv)}" download="${esc(
+          c.person.cvDownloadName
+        )}" aria-label="Download CV">${icon.download}<span>Download CV</span></a>
       </div>
-      <a class="btn btn-sm btn-primary nav-cv" href="${esc(c.person.cv)}" download="${esc(
-        c.person.cvDownloadName
-      )}" aria-label="Download CV">${icon.download}<span>Download CV</span></a>
     </div>
   </nav>`;
 }
 
 const heroKpis = (kpis) => `
-  <ul class="hero-kpis reveal">
+  <ul class="hero-kpis">
     ${kpis
       .filter((k) => has(k.value))
       .map(
@@ -108,15 +119,14 @@ function hero(c) {
   const lines = h.headlineOptions[h.headline] || h.headlineOptions[0];
   return `
   <section class="hero" id="top">
-    <div class="glow glow-hero" aria-hidden="true"></div>
-    <div class="container hero-inner">
+    <div class="container">
       <div class="hero-copy">
-        <span class="pill-hero reveal"><span class="dot-live"></span>${esc(h.eyebrow)}</span>
-        <h1 class="h1 reveal">${lines.map((l) => `<span>${esc(l)}</span>`).join('')}</h1>
-        <p class="hero-sub reveal">${esc(h.subline)}</p>
-        <div class="hero-ctas reveal">
+        <h1 class="h1">${lines.map((l) => `<span>${esc(l)}</span>`).join(' ')}</h1>
+        <p class="hero-sub">${esc(h.subline)}</p>
+        ${has(h.availability) ? `<p class="availability">${esc(h.availability)}</p>` : ''}
+        <div class="hero-ctas">
           ${cvLink(c, 'btn btn-primary', h.primaryCta)}
-          <a class="btn btn-ghost" href="#research"><span>${esc(h.secondaryCta)}</span>${icon.arrow}</a>
+          <a class="btn btn-outline" href="#research"><span>${esc(h.secondaryCta)}</span>${icon.arrow}</a>
         </div>
       </div>
       ${heroKpis(h.kpis)}
@@ -130,24 +140,28 @@ function affiliations(c) {
   if (!items.length) return '';
   return `
   <section class="affil" aria-label="${esc(a.label)}">
-    <div class="container affil-inner">
-      <span class="mono-label">${esc(a.label)}</span>
-      <ul class="affil-list">${items.map((i) => `<li class="wordmark">${esc(i)}</li>`).join('')}</ul>
-    </div>
+    <div class="container"><div class="affil-inner">
+      <span class="affil-label">${esc(a.label)}</span>
+      <ul class="affil-list">${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>
+    </div></div>
   </section>`;
 }
 
-function about(c) {
+function about(c, opts) {
   const a = c.about;
   const degree = [a.degree, has(a.minor) ? a.minor : ''].filter(Boolean).join(' · ');
+  const photo = opts.photo && has(a.photo) ? `<img class="photo" src="${esc(a.photo)}" alt="${esc(a.photoAlt)}" width="112" height="112">` : '';
   return `
   <section class="section" id="about">
     <div class="container">
-      <div class="about-grid reveal">
+      <div class="about-grid">
         <h2 class="h2">${esc(a.title)}</h2>
-        <div class="about-copy">
-          ${keep(a.paragraphs).map((p) => `<p>${esc(p)}</p>`).join('')}
-          <p class="degree">${esc(degree)}</p>
+        <div class="about-copy${photo ? ' has-photo' : ''}">
+          ${photo}
+          <div>
+            ${keep(a.paragraphs).map((p) => `<p>${esc(p)}</p>`).join('')}
+            <p class="degree">${esc(degree)}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -155,25 +169,16 @@ function about(c) {
 }
 
 function roleCard(c, r) {
-  const advisors = r.supervisors
-    .map((p) => `<li><strong>${esc(has(p.fullName) ? p.fullName : p.name)}</strong>, ${esc(p.affil)}</li>`)
-    .join('');
+  const people = r.supervisors?.length ? `with ${joinPeople(r.supervisors)}` : '';
   return `
-  <article class="card role reveal">
-    <div class="role-meta">
-      <div class="role-top">
-        ${has(r.relevant) ? `<span class="relevant">${esc(c.research.relevantLabel)}: ${esc(r.relevant)}</span>` : '<span></span>'}
-        ${has(r.dates) ? `<span class="date">${esc(r.dates)}</span>` : ''}
-      </div>
-      <span class="mono-label">${esc(r.org)}</span>
-      <h3 class="h3">${esc(r.role)}</h3>
-      <p class="role-project">${esc(r.project)}</p>
-      <div class="advisors"><span class="advisors-label">${esc(c.research.advisorsLabel)}</span><ul>${advisors}</ul></div>
-      ${has(r.funding) ? `<p class="funding">${esc(r.funding)}</p>` : ''}
+  <article class="card entry entry-wide">
+    <div class="entry-head">
+      ${has(r.relevant) ? `<p class="relevant">${esc(c.research.relevantLabel)}: ${esc(r.relevant)}</p>` : ''}
+      ${entryTitle(r.role, r.orgShort || r.org)}
+      <p class="entry-project">${esc(r.project)}</p>
+      ${metaLine([date(r.dates), people, has(r.funding) ? esc(r.funding) : ''])}
     </div>
-    <div class="role-body">
-      ${bullets(r.bullets)}
-    </div>
+    <div class="entry-body">${bullets(r.bullets)}</div>
   </article>`;
 }
 
@@ -192,44 +197,26 @@ function caseStudy(c) {
   const k = c.caseStudy;
   if (!k || k.visible === false) return '';
   const findings = keep(k.findings);
-  const meta = [k.org, k.role].join(' · ');
+  const row = (label, body) => `<div class="case-row"><h3 class="case-label">${esc(label)}</h3><div>${body}</div></div>`;
   return `
   <section class="section" id="case">
     <div class="container">
       ${sectionHead(k.title)}
-      <article class="card report reveal">
+      <article class="card report">
         <div class="report-bar">
-          <span class="mono-label">${esc(meta)}</span>
-          ${has(k.dates) ? `<span class="date">${esc(k.dates)}</span>` : ''}
-          <span class="report-title">“${esc(k.reportTitle)}”</span>
+          ${entryTitle(k.role, k.org)}
+          ${metaLine([date(k.dates), `<span class="report-title">“${esc(k.reportTitle)}”</span>`])}
         </div>
         <div class="case-body">
-          <div class="case-row">
-            <h3 class="case-label">Question</h3>
-            <p class="case-question">${esc(k.question)}</p>
-          </div>
-          <div class="case-row">
-            <h3 class="case-label">${esc(k.approachLabel)}</h3>
-            <div>
-              <ul class="design">
-                ${k.approach
-                  .map((a) => `<li><span class="design-value">${esc(a.value)}</span><span class="design-label">${esc(a.label)}</span></li>`)
-                  .join('')}
-              </ul>
-              ${has(k.approachNote) ? `<p class="design-note">${esc(k.approachNote)}</p>` : ''}
-            </div>
-          </div>
-          ${
-            findings.length
-              ? `<div class="case-row"><h3 class="case-label">${esc(k.findingsLabel)}</h3><ol class="findings">${findings
-                  .map((f) => `<li>${esc(f)}</li>`)
-                  .join('')}</ol></div>`
-              : ''
-          }
-          <div class="case-row">
-            <h3 class="case-label">${esc(k.outcomeLabel)}</h3>
-            <p class="case-outcome">${esc(k.outcome)}</p>
-          </div>
+          ${row('Question', `<p class="case-question">${esc(k.question)}</p>`)}
+          ${row(
+            k.approachLabel,
+            `<ul class="design">${k.approach
+              .map((a) => `<li><span class="design-value">${esc(a.value)}</span><span class="design-label">${esc(a.label)}</span></li>`)
+              .join('')}</ul>${has(k.approachNote) ? `<p class="design-note">${esc(k.approachNote)}</p>` : ''}`
+          )}
+          ${findings.length ? row(k.findingsLabel, `<ol class="findings">${findings.map((f) => `<li>${esc(f)}</li>`).join('')}</ol>`) : ''}
+          ${row(k.outcomeLabel, `<p>${esc(k.outcome)}</p>`)}
         </div>
       </article>
     </div>
@@ -248,34 +235,25 @@ function project(c) {
   <section class="section" id="project">
     <div class="container">
       ${sectionHead(p.title, p.lead)}
-      <article class="card report reveal">
-        <div class="report-bar">
-          <span class="mono-label">${esc(p.reportId)}</span>
-          <span class="report-title">${esc(p.title)}</span>
+      <article class="card report">
+        <div class="case-body">
+          ${steps.map(([k, v]) => `<div class="case-row"><h3 class="case-label">${k}</h3><p>${esc(v)}</p></div>`).join('')}
+          <div class="case-row" data-finding-row hidden><h3 class="case-label">${esc(p.findingLabel)}</h3><p data-finding></p></div>
         </div>
-        <div class="report-body">
-          <ol class="report-steps">
-            ${steps
-              .map(([k, v], i) => `<li><span class="step-n">0${i + 1}</span><div><h3>${k}</h3><p>${esc(v)}</p></div></li>`)
-              .join('')}
-            <li class="finding" data-finding-row hidden><span class="step-n">0${steps.length + 1}</span><div><h3>${esc(
-              p.findingLabel
-            )}</h3><p data-finding></p></div></li>
-          </ol>
-          <div class="report-chart" data-report-chart hidden>
-            <div class="dpanel-head">
-              <div><h4>${esc(p.chartTitle)}</h4><span class="mono-label" data-xlabel></span></div>
-              <div class="report-kpi"><span class="kpi-value" data-headline-value></span><span class="kpi-note" data-headline-label></span></div>
-            </div>
-            <div class="chart-box chart-event"><canvas data-chart="event" aria-label="Event study chart" role="img"></canvas></div>
-            ${
-              has(p.github)
-                ? `<div class="report-foot"><a class="btn btn-ghost btn-sm" href="${esc(p.github)}" target="_blank" rel="noopener">${
-                    icon.code
-                  }<span>${esc(p.githubLabel)}</span>${icon.ext}</a></div>`
-                : ''
-            }
+        <div class="report-chart" data-report-chart hidden>
+          <div class="chart-head">
+            <h4>${esc(p.chartTitle)}</h4>
+            <p class="entry-meta" data-xlabel></p>
+            <p class="report-kpi"><span data-headline-value></span> <span data-headline-label></span></p>
           </div>
+          <div class="chart-box chart-event"><canvas data-chart="event" aria-label="Event study chart" role="img"></canvas></div>
+          ${
+            has(p.github)
+              ? `<a class="btn btn-sm btn-outline" href="${esc(p.github)}" target="_blank" rel="noopener">${icon.code}<span>${esc(
+                  p.githubLabel
+                )}</span>${icon.ext}</a>`
+              : ''
+          }
         </div>
       </article>
     </div>
@@ -292,13 +270,13 @@ function workSamples(c) {
       <div class="samples samples-${cards.length}">
         ${cards
           .map((s) => {
-            const head = `<span class="mono-label">${esc(s.label)}</span><h3 class="h4">${esc(s.title)}</h3>`;
+            const head = `<span class="sample-label">${esc(s.label)}</span><h3 class="entry-title">${esc(s.title)}</h3>`;
             if (s.kind === 'details')
-              return `<details class="card sample reveal"><summary>${head}<span class="sample-more">${esc(s.more)}</span></summary><p>${esc(
+              return `<details class="card sample"><summary>${head}<span class="sample-more">${esc(s.more)}</span></summary><p>${esc(
                 s.abstract
               )}</p></details>`;
             const attrs = s.external ? ' target="_blank" rel="noopener"' : '';
-            return `<a class="card sample reveal" href="${esc(s.href)}"${attrs}>${head}<p>${esc(s.text)}</p></a>`;
+            return `<a class="card sample" href="${esc(s.href)}"${attrs}>${head}<p>${esc(s.text)}</p></a>`;
           })
           .join('')}
       </div>
@@ -324,10 +302,12 @@ function experience(c) {
         ${e.items
           .map(
             (x) => `
-          <article class="card tl-card reveal">
-            <div class="tl-top"><h3 class="h4">${esc(x.role)}</h3>${has(x.dates) ? `<span class="date">${esc(x.dates)}</span>` : ''}</div>
-            <span class="tl-org">${esc(x.org)}</span>
-            ${bullets(withResult(x))}
+          <article class="card entry entry-wide">
+            <div class="entry-head">
+              ${entryTitle(x.role, x.org)}
+              ${metaLine([date(x.dates), has(x.place) ? esc(x.place) : ''])}
+            </div>
+            <div class="entry-body">${bullets(withResult(x))}</div>
           </article>`
           )
           .join('')}
@@ -342,11 +322,9 @@ function skills(c) {
   <section class="section" id="skills">
     <div class="container">
       ${sectionHead(s.title)}
-      <div class="card skill-table reveal">
-        ${s.groups
-          .map((g) => `<div class="skill-row"><h3 class="mono-label">${esc(g.name)}</h3><ul class="chips">${chips(g.items)}</ul></div>`)
-          .join('')}
-      </div>
+      <dl class="skills">
+        ${s.groups.map((g) => `<div class="skill-row"><dt>${esc(g.name)}</dt><dd>${keep(g.items).map(esc).join(', ')}</dd></div>`).join('')}
+      </dl>
     </div>
   </section>`;
 }
@@ -357,37 +335,39 @@ function contact(c) {
   const github = has(p.github);
   return `
   <section class="section contact" id="contact">
-    <div class="glow glow-contact" aria-hidden="true"></div>
-    <div class="container contact-inner reveal">
+    <div class="container"><div class="contact-inner">
       <h2 class="h-cta">${esc(k.title)}</h2>
       <p class="lead">${esc(k.text)}</p>
       <a class="contact-email" href="mailto:${esc(p.email)}">${esc(p.email)}</a>
       <div class="hero-ctas">
         <a class="btn btn-primary" href="mailto:${esc(p.email)}">${icon.mail}<span>${esc(k.emailCta)}</span></a>
-        <a class="btn btn-ghost" href="${esc(p.linkedin)}" target="_blank" rel="noopener"><span>${esc(k.linkedinCta)}</span>${icon.ext}</a>
-        ${github ? `<a class="btn btn-ghost" href="${esc(p.github)}" target="_blank" rel="noopener"><span>${esc(k.githubCta)}</span>${icon.ext}</a>` : ''}
-        ${cvLink(c, 'btn btn-ghost', k.cvCta)}
+        <a class="btn btn-outline" href="${esc(p.linkedin)}" target="_blank" rel="noopener"><span>${esc(k.linkedinCta)}</span>${icon.ext}</a>
+        ${github ? `<a class="btn btn-outline" href="${esc(p.github)}" target="_blank" rel="noopener"><span>${esc(k.githubCta)}</span>${icon.ext}</a>` : ''}
+        ${cvLink(c, 'btn btn-outline', k.cvCta)}
       </div>
-    </div>
-    <footer class="container footer">
+      <p class="print-only print-contact">${esc(p.email)} · ${esc(p.linkedin.replace(/^https?:\/\/(www\.)?/, ''))}${
+        github ? ` · ${esc(p.github.replace(/^https?:\/\//, ''))}` : ''
+      }</p>
+    </div></div>
+    <div class="container"><footer class="footer">
       <span>© ${new Date().getFullYear()} ${esc(k.footer)}</span>
       <ul class="footer-links">
         <li><a href="mailto:${esc(p.email)}">Email</a></li>
         <li><a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>
         ${github ? `<li><a href="${esc(p.github)}" target="_blank" rel="noopener">GitHub</a></li>` : ''}
-        <li><span class="mono-label">${esc(k.updated)}</span></li>
+        <li><span>${esc(k.updated)}</span></li>
       </ul>
-    </footer>
+    </footer></div>
   </section>`;
 }
 
-export function renderPage(c) {
+export function renderPage(c, opts = {}) {
   return [
     nav(c),
     '<main>',
     hero(c),
     affiliations(c),
-    about(c),
+    about(c, opts),
     research(c),
     caseStudy(c),
     project(c),

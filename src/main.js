@@ -1,75 +1,63 @@
 const root = document.documentElement;
-root.classList.add('js');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Nav: glass background after scroll, active link per section */
-const nav = document.querySelector('.nav');
-const onScroll = () => nav.classList.toggle('scrolled', scrollY > 12);
-addEventListener('scroll', onScroll, { passive: true });
-onScroll();
-
-const links = [...document.querySelectorAll('.nav-links a')];
-const sectionObs = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#${e.target.id}`));
-    }
-  },
-  { rootMargin: '-45% 0px -50% 0px' }
-);
-links.forEach((a) => {
-  const s = document.querySelector(a.getAttribute('href'));
-  if (s) sectionObs.observe(s);
+/* Theme: light by default, dark via the header toggle. Without a saved choice, CSS follows
+   prefers-color-scheme; a click saves an explicit choice. */
+const toggle = document.querySelector('[data-theme-toggle]');
+const systemDark = matchMedia('(prefers-color-scheme: dark)');
+const currentTheme = () => root.dataset.theme || (systemDark.matches ? 'dark' : 'light');
+const labelToggle = () => {
+  if (!toggle) return;
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  toggle.setAttribute('aria-label', `Switch to ${next} theme`);
+  toggle.title = `Switch to ${next} theme`;
+};
+toggle?.addEventListener('click', () => {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next;
+  try {
+    localStorage.setItem('theme', next);
+  } catch {}
+  labelToggle();
 });
+systemDark.addEventListener?.('change', labelToggle);
+labelToggle();
 
-/* Scroll reveal, staggered among siblings */
-const revealObs = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      const el = e.target;
-      const siblings = [...el.parentElement.children].filter((c) => c.classList.contains('reveal'));
-      el.style.transitionDelay = `${Math.min(siblings.indexOf(el), 5) * 70}ms`;
-      el.classList.add('in');
-      revealObs.unobserve(el);
-    }
-  },
-  { rootMargin: '0px 0px -8% 0px' }
-);
-document.querySelectorAll('.reveal').forEach((el) => (reduced ? el.classList.add('in') : revealObs.observe(el)));
-
-/* Hero dashboard tilt (mouse only, off for reduced motion) */
-const tiltWrap = document.querySelector('[data-tilt]');
-if (tiltWrap && !reduced && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  const dash = tiltWrap.querySelector('.dash');
-  let frame = 0;
-  addEventListener(
-    'mousemove',
-    (e) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const x = e.clientX / innerWidth - 0.5;
-        const y = e.clientY / innerHeight - 0.5;
-        dash.style.setProperty('--ry', `${(x * 5).toFixed(2)}deg`);
-        dash.style.setProperty('--rx', `${(-y * 4).toFixed(2)}deg`);
-      });
-    },
-    { passive: true }
-  );
+/* Nav: solid background after scroll; the active link is the section whose top has passed
+   40% of the viewport (or the last one at the bottom of the page) */
+const nav = document.querySelector('.nav');
+const links = [...document.querySelectorAll('.nav-links a')];
+const sections = [...document.querySelectorAll('main section[id], body > section[id]')];
+let ticking = false;
+function update() {
+  ticking = false;
+  nav.classList.toggle('scrolled', scrollY > 8);
+  const line = innerHeight * 0.4;
+  let current = null;
+  for (const s of sections) if (s.getBoundingClientRect().top <= line) current = s.id;
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = sections.at(-1)?.id;
+  for (const a of links) {
+    const on = a.getAttribute('href') === `#${current}`;
+    a.classList.toggle('active', on);
+    if (on) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
+  }
 }
+addEventListener('scroll', () => ticking || ((ticking = true), requestAnimationFrame(update)), { passive: true });
+addEventListener('resize', update);
+update();
 
-/* Charts and map load only when they come near the viewport */
-let chartsMod;
-const loadCharts = () => (chartsMod ||= __HAS_CHARTS__ ? import('./charts.js') : Promise.resolve(null));
-const chartObs = new IntersectionObserver(
-  (entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      chartObs.unobserve(e.target);
-      loadCharts().then((m) => m?.mount(e.target, { reduced }));
-    }
-  },
-  { rootMargin: '200px 0px' }
-);
-if (__HAS_CHARTS__) document.querySelectorAll('canvas[data-chart]').forEach((c) => chartObs.observe(c));
+/* The featured-project chart is bundled only while that section is visible (see vite.config.js) */
+if (__HAS_CHARTS__) {
+  const chartObs = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        chartObs.unobserve(e.target);
+        import('./charts.js').then((m) => m.mount(e.target, { reduced }));
+      }
+    },
+    { rootMargin: '200px 0px' }
+  );
+  document.querySelectorAll('canvas[data-chart]').forEach((c) => chartObs.observe(c));
+}

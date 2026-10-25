@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 
 // Renders content.js into index.html at build time (and on every dev request),
 // so the page ships as static HTML and all copy stays in one file.
@@ -15,7 +15,9 @@ function contentPlugin() {
       const content = (await load('src/content.js')).default;
       const { renderPage, renderHead, collectTodos } = await load('src/render.js');
       const todos = collectTodos(content);
-      let out = html.replace('<!--head-->', renderHead(content)).replace('<!--app-->', renderPage(content));
+      // The About photo appears only once public/<about.photo> exists
+      const photo = existsSync(resolve('public', content.about.photo || 'photo.jpg'));
+      let out = html.replace('<!--head-->', renderHead(content)).replace('<!--app-->', renderPage(content, { photo }));
       if (todos.length) {
         // Hidden TODOs: always in the terminal; in the browser console only on the dev server
         if (!ctx.server) console.log(`\n\x1b[33mHidden TODOs (not shown on the page):\x1b[0m\n  - ${todos.join('\n  - ')}\n`);
