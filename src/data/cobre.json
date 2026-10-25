@@ -1,0 +1,89 @@
+{
+  "placeholder": true,
+  "_note": "PLACEHOLDER. Replace series with your real estimates and set placeholder to false.",
+  "finding": "[TODO: one or two sentences with the result, e.g. the size of the cumulative abnormal return over the event window and whether it is significant]",
+  "headline": {
+    "value": "[TODO]",
+    "label": "CAR over event window"
+  },
+  "xLabel": "Trading days relative to event (t = 0)",
+  "yLabel": "Cumulative abnormal return, %",
+  "labels": [
+    "t−10",
+    "t−9",
+    "t−8",
+    "t−7",
+    "t−6",
+    "t−5",
+    "t−4",
+    "t−3",
+    "t−2",
+    "t−1",
+    "t=0",
+    "t+1",
+    "t+2",
+    "t+3",
+    "t+4",
+    "t+5",
+    "t+6",
+    "t+7",
+    "t+8",
+    "t+9",
+    "t+10"
+  ],
+  "series": [
+    {
+      "name": "Treated firm [TODO]",
+      "values": [
+        0.17,
+        0.21,
+        0.27,
+        0.34,
+        0.29,
+        0.03,
+        -0.32,
+        -0.54,
+        -0.46,
+        -0.16,
+        -1.83,
+        -3.02,
+        -3.91,
+        -4.54,
+        -4.94,
+        -5.26,
+        -5.65,
+        -6.08,
+        -6.37,
+        -6.35,
+        -6.07
+      ]
+    },
+    {
+      "name": "Benchmark [TODO]",
+      "values": [
+        0.09,
+        0.0,
+        -0.12,
+        -0.25,
+        -0.36,
+        -0.4,
+        -0.34,
+        -0.17,
+        0.05,
+        0.26,
+        0.39,
+        0.42,
+        0.34,
+        0.19,
+        0.04,
+        -0.09,
+        -0.17,
+        -0.21,
+        -0.24,
+        -0.26,
+        -0.27
+      ]
+    }
+  ],
+  "eventIndex": 10
+}
