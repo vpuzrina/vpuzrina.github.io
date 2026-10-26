@@ -1,13 +1,13 @@
 // Builds the page markup from content.js at build/dev time (see vite.config.js).
 // Output is static HTML: everything is visible without JavaScript.
 
-const esc = (s = '') =>
+export const esc = (s = '') =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 // A field is shown only if it is non-empty and has no [TODO] or [FILL] marker
 const MARKER = /\[(TODO|FILL)/;
-const has = (s) => typeof s === 'string' && s.trim() !== '' && !MARKER.test(s);
-const keep = (list = []) => list.filter(has);
+export const has = (s) => typeof s === 'string' && s.trim() !== '' && !MARKER.test(s);
+export const keep = (list = []) => list.filter(has);
 
 // Every unfinished item in content.js: marked strings and `todos: [...]` arrays
 export function collectTodos(obj, path = '') {
@@ -20,7 +20,7 @@ export function collectTodos(obj, path = '') {
   return [];
 }
 
-const icon = {
+export const icon = {
   download:
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>',
   arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg>',
@@ -50,7 +50,7 @@ const cvLink = (c, cls, label) =>
 const date = (d) => (has(d) ? `<span class="date">${esc(d)}</span>` : '');
 
 // "A (BU)", "A (BU) and B (Pitt)", "A, B and C"
-const joinPeople = (people) => {
+export const joinPeople = (people) => {
   const names = people.map((p) => `${esc(has(p.fullName) ? p.fullName : p.name)}${p.short ? ` (${esc(p.short)})` : ''}`);
   return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 };
@@ -285,7 +285,7 @@ function workSamples(c) {
 }
 
 // Appends a filled-in `result` to the first bullet; otherwise just closes the sentence
-const withResult = (x) => {
+export const withResult = (x) => {
   if (!x.bullets?.length) return [];
   const [first, ...rest] = x.bullets;
   const base = first.replace(/\.$/, '');

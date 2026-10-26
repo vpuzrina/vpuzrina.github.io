@@ -33,6 +33,13 @@ The site has no charts right now. The only chart in the code is the event-study 
 
 The hero "Research timeline" is drawn from the real start dates in `heroDashboard.timeline`, up to the month of the build.
 
+## Design previews
+
+`/v1/` (editorial) and `/v2/` (editorial plus the archive-to-dataset hero) are built from the same `src/content.js`
+by `src/variants/render-editorial.js`, with their own `src/variants/editorial.css` and `editorial-client.js`.
+They carry `noindex` and leave the homepage untouched. The floating bar switches the accent between claret and teal.
+To adopt a variant later, point the root `index.html` at the editorial renderer and remove the `v1/` and `v2/` folders.
+
 ## Run locally
 
 ```bash

@@ -14,10 +14,18 @@ function contentPlugin() {
     async transformIndexHtml(html, ctx) {
       const content = (await load('src/content.js')).default;
       const { renderPage, renderHead, collectTodos } = await load('src/render.js');
+      // /v1/ and /v2/ are design previews rendered from the same content
+      const variant = (ctx.filename || ctx.path || '').match(/[\\/](v[12])[\\/]index\.html$/)?.[1];
       const todos = collectTodos(content);
       // The About photo appears only once public/<about.photo> exists
       const photo = existsSync(resolve('public', content.about.photo || 'photo.jpg'));
-      let out = html.replace('<!--head-->', renderHead(content)).replace('<!--app-->', renderPage(content, { photo }));
+      let out;
+      if (variant) {
+        const { renderEditorial, renderEditorialHead } = await load('src/variants/render-editorial.js');
+        out = html.replace('<!--head-->', renderEditorialHead(content, variant)).replace('<!--app-->', renderEditorial(content, { variant, photo }));
+      } else {
+        out = html.replace('<!--head-->', renderHead(content)).replace('<!--app-->', renderPage(content, { photo }));
+      }
       if (todos.length) {
         // Hidden TODOs: always in the terminal; in the browser console only on the dev server
         if (!ctx.server) console.log(`\n\x1b[33mHidden TODOs (not shown on the page):\x1b[0m\n  - ${todos.join('\n  - ')}\n`);
@@ -30,7 +38,7 @@ function contentPlugin() {
       return out;
     },
     handleHotUpdate({ file, server }) {
-      if (/src[\\/](content|render)\.js$/.test(file)) {
+      if (/src[\\/](variants[\\/])?(content|render|render-editorial)\.js$/.test(file)) {
         server.ws.send({ type: 'full-reload' });
         return [];
       }
@@ -78,6 +86,11 @@ export default defineConfig(async ({ mode }) => {
     build: {
       target: 'es2020',
       cssMinify: true,
+      modulePreload: { polyfill: false },
+      // the live page plus two design previews; the single-file build keeps only the live page
+      rollupOptions: single
+        ? undefined
+        : { input: { main: resolve('index.html'), v1: resolve('v1/index.html'), v2: resolve('v2/index.html') } },
       ...(single ? { outDir: 'dist-single', copyPublicDir: false } : {}),
     },
   };
