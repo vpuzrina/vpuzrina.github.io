@@ -38,7 +38,7 @@ The hero "Research timeline" is drawn from the real start dates in `heroDashboar
 `/v1/` (editorial) and `/v2/` (editorial plus the archive-to-dataset hero) are built from the same `src/content.js`
 by `src/variants/render-editorial.js`, with their own `src/variants/editorial.css` and `editorial-client.js`.
 They carry `noindex` and leave the homepage untouched. The floating bar switches the accent between claret and teal.
-`/v3/` is dark by default (light via the header toggle), with v1's type in a compact card layout, framed section labels that light up on scroll, and a claret / teal / violet accent switch (`render-v3.js`, `v3.css`, `v3-client.js`). To adopt a variant later, point the root `index.html` at the editorial renderer and remove the `v1/` and `v2/` folders.
+`/v3/` is dark by default (light via the header toggle), with v1's type in a compact card layout, framed section labels that light up on scroll, and a claret / teal / violet accent switch (`render-v3.js`, `v3.css`, `v3-client.js`). v3 also has KPI source footnotes, a skill filter (the skill-to-card map in `render-v3.js` cites the supporting phrase for each link), cursor-following card borders, "How I did it" notes (`research.roles[].how`), a research-design flow for the case study, copy-on-click email, CV file details read from `resume.pdf` at build time, a Boston clock and back-to-top. To adopt a variant later, point the root `index.html` at the editorial renderer and remove the `v1/` and `v2/` folders.
 
 ## Run locally
 

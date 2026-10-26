@@ -6,6 +6,19 @@ import { readFileSync, existsSync } from 'node:fs';
 
 // Renders content.js into index.html at build time (and on every dev request),
 // so the page ships as static HTML and all copy stays in one file.
+// Page count and creation month straight from the CV file, for the v3 "PDF · 1 page · updated …" note
+function cvInfo(file) {
+  try {
+    const pdf = readFileSync(file, 'latin1');
+    const pages = (pdf.match(/\/Type\s*\/Page(?!s)/g) || []).length || null;
+    const d = pdf.match(/\/CreationDate\s*\(D:(\d{4})(\d{2})/);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return { pages, updated: d ? `${months[Number(d[2]) - 1]} ${d[1]}` : null };
+  } catch {
+    return null;
+  }
+}
+
 const load = async (file) => await import(`${pathToFileURL(resolve(file)).href}?t=${Date.now()}`);
 
 function contentPlugin() {
@@ -22,7 +35,8 @@ function contentPlugin() {
       let out;
       if (variant === 'v3') {
         const { renderV3, renderV3Head } = await load('src/variants/render-v3.js');
-        out = html.replace('<!--head-->', renderV3Head(content)).replace('<!--app-->', renderV3(content, { photo }));
+        const cv = cvInfo(resolve('public', content.person.cv));
+        out = html.replace('<!--head-->', renderV3Head(content)).replace('<!--app-->', renderV3(content, { photo, cv }));
       } else if (variant) {
         const { renderEditorial, renderEditorialHead } = await load('src/variants/render-editorial.js');
         out = html.replace('<!--head-->', renderEditorialHead(content, variant)).replace('<!--app-->', renderEditorial(content, { variant, photo }));

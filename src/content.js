@@ -50,10 +50,11 @@ export default {
     primaryCta: 'Download CV',
     secondaryCta: 'See my research',
     kpis: [
-      { value: '5,000+', label: 'historical documents coded', note: 'NBER' },
-      { value: "Dean's List", label: 'last 2 semesters', note: 'Boston University' },
-      { value: '$3,000–4,000', label: 'semester budget managed', note: 'Russian Speaking Society' },
-      { value: '19 + 60+', label: 'interviews and survey responses', note: 'Yandex' },
+      // `source` is the footnote shown on the /v3/ preview; facts only from elsewhere on the page
+      { value: '5,000+', label: 'historical documents coded', note: 'NBER', source: 'NBER project · Mar 2026–present · 300–600 articles a week' },
+      { value: "Dean's List", label: 'last 2 semesters', note: 'Boston University', source: "Boston University · Dean's List, last 2 semesters" },
+      { value: '$3,000–4,000', label: 'semester budget managed', note: 'Russian Speaking Society', source: 'Russian Speaking Society at BU · Senior Treasurer since May 2025 · about 20 reimbursements a semester' },
+      { value: '19 + 60+', label: 'interviews and survey responses', note: 'Yandex', source: 'Yandex market-entry report · 19 SMB-owner interviews, 60+ consumers surveyed' },
     ],
   },
 
@@ -90,6 +91,11 @@ export default {
         ],
         dates: 'Mar 2026 – Present',
         relevant: 'Document review and coding',
+        how: [
+          ['Source', 'U.S. newspaper articles from the 1880s, read one by one.'],
+          ['Rule', "Each article is classified YES, POTENTIAL or NO under the project's detailed coding rubric."],
+          ['Checks', 'Event location is recorded separately from the dateline, and duplicate coverage is flagged so each event counts once.'],
+        ],
         bullets: [
           'Classify 300–600 U.S. newspaper articles from the 1880s each week as YES, POTENTIAL or NO cases of racial expulsion under a detailed coding rubric; 5,000+ classified so far.',
           'Record each case as a structured entry, with the event location kept separate from the dateline, plus violence and fatalities, and flag duplicate coverage so each event counts once.',
@@ -105,6 +111,11 @@ export default {
         dates: 'Aug 2026 – Present',
         funding: 'Funded by a Boston University research grant',
         relevant: 'Dataset construction',
+        how: [
+          ['Source', 'Scanned Russian-language Imperial statistical yearbooks: 16 provinces, monthly, 1888–1893.'],
+          ['Checks', 'Every table reconciled to its row and column totals; source errors corrected; a crosswalk links two district-coding systems.'],
+          ['Tools', 'R, on the district panel merged with an MIT famine dataset (harvests, taxes, serfdom).'],
+        ],
         bullets: [
           'Built a monthly mortality panel for 16 provinces over 1888–1893 (72 months each), digitized from scanned Russian-language Imperial statistical yearbooks.',
           'Checked every table against its row and column totals, corrected source errors and built a crosswalk between two district-coding systems so the datasets could be merged.',
@@ -119,6 +130,11 @@ export default {
         supervisors: [{ name: 'Prof. Onur Celik', affil: 'Advisor, BU Economics', short: 'BU' }],
         dates: 'Sep 2026 – Present',
         relevant: 'Empirical testing',
+        how: [
+          ['Data', 'On3 NIL valuations matched to 2025–26 season statistics for NCAA Division I basketball players.'],
+          ['Checks', 'Rules for missing data and a top-1% outlier check.'],
+          ['Method', 'OLS in R with controls, in levels and logs, based on a review of the pay-gap literature.'],
+        ],
         bullets: [
           'Wrote an original empirical proposal on the gender gap in NIL pay among NCAA Division I basketball players; the department chair approved it.',
           'Now building a cross-section that matches On3 NIL valuations to 2025–26 season statistics, with rules for missing data and a top-1% outlier check.',
@@ -137,10 +153,11 @@ export default {
     question: 'What barriers and opportunities would Yandex face if it entered e-commerce in Uzbekistan?',
     approachLabel: 'Approach',
     approach: [
-      { value: '19', label: 'interviews with SMB owners, using an interview guide I designed' },
-      { value: '60+', label: 'local consumers surveyed' },
-      { value: '8', label: 'e-commerce platforms benchmarked' },
+      { value: '19', label: 'interviews with SMB owners, using an interview guide I designed', step: 'Interviews' },
+      { value: '60+', label: 'local consumers surveyed', step: 'Survey' },
+      { value: '8', label: 'e-commerce platforms benchmarked', step: 'Platform benchmark' },
     ],
+    flowEnd: { step: 'Report adopted', label: 'by the International Marketing Department' }, // last step of the /v3/ flow
     approachNote: 'I also analyzed competitor revenue and compiled statistical summaries for department leadership.',
     findingsLabel: 'What I found',
     findings: ['[FILL: finding 1]', '[FILL: finding 2]', '[FILL: finding 3]'], // row hidden while empty

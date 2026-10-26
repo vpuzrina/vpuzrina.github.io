@@ -6,14 +6,39 @@ const bullets = (items) => {
   return list.length ? `<ul class="bullets">${list.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : '';
 };
 const cvHref = (c) => `/${c.person.cv}`;
+let cvMeta = '';
 const cvLink = (c, cls, label) =>
-  `<a class="${cls}" href="${esc(cvHref(c))}" download="${esc(c.person.cvDownloadName)}">${icon.download}<span>${esc(label)}</span></a>`;
+  `<a class="${cls} cv-link" href="${esc(cvHref(c))}" download="${esc(c.person.cvDownloadName)}"${
+    cvMeta ? ` data-meta="${esc(cvMeta)}"` : ''
+  }>${icon.download}<span>${esc(label)}</span></a>`;
 const meta = (parts) => {
   const list = parts.filter(Boolean);
   return list.length ? `<p class="meta">${list.join('<span class="sep" aria-hidden="true"> · </span>')}</p>` : '';
 };
 const title = (role, org) => `<h3 class="entry-title">${esc(role)}<span class="sep" aria-hidden="true"> · </span>${esc(org)}</h3>`;
 const pad = (n) => String(n).padStart(2, '0');
+const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// Skill filter: which cards each skill highlights. Only where the card's own text supports it;
+// skills not mentioned in any card (Stata, Excel, Python, Java, Survey design) highlight nothing.
+const SKILL_CARDS = {
+  R: ['res-1', 'res-2'], // "running regressions in R" · "OLS in R"
+  'Regression analysis (OLS)': ['res-2'], // "OLS in R with controls"
+  'Panel data': ['res-1'], // "monthly mortality panel" · "district panel"
+  'Data cleaning': ['res-1', 'res-2'], // "corrected source errors" · "rules for missing data and a top-1% outlier check"
+  'Rubric-based document coding': ['res-0'], // "under a detailed coding rubric"
+  'Archival research': ['res-0', 'res-1'], // "newspaper articles from the 1880s" · "Imperial statistical yearbooks"
+  'Data validation': ['res-0', 'res-1'], // "flag duplicate coverage" · "checked every table against its row and column totals"
+  Interviews: ['case'], // "interviews with SMB owners"
+  'Report writing': ['case', 'res-2'], // "adopted the report" · "wrote an original empirical proposal"
+};
+const cardSkills = (id) =>
+  Object.entries(SKILL_CARDS)
+    .filter(([, ids]) => ids.includes(id))
+    .map(([k]) => slug(k))
+    .join(' ');
+const SUP = ['¹', '²', '³', '⁴', '⁵', '⁶'];
+const CLICKABLE_GROUPS = ['Analysis', 'Research', 'Programming'];
 
 // Framed label "02 · Research" above the heading. When the section title is just its name,
 // the label itself is the heading, so nothing is repeated.
@@ -42,7 +67,9 @@ function nav(c, links) {
         <button class="icon-link" type="button" data-theme-toggle aria-label="Switch to light theme">${icon.sun}${icon.moon}</button>
         <a class="icon-link" href="${esc(c.person.linkedin)}" target="_blank" rel="noopener" aria-label="LinkedIn">${icon.linkedin}</a>
         ${has(c.person.github) ? `<a class="icon-link" href="${esc(c.person.github)}" target="_blank" rel="noopener" aria-label="GitHub">${icon.github}</a>` : ''}
-        <a class="btn btn-outline btn-sm nav-cv" href="${esc(cvHref(c))}" download="${esc(c.person.cvDownloadName)}" aria-label="Download CV">${icon.download}<span>Download CV</span></a>
+        <a class="btn btn-outline btn-sm nav-cv cv-link" href="${esc(cvHref(c))}" download="${esc(c.person.cvDownloadName)}" aria-label="Download CV"${
+          cvMeta ? ` data-meta="${esc(cvMeta)}"` : ''
+        }>${icon.download}<span>Download CV</span></a>
       </div>
     </div>
   </nav>`;
@@ -52,6 +79,7 @@ function hero(c) {
   const h = c.hero;
   const lines = h.headlineOptions[h.headline] || h.headlineOptions[0];
   const affil = keep(c.affiliations.items);
+  const kpis = h.kpis.filter((k) => has(k.value));
   return `
   <header class="hero" id="top">
     <div class="glow glow-hero" aria-hidden="true"></div>
@@ -64,15 +92,25 @@ function hero(c) {
         <a class="btn btn-outline" href="#research"><span>${esc(h.secondaryCta)}</span>${icon.arrow}</a>
       </div>
       <ul class="kpis">
-        ${h.kpis
-          .filter((k) => has(k.value))
+        ${kpis
           .map(
-            (k) => `<li class="card kpi" data-count-wrap><span class="kpi-value" data-count>${esc(k.value)}</span><span class="kpi-label">${esc(
-              k.label
-            )}</span><span class="kpi-note">${esc(k.note)}</span></li>`
+            (k, i) => `<li class="card kpi" data-count-wrap>
+              <span class="kpi-top"><span class="kpi-value" data-count>${esc(k.value)}</span>${
+                has(k.source)
+                  ? `<sup class="fn"><button type="button" class="fn-btn" aria-describedby="fn-tip-${i + 1}" aria-label="Source ${i + 1}">${SUP[i]}</button><span class="fn-tip" role="tooltip" id="fn-tip-${i + 1}">${esc(k.source)}</span></sup>`
+                  : ''
+              }</span>
+              <span class="kpi-label">${esc(k.label)}</span><span class="kpi-note">${esc(k.note)}</span></li>`
           )
           .join('')}
       </ul>
+      ${
+        kpis.some((k) => has(k.source))
+          ? `<ol class="footnotes">${kpis
+              .map((k, i) => (has(k.source) ? `<li id="fn-${i + 1}"><span class="fn-num" aria-hidden="true">${SUP[i]}</span> ${esc(k.source)}</li>` : ''))
+              .join('')}</ol>`
+          : ''
+      }
       ${
         affil.length
           ? `<p class="affil"><span class="affil-label">${esc(c.affiliations.label)}</span> ${affil
@@ -98,21 +136,28 @@ function aboutBody(c, photo) {
     </div>`;
 }
 
-const entryCard = (head, list) => `
-  <article class="card entry">
+const howBlock = (how) =>
+  how?.length
+    ? `<details class="how"><summary><span class="how-sign" aria-hidden="true"></span>How I did it</summary><dl class="how-body">${how
+        .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`)
+        .join('')}</dl></details>`
+    : '';
+const entryCard = (id, head, list) => `
+  <article class="card entry" data-card="${id}" data-skills="${cardSkills(id)}">
     <div class="entry-head">${head}</div>
     <div class="entry-body">${list}</div>
   </article>`;
 
 function researchBody(c) {
   return `<div class="stack">${c.research.roles
-    .map((r) =>
+    .map((r, i) =>
       entryCard(
+        `res-${i}`,
         `${has(r.relevant) ? `<p class="relevant">${esc(c.research.relevantLabel)}: ${esc(r.relevant)}</p>` : ''}
          ${title(r.role, r.orgShort || r.org)}
          <p class="project">${esc(r.project)}</p>
          ${meta([has(r.dates) ? `<span class="date">${esc(r.dates)}</span>` : '', r.supervisors?.length ? `with ${joinPeople(r.supervisors)}` : '', has(r.funding) ? esc(r.funding) : ''])}`,
-        bullets(r.bullets)
+        bullets(r.bullets) + howBlock(r.how)
       )
     )
     .join('')}</div>`;
@@ -122,17 +167,26 @@ function caseBody(c) {
   const k = c.caseStudy;
   const findings = keep(k.findings);
   return `
-    <article class="card case">
+    <article class="card case" data-card="case" data-skills="${cardSkills('case')}">
       <p class="byline">${esc(k.role)}<span class="sep" aria-hidden="true"> · </span>${esc(k.org)}${
         has(k.dates) ? `<span class="sep" aria-hidden="true"> · </span><span class="date">${esc(k.dates)}</span>` : ''
       }<span class="sep" aria-hidden="true"> · </span><span class="report-title">“${esc(k.reportTitle)}”</span></p>
       <blockquote class="pullquote"><p>${esc(k.question)}</p></blockquote>
       <h3 class="sub">${esc(k.approachLabel)}</h3>
-      <ul class="figures">
+      <ol class="flow" data-flow>
         ${k.approach
-          .map((a) => `<li data-count-wrap><span class="figure-num" data-count>${esc(a.value)}</span><span class="figure-label">${esc(a.label)}</span></li>`)
+          .map(
+            (a) => `<li class="flow-step"><span class="flow-name">${esc(a.step || '')}</span><span class="figure-num" data-count>${esc(
+              a.value
+            )}</span><span class="figure-label">${esc(a.label)}</span></li><li class="flow-link" aria-hidden="true"><span></span></li>`
+          )
           .join('')}
-      </ul>
+        ${
+          k.flowEnd
+            ? `<li class="flow-step flow-end"><span class="flow-name">${esc(k.flowEnd.step)}</span><span class="flow-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="figure-label">${esc(k.flowEnd.label)}</span></li>`
+            : ''
+        }
+      </ol>
       ${findings.length ? `<h3 class="sub">${esc(k.findingsLabel)}</h3><ol class="findings">${findings.map((f) => `<li>${esc(f)}</li>`).join('')}</ol>` : ''}
       <div class="case-foot">
         ${has(k.approachNote) ? `<p class="note">${esc(k.approachNote)}</p>` : '<span></span>'}
@@ -143,23 +197,36 @@ function caseBody(c) {
 
 function experienceBody(c) {
   return `<div class="stack">${c.experience.items
-    .map((x) =>
-      entryCard(`${title(x.role, x.org)}${meta([has(x.dates) ? `<span class="date">${esc(x.dates)}</span>` : '', has(x.place) ? esc(x.place) : ''])}`, bullets(withResult(x)))
+    .map((x, i) =>
+      entryCard(`exp-${i}`, `${title(x.role, x.org)}${meta([has(x.dates) ? `<span class="date">${esc(x.dates)}</span>` : '', has(x.place) ? esc(x.place) : ''])}`, bullets(withResult(x)))
     )
     .join('')}</div>`;
 }
 
 const skillsBody = (c) => `
   <dl class="card skills">
-    ${c.skills.groups.map((g) => `<div><dt>${esc(g.name)}</dt><dd>${keep(g.items).map(esc).join(', ')}</dd></div>`).join('')}
-  </dl>`;
+    ${c.skills.groups
+      .map((g) => {
+        const items = keep(g.items);
+        const dd = CLICKABLE_GROUPS.includes(g.name)
+          ? items
+              .map((t) => `<button type="button" class="skill" data-skill="${slug(t)}" aria-pressed="false">${esc(t)}</button>`)
+              .join('<span class="comma">, </span>')
+          : items.map(esc).join(', ');
+        return `<div><dt>${esc(g.name)}</dt><dd>${dd}</dd></div>`;
+      })
+      .join('')}
+  </dl>
+  <p class="filter-status" data-filter-status aria-live="polite">Click a tool or method to highlight the work that uses it.</p>`;
 
 function contactBody(c) {
   const k = c.contact;
   const p = c.person;
   return `
     <p class="lead">${esc(k.text)}</p>
-    <p><a class="email u" href="mailto:${esc(p.email)}">${esc(p.email)}</a></p>
+    <p class="email-wrap"><a class="email u" href="mailto:${esc(p.email)}" data-copy="${esc(p.email)}" title="Click to copy">${esc(
+      p.email
+    )}</a><span class="copied" data-copied role="status" aria-live="polite"></span></p>
     <div class="ctas">
       <a class="btn btn-primary" href="mailto:${esc(p.email)}">${icon.mail}<span>${esc(k.emailCta)}</span></a>
       <a class="btn btn-outline" href="${esc(p.linkedin)}" target="_blank" rel="noopener"><span>${esc(k.linkedinCta)}</span>${icon.ext}</a>
@@ -168,7 +235,8 @@ function contactBody(c) {
     </div>`;
 }
 
-export function renderV3(c, { photo = false } = {}) {
+export function renderV3(c, { photo = false, cv = null } = {}) {
+  cvMeta = cv ? ['PDF', cv.pages ? `${cv.pages} page${cv.pages > 1 ? 's' : ''}` : '', cv.updated ? `updated ${cv.updated}` : ''].filter(Boolean).join(' · ') : '';
   const caseHeading = c.caseStudy.title.replace(/^Case study:\s*/i, '');
   // Same section order as the homepage; hidden sections stay hidden
   const parts = [
@@ -191,11 +259,13 @@ export function renderV3(c, { photo = false } = {}) {
       '<div class="glow glow-contact" aria-hidden="true"></div><div class="wrap">'
     ),
     '</main>',
-    `<footer class="wrap footer"><span>© ${new Date().getFullYear()} ${esc(c.contact.footer)}</span><span><a class="u" href="mailto:${esc(
+    `<footer class="wrap footer"><span>© ${new Date().getFullYear()} ${esc(c.contact.footer)}<span class="clock" data-clock hidden> · <time></time> local time</span></span><span><a class="u" href="mailto:${esc(
       p.email
     )}">Email</a> · <a class="u" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>${
       has(p.github) ? ` · <a class="u" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub</a>` : ''
     } · ${esc(c.contact.updated)}</span></footer>`,
+    `<button class="to-top" type="button" data-to-top aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg></button>
+    <div class="filter-chip" data-filter-chip hidden><span data-filter-chip-label></span><button type="button" data-filter-clear>Clear <kbd>Esc</kbd></button></div>`,
     `<div class="preview-bar" role="group" aria-label="Design preview controls">
       <span>Preview V3 · accent</span>
       ${['claret', 'teal', 'violet']

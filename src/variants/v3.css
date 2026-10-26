@@ -363,7 +363,7 @@ svg {
   transform: scaleX(1);
 }
 .kpi-value {
-  font: 500 clamp(1.7rem, 2.6vw, 2.3rem) / 1.05 var(--serif);
+  font: 500 clamp(1.6rem, 2.4vw, 2.1rem) / 1.05 var(--serif);
   letter-spacing: -0.02em;
   color: var(--ink);
   white-space: nowrap;
@@ -899,6 +899,478 @@ svg {
   }
 }
 
+/* ================= Interactive details ================= */
+
+/* Polish: selection, focus ring, theme switch */
+::selection {
+  background: var(--fill);
+  color: #fff;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(var(--glow-rgb), 0.22);
+}
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, fill 0.2s ease, stroke 0.2s ease !important;
+}
+
+/* 1. KPI source footnotes */
+.kpi-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1px;
+}
+.fn {
+  position: relative;
+  line-height: 0;
+  vertical-align: top;
+}
+.fn-btn {
+  font: 600 0.92rem/1 var(--sans);
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 3px 4px;
+  margin-top: -2px;
+  border-radius: 4px;
+  cursor: help;
+}
+.fn-tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 30;
+  width: max-content;
+  max-width: 250px;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  font: 400 0.82rem/1.45 var(--sans);
+  color: var(--text);
+  white-space: normal;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+.fn:hover .fn-tip,
+.fn-btn:focus-visible + .fn-tip,
+.fn.open .fn-tip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.footnotes {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 24px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.fn-num {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 2. Skill filter */
+.skill {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px dotted var(--border-strong);
+  padding: 0 1px;
+  cursor: pointer;
+  border-radius: 0;
+}
+.skill:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.skill[aria-pressed='true'] {
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  text-shadow: 0 0 12px rgba(var(--glow-rgb), 0.5);
+}
+.filter-status {
+  margin-top: 10px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+[data-card] {
+  transition: opacity 0.25s, transform 0.25s var(--ease);
+}
+body.filtering [data-card] {
+  opacity: 0.35;
+}
+body.filtering [data-card].match {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(var(--glow-rgb), 0.55), 0 0 30px -8px rgba(var(--glow-rgb), 0.55);
+}
+body.filtering [data-card].match::after {
+  opacity: 1;
+}
+.filter-chip {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 0 22px -8px rgba(var(--glow-rgb), 0.6);
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+.filter-chip[hidden] {
+  display: none;
+}
+.filter-chip button {
+  font: 500 0.8rem var(--sans);
+  color: var(--text);
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.filter-chip kbd {
+  font: 500 0.7rem var(--sans);
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* 3. Spotlight that follows the cursor along the card border (pointer devices only) */
+.card::before {
+  border: 0;
+  padding: 1px;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--glow-rgb), 0.75), rgba(var(--glow-rgb), 0.14) 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* 4. "How I did it" disclosure, height animates where the browser supports it */
+:root {
+  interpolate-size: allow-keywords;
+}
+.how {
+  margin-top: 10px;
+}
+.how summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+  font: 600 0.88rem/1.4 var(--sans);
+  color: var(--accent);
+  border-radius: 4px;
+}
+.how summary::-webkit-details-marker {
+  display: none;
+}
+.how-sign {
+  position: relative;
+  width: 10px;
+  height: 10px;
+}
+.how-sign::before,
+.how-sign::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4.5px;
+  width: 10px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.25s var(--ease);
+}
+.how-sign::after {
+  transform: rotate(90deg);
+}
+.how[open] .how-sign::after {
+  transform: rotate(0deg);
+}
+.how::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 0.3s var(--ease), content-visibility 0.3s allow-discrete;
+}
+.how[open]::details-content {
+  block-size: auto;
+}
+.how-body {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0 2px;
+  font-size: 0.9rem;
+}
+.how-body > div {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+}
+.how-body dt {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* 5. Case study research-design flow */
+.flow {
+  display: flex;
+  align-items: stretch;
+}
+.flow-step {
+  flex: 1 1 0;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.flow-name {
+  font: 600 0.84rem/1.3 var(--sans);
+  color: var(--ink);
+}
+.flow-end {
+  border-color: rgba(var(--glow-rgb), 0.5);
+}
+.flow-check {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  margin: 2px 0;
+}
+.flow-check svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flow-link {
+  flex: 0 0 30px;
+  align-self: center;
+  height: 1px;
+  position: relative;
+}
+.flow-link span {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.45s var(--ease);
+}
+.flow-link span::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -3px;
+  border-left: 6px solid var(--accent);
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+}
+.flow-link:nth-child(4) span {
+  transition-delay: 0.35s;
+}
+.flow-link:nth-child(6) span {
+  transition-delay: 0.7s;
+}
+.flow.drawn .flow-link span {
+  transform: none;
+}
+
+/* 6. Copy email */
+.email-wrap {
+  position: relative;
+  display: inline-block;
+}
+.email {
+  cursor: copy;
+}
+.copied {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  margin-left: 12px;
+  padding: 4px 9px;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font: 500 0.8rem var(--sans);
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.copied.show {
+  opacity: 1;
+}
+
+/* 7. CV file details on hover */
+/* only on devices that hover, so the hidden note never widens a phone layout */
+@media (hover: hover) {
+  .cv-link[data-meta]::before {
+    content: attr(data-meta);
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 7px);
+    transform: translate(-50%, -3px);
+    white-space: nowrap;
+    font: 500 0.74rem var(--sans);
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+  }
+  .nav-cv[data-meta]::before {
+    left: auto;
+    right: 0;
+    transform: translateY(-3px);
+  }
+  .nav-cv:hover::before,
+  .nav-cv:focus-visible::before {
+    transform: none !important;
+  }
+  .cv-link:hover::before,
+  .cv-link:focus-visible::before {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* 8. Footer clock */
+.clock time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 9. Back to top */
+.to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 68px;
+  z-index: 55;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s, border-color 0.2s;
+  pointer-events: none;
+}
+.to-top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.to-top:hover {
+  border-color: var(--accent);
+}
+.to-top svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 760px) {
+  .flow {
+    flex-direction: column;
+  }
+  .flow-step {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 12px;
+  }
+  .flow-name {
+    flex-basis: 100%;
+  }
+  .flow-link {
+    flex: 0 0 18px;
+    align-self: flex-start;
+    width: 1px;
+    height: auto;
+    margin-left: 30px;
+  }
+  .flow-link span {
+    transform: scaleY(0);
+    transform-origin: 50% 0;
+  }
+  .flow-link span::after {
+    right: -3px;
+    top: auto;
+    bottom: -1px;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+    border-top: 6px solid var(--accent);
+    border-bottom: 0;
+  }
+  .kpi:nth-child(even) .fn-tip {
+    left: auto;
+    right: -8px;
+    transform: translateY(4px);
+  }
+  .kpi:nth-child(even) .fn.open .fn-tip,
+  .kpi:nth-child(even) .fn:hover .fn-tip {
+    transform: none;
+  }
+  .kpi:nth-child(odd) .fn-tip {
+    left: -40px;
+    transform: translateY(4px);
+  }
+  .kpi:nth-child(odd) .fn.open .fn-tip,
+  .kpi:nth-child(odd) .fn:hover .fn-tip {
+    transform: none;
+  }
+  .fn-tip {
+    max-width: 210px;
+  }
+  .footnotes {
+    grid-template-columns: 1fr;
+  }
+  .copied {
+    left: 0;
+    top: 100%;
+    margin: 6px 0 0;
+    transform: none;
+  }
+}
+
 /* Reduced motion: everything in its final state, nothing animates */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -915,8 +1387,12 @@ svg {
     color: var(--ink);
   }
   .head-line,
-  .kpi .kpi-value::before {
+  .kpi .kpi-value::before,
+  .flow-link span {
     transform: none;
+  }
+  .card::before {
+    background: rgba(var(--glow-rgb), 0.55);
   }
 }
 
