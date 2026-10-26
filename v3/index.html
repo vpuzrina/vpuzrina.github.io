@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-accent="claret">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E1117" />
+    <script>
+      // Dark for every visitor unless they chose light with the toggle; accent from the preview bar
+      try {
+        var t = localStorage.getItem('v3-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        var a = localStorage.getItem('v3-accent');
+        if (a === 'claret' || a === 'teal' || a === 'violet') document.documentElement.dataset.accent = a;
+      } catch (e) {}
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!--head-->
+    <link rel="stylesheet" href="/src/variants/v3.css" />
+  </head>
+  <body>
+    <a class="skip" href="#research">Skip to research</a>
+    <!--app-->
+    <script type="module" src="/src/variants/v3-client.js"></script>
+  </body>
+</html>
