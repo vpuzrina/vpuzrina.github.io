@@ -1,9 +1,63 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import ContextLine from '../components/ContextLine.astro';
+import EventStudy from '../figures/EventStudy/EventStudy';
+import { FIG1_PARAMS, FIG1_TAG } from '../figures/EventStudy/meta';
+import { u } from '../lib/url';
 ---
-<BaseLayout title="Event study lab" description="Full-screen interactive event study on simulated data.">
-  <div class="wrap prose" style="padding: 4rem 0 2rem">
-    <h1>Event study lab</h1>
-    <p><mark class="todo">[TODO: full-screen version of Fig. 1, built in Phase 2]</mark></p>
+<BaseLayout title="Event study lab" description="The full version of Fig. 1: an interactive event study on simulated returns, with adjustable estimation and event windows and three expected-return models.">
+  <div class="wrap lab">
+    <header class="prose head">
+      <h1>Event study lab</h1>
+      <ContextLine items={['Interactive figure', 'simulated returns', 'market model, market-adjusted, mean-adjusted']} />
+    </header>
+    <p class="prose">
+      This is the full version of Fig. 1 on the home page. The returns are simulated with a fixed seed, so every visitor
+      sees the same series. The Cobre Panamá paper runs the same code on real prices.
+    </p>
+
+    <Figure n={1} title="Event study of a one-day shock" tag={FIG1_TAG} params={FIG1_PARAMS}>
+      <EventStudy client:load id="lab" source={{ kind: 'sim' }} size="full" />
+      <Fragment slot="caption">
+        <p>CAR summed from day −10, with a 95% band of ±1.96·<span class="hat">σ</span>·√k after k days. The table refers to the event window only.</p>
+      </Fragment>
+    </Figure>
+
+    <section class="section prose" aria-labelledby="how">
+      <h2 id="how">How the numbers are computed</h2>
+      <ul class="steps">
+        <li><span class="hat">α</span> and <span class="hat tall">β</span> come from an OLS regression of the firm's daily return on the market return over the estimation window.</li>
+        <li>The abnormal return is AR<sub>t</sub> = R<sub>t</sub> − (<span class="hat">α</span> + <span class="hat tall">β</span>·R<sub>m,t</sub>). CAR is the sum of AR over the event window.</li>
+        <li>
+          SE(CAR) = <span class="hat">σ</span>(ε)·√L, where L is the number of days in the event window. This ignores the estimation error in <span class="hat">α</span> and <span class="hat tall">β</span> and any autocorrelation in the residuals, so with a short estimation window the SE comes out slightly too small.
+        </li>
+        <li>t = CAR / SE(CAR). The p-value is two-sided, from a t distribution with N − 2 degrees of freedom (N − 1 for the two models with fixed coefficients).</li>
+        <li>Market-adjusted fixes α = 0 and β = 1. Mean-adjusted uses the firm's average return over the estimation window as the expected return.</li>
+      </ul>
+    </section>
+
+    <section class="section prose" aria-labelledby="controls">
+      <h2 id="controls">Controls</h2>
+      <p>
+        Drag the ends of either bar. With a keyboard, tab to a handle and use the arrow keys to move it one day, or Page Up
+        and Page Down to move it 5 days on the event window and 10 on the estimation window. The estimation window is at
+        least 30 days long and ends by day −11.
+      </p>
+      <p class="more"><a href={u('/')}>← Home</a></p>
+    </section>
   </div>
 </BaseLayout>
+<style>
+  .head { padding: var(--space-5) 0 var(--space-3); }
+  .head h1 { margin-bottom: var(--space-2); }
+  .steps { padding-left: 1.2rem; }
+  .steps li { margin-bottom: 0.6rem; }
+  /* the full version breaks out of the 900px column, centred, up to 1200px */
+  .lab :global(.fig) {
+    --full: min(1200px, calc(100vw - 2 * var(--gutter)));
+    width: var(--full);
+    max-width: none;
+    margin-left: calc((100% - var(--full)) / 2);
+  }
+</style>
