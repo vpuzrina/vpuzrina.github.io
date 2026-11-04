@@ -1,0 +1,84 @@
+---
+// Schematic of the YES / POTENTIAL / NO rubric, built only from the rules listed on the page.
+// HTML rather than SVG: it reflows on a phone, and screen readers get an ordered list.
+const checks: [string, string][] = [
+  ['Does the article report an event, rather than give an opinion?', 'opinion piece'],
+  ['Did the event take place in the United States?', 'outside the U.S.'],
+  ['Was a group targeted, rather than one person?', 'single individual'],
+  ['Were people forced out, rather than leaving by choice?', 'voluntary migration'],
+  ['Is it something other than federal Indigenous policy?', 'federal Indigenous policy'],
+];
+---
+<ol class="flow" aria-label="Rubric checks, in order">
+  {checks.map(([q, exit], i) => (
+    <li class="step">
+      <span class="n mono">{i + 1}</span>
+      <span class="q">{q}</span>
+      <span class="exit mono"><span class="if">if not:</span> {exit} <span aria-hidden="true">→</span> <b class="v no">NO</b></span>
+    </li>
+  ))}
+  <li class="step last">
+    <span class="n mono">6</span>
+    <span class="q">Does the article confirm that an expulsion took place?</span>
+    <span class="split mono">
+      <span>confirmed <span aria-hidden="true">→</span> <b class="v yes">YES</b></span>
+      <span>suggested, not confirmed <span aria-hidden="true">→</span> <b class="v pot">POTENTIAL</b></span>
+    </span>
+  </li>
+  <li class="step record">
+    <span class="n mono">7</span>
+    <span class="q">Record the case: event location (not the dateline), violence, fatalities, and whether it is a duplicate.</span>
+  </li>
+</ol>
+
+<style>
+  .flow { list-style: none; margin: 0; padding: 0; max-width: 52rem; }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) 18.5rem;
+    gap: 0.25rem 1rem;
+    align-items: center;
+    padding: 0 0 1.1rem;
+  }
+  /* connector down the left */
+  .step::before {
+    content: '';
+    position: absolute;
+    left: calc(0.75rem - 0.5px);
+    top: 1.6rem;
+    bottom: 0.1rem;
+    border-left: 1px solid var(--rule);
+  }
+  .step.record::before { display: none; }
+  .n {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    font-size: var(--fs-label);
+    background: var(--bg);
+    position: relative;
+  }
+  .q {
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    padding: 0.5rem 0.75rem;
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+  .exit, .split { font-size: var(--fs-label); color: var(--muted); }
+  .exit, .split > span { white-space: nowrap; }
+  .split { display: flex; flex-direction: column; gap: 0.25rem; }
+  .if { opacity: 0.8; }
+  .v { font-weight: 500; color: var(--text); border: 1px solid var(--rule); padding: 0 0.3rem; }
+  .v.yes { border-color: var(--text); }
+  .record .q { background: transparent; border-style: dashed; }
+  @media (max-width: 640px) {
+    .step { grid-template-columns: 2rem minmax(0, 1fr); }
+    .exit, .split { grid-column: 2; }
+    .exit, .split > span { white-space: normal; }
+  }
+</style>

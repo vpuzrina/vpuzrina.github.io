@@ -11,4 +11,55 @@ provenance: { repo: 'none, the data is not public', data: 'belongs to the resear
 updated: 2026-11-04
 ---
 
-[TODO: paper text, drafted in Phase 3]
+import Figure from '../../components/Figure.astro';
+import RubricFlow from '../../figures/RubricFlow/RubricFlow.astro';
+
+Since March 2026 I have been a research assistant on an NBER project on racial expulsions in the U.S. in the 1880s, run by Prof. Martin Fiszbein (Boston University) and Prof. A. Ferrara (University of Pittsburgh). I read newspaper articles from the American West, the South and the border regions and classify each one as YES, POTENTIAL or NO under the project's coding rubric. I get through 300–600 articles a week and have classified more than 5,000. This page describes the rubric and the checks I apply, not the results.
+
+<p class="note">Data belongs to the research team and isn't shown here.</p>
+
+## The task
+
+An expulsion here means a group of people forced out of a place because of their race. [TODO: confirm this one-line definition, or give me the rubric's wording]
+
+The project builds its record of these events from newspaper reports, and a report is not the same thing as an event. One expulsion can appear in several papers. A paper printed in one town often reports something that happened in another. My job is to turn articles into entries that can be counted, each event once, at the place where it happened.
+
+## The rubric
+
+Most of the rules I apply are exclusions. An article is a NO if it is an opinion piece rather than a report, if the event took place outside the United States, if it describes one person being driven out rather than a group, if the people moved by choice, or if it is about federal Indigenous policy. What is left is a YES when the article confirms that an expulsion took place, and a POTENTIAL when it suggests one without confirming it. [TODO: check that this matches how the rubric separates YES from POTENTIAL]
+
+<Figure n={1} title="How an article becomes YES, POTENTIAL or NO" tag="Schematic" params="simplified from the project rubric · the order of checks is mine">
+  <RubricFlow />
+  <Fragment slot="caption">
+    <p>Each article goes through these checks. The rubric itself is longer and more detailed; I put the checks in this order so the diagram reads top to bottom. No articles or results are shown.</p>
+  </Fragment>
+</Figure>
+
+## What each entry records
+
+<p class="table-label label">Fields recorded for each case</p>
+
+| Field | What goes in |
+| --- | --- |
+| verdict | YES, POTENTIAL or NO |
+| event location | where the expulsion happened |
+| dateline | where the paper filed the story from, kept separate |
+| violence | whether the article reports violence |
+| fatalities | deaths the article reports |
+| duplicate | whether the event is already in the sheet from another paper |
+
+The location rule is the one that matters most for any later analysis. A dateline gives the town a story was filed from, which is often not the town where the expulsion happened. If I entered the dateline, events would pile up in the towns that printed newspapers.
+
+## Where it stands
+
+I have classified more than 5,000 articles since March 2026. The team has 12+ research assistants at Boston University, UT Austin and Tulane working from the same rubric. I have been approved to join the data-analysis stage, which I haven't started yet.
+
+## What could be wrong with it
+
+These are the errors I watch for in my own work.
+
+The line between YES and POTENTIAL is a judgment call. Reports from the 1880s often describe events loosely, so two coders can read the same article differently. [TODO: is there a second coder or an agreement check I can mention?]
+
+Duplicates are the second risk. If the same event reaches me through two papers with different details, it can enter the sheet twice. The duplicate flag catches the cases I recognize and cannot catch the ones I don't.
+
+The third is coverage. The record only holds events that some newspaper reported and that the archive kept. An expulsion in a place with no local paper may be missing, so counts by region partly measure where newspapers were.
