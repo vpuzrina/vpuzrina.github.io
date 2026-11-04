@@ -1,0 +1,8 @@
+{
+  "_note": "Fill eventDate (YYYY-MM-DD) and the labels, then put daily simple returns in returns.csv. The figure shows 'Data coming soon' until both are filled.",
+  "eventDate": "",
+  "firm": "[TODO: firm ticker]",
+  "market": "[TODO: market index]",
+  "estimation": [-250, -11],
+  "event": [-1, 1]
+}

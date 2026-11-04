@@ -1,0 +1,26 @@
+---
+// Cobre Panamá figure: the same component as Fig. 1, fed from src/data/cobre-panama/returns.csv.
+// Until that file has data, a grey "Data coming soon" frame, never simulated numbers.
+import Figure from '../../components/Figure.astro';
+import EventStudy from './EventStudy';
+import { loadCobre } from './loadCobre';
+interface Props { n: number }
+const data = loadCobre();
+---
+<Figure n={Astro.props.n} title="Cumulative abnormal return around the closure" params={data ? `${data.firm} against ${data.market} · market model` : '[TODO: firm, index, event date, windows]'}>
+  {data ? (
+    <EventStudy client:visible id="cobre" source={{ kind: 'data', series: data.series }} est={data.est} evt={data.evt} />
+  ) : (
+    <div class="soon mono muted" role="img" aria-label="Placeholder: the data for this figure is not in yet.">Data coming soon</div>
+  )}
+  <Fragment slot="caption"><slot /></Fragment>
+</Figure>
+<style>
+  .soon {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 900 / 420;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+  }
+</style>
