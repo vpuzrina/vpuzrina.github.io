@@ -62,6 +62,20 @@ mark.todo {
   box-decoration-break: clone;
 }
 
+/* Estimator hat (α̂, β̂, σ̂): the combining circumflex sits off-centre in Plex, so it is drawn here */
+.hat { position: relative; display: inline-block; }
+.hat::after {
+  content: '^';
+  content: '^' / '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 0.85em;
+  line-height: 1;
+}
+.hat.tall::after { top: -0.3em; } /* letters with an ascender: β */
+
 /* Mono labels and metadata */
 .mono {
   font-family: var(--mono);
