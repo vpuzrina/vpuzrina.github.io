@@ -39,20 +39,20 @@ const { title, description, context, provenance, updated } = Astro.props;
   .paper-body :global(ul:not([class])) { padding-left: 1.2rem; }
   .paper-body :global(ul:not([class]) li) { margin-bottom: 0.45rem; }
   .paper-body :global(.table-label) { margin: var(--space-3) 0 0.5rem; }
-  .paper-body :global(table) {
+  .paper-body > :global(table) {
     border-collapse: collapse;
     width: 100%;
     max-width: var(--measure);
     font-size: var(--fs-small);
     margin-bottom: var(--space-3);
   }
-  .paper-body :global(th), .paper-body :global(td) {
+  .paper-body > :global(table) :global(th), .paper-body > :global(table) :global(td) {
     text-align: left;
     vertical-align: top;
     padding: 0.45rem 1rem 0.45rem 0;
     border-bottom: 1px solid var(--rule);
   }
-  .paper-body :global(thead th) {
+  .paper-body > :global(table) :global(thead th) {
     font-family: var(--mono);
     font-size: var(--fs-label);
     font-weight: 500;
@@ -61,7 +61,7 @@ const { title, description, context, provenance, updated } = Astro.props;
     color: var(--muted);
     border-bottom-color: var(--muted);
   }
-  .paper-body :global(td:first-child) { font-family: var(--mono); font-size: var(--fs-mono); white-space: nowrap; }
+  .paper-body > :global(table) :global(td:first-child) { font-family: var(--mono); font-size: var(--fs-mono); white-space: nowrap; }
   .paper-body :global(.note) { color: var(--muted); font-size: var(--fs-small); }
   .back { margin-top: var(--space-2); }
   .section > h2.label { margin-bottom: var(--space-2); font-size: var(--fs-label); }
