@@ -8,6 +8,9 @@ export type Entry = {
   dates: string;
   note?: string; // supervisor, funding, one line under the role
   bullets: string[];
+  cv?: string[]; // shorter bullets for the one-page CV; falls back to bullets
+  cvRole?: string;
+  cvHide?: boolean; // left off the one-page CV, kept on /about
   paper?: string;
 };
 
@@ -23,6 +26,9 @@ export const research: Entry[] = [
       'Wrote the research proposal; the department chair approved it. Drafting the introduction and literature review; analysis will be in R.',
       'Broader working title: "The Evolution of the Gender Pay Gap in American Sports Compensation: From Title IX to NIL."',
     ],
+    cv: [
+      'Paper on whether women in Power 4 basketball get fewer Instagram followers than men with the same stats; proposal approved by the chair; analysis in R.',
+    ],
     paper: 'nil-gender-gap',
   },
   {
@@ -34,6 +40,7 @@ export const research: Entry[] = [
       "Measuring how equity markets priced the shutdown of First Quantum's Cobre Panamá copper mine, against a set of comparison copper producers. Results are not final.",
       '[TODO: data source, tools and current status]',
     ],
+    cv: ["Event study of how equity markets priced the Cobre Panamá shutdown for First Quantum and other copper producers."],
     paper: 'cobre-panama',
   },
   {
@@ -47,6 +54,12 @@ export const research: Entry[] = [
       'Checked every table against its printed row and column totals, corrected source errors, and built a crosswalk between two district-coding systems so the datasets could be merged.',
       'Running regressions in R and Stata on the district panel, merged with an MIT famine dataset (harvests, taxes, serfdom).',
     ],
+    cvRole: 'Research assistant (BU grant), 1892–93 cholera in Imperial Russia, for PhD researcher Artem Vyshinskiy',
+    cv: [
+      'Built a monthly mortality panel by district for 16 provinces over 1888–1893 (72 months each) from scanned Russian-language statistical yearbooks.',
+      'Checked every table against its printed row and column totals, corrected source errors and built a crosswalk between two district-coding systems.',
+      'Running regressions in R and Stata on the panel merged with an MIT famine dataset (harvests, taxes, serfdom).',
+    ],
     paper: 'imperial-mortality',
   },
   {
@@ -59,6 +72,11 @@ export const research: Entry[] = [
       'Classified 5,000+ newspaper articles from the 1880s, 300–600 a week, as YES, POTENTIAL or NO under a detailed coding rubric, recording event location, violence and fatalities for each case.',
       'Kept the event location separate from the dateline and flagged duplicate coverage so each event counts once.',
       'One of 12+ research assistants at Boston University, UT Austin and Tulane. Approved to join the data-analysis stage.',
+    ],
+    cvRole: 'Research assistant (Prof. M. Fiszbein, BU; Prof. A. Ferrara, University of Pittsburgh)',
+    cv: [
+      'Classified 5,000+ U.S. newspaper articles from the 1880s (300–600 a week) as YES, POTENTIAL or NO racial expulsions under a detailed coding rubric, recording location, violence and fatalities.',
+      'Kept event location separate from the dateline and flagged duplicate coverage; one of 12+ RAs at BU, UT Austin and Tulane; approved for the data-analysis stage.',
     ],
     paper: 'newspaper-expulsions',
   },
@@ -75,6 +93,10 @@ export const work: Entry[] = [
       'Benchmarked competing car-repair platforms on pricing, fee models (subscription against per-job) and acquisition, for the positioning of the iOS and Android app.',
       'Researched Boston-area demand and customer segments on both sides of the marketplace, car owners and mechanics.',
     ],
+    cv: [
+      'Analyzed website and app data (traffic, acquisition, engagement) and reported findings to the founders.',
+      'Benchmarked competing platforms on pricing and fee models; researched demand among car owners and mechanics.',
+    ],
   },
   {
     org: 'Yandex',
@@ -85,6 +107,10 @@ export const work: Entry[] = [
       'Wrote the market-entry report "E-commerce Market of Uzbekistan: Barriers and Opportunities," which the department adopted.',
       'Designed and ran interviews with 19 small-business owners, surveyed 60+ consumers and benchmarked 8 e-commerce platforms to map demand and entry barriers.',
       'Analyzed the revenue of local competitors and compiled statistical summaries for department leadership.',
+    ],
+    cv: [
+      'Wrote the market-entry report "E-commerce Market of Uzbekistan: Barriers and Opportunities," adopted by the department.',
+      'Ran 19 interviews with small-business owners, surveyed 60+ consumers, benchmarked 8 platforms and analyzed competitor revenue.',
     ],
   },
 ];
@@ -99,12 +125,14 @@ export const leadership: Entry[] = [
       'Manage a $3,000–4,000 semester budget and plan the budgets for 3 flagship events of 40–50 attendees each.',
       'Write the semester funding request to the Student Activities Allocations Board, process about 20 reimbursements a semester and report expenses to the university finance office.',
     ],
+    cv: ['Manage a $3,000–4,000 semester budget for 3 flagship events of 40–50 attendees; write the funding request to the Allocations Board; process about 20 reimbursements a semester.'],
   },
   {
     org: 'BU AdClub Varsity Team',
     role: 'Project manager',
     place: 'Boston, MA',
     dates: '[TODO: dates]',
+    cvHide: true,
     bullets: ['Led a team of 7 on a campaign for a real client, The Half Cookie. [TODO: deliverables]'],
   },
 ];
@@ -131,6 +159,8 @@ export const educationDetail = {
     ['[TODO: code]', 'Calculus I'],
   ] as [string, string][],
   next: 'CS 131, CS 132, CS 210, CS 330 (2027)',
+  cvCoursework:
+    'Intermediate Microeconomics (EC 201), Intermediate Macroeconomics (EC 202, in progress), Empirical Economics I and II (EC 203, EC 204), Intro to Computer Science I and II (CS 111, Python; CS 112, Java, intensive section CS 392 XI)',
 };
 
 export const skills: [string, string][] = [
