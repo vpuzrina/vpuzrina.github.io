@@ -12,11 +12,13 @@ interface Props {
   updated: Date;
 }
 const { title, description, context, provenance, updated } = Astro.props;
+// keep number ranges like 300–600 on one line (word joiner after the en dash)
+const h1 = title.replace(/(\d)–(\d)/g, '$1–\u2060$2');
 ---
 <BaseLayout title={title} description={description}>
   <article class="wrap paper">
     <header class="paper-head prose">
-      <h1>{title}</h1>
+      <h1>{h1}</h1>
       <ContextLine items={context} />
     </header>
     <div class="paper-body">

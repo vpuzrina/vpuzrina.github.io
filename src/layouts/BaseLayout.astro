@@ -11,8 +11,9 @@ interface Props {
   description: string;
   footerContact?: boolean;
   bare?: boolean; // full-screen figure pages: no footer
+  notFound?: boolean; // 404: no canonical URL, noindex
 }
-const { title, description, footerContact = true, bare = false } = Astro.props;
+const { title, description, footerContact = true, bare = false, notFound = false } = Astro.props;
 const fullTitle = title === person.name ? person.name : `${title} · ${person.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const preview = process.env.PREVIEW === '1';
@@ -27,14 +28,14 @@ const ogImage = new URL(u(`/og/${rel === '' ? 'home' : rel.replace(/\//g, '-')}.
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    {preview && <meta name="robots" content="noindex, nofollow" />}
+    {!notFound && <link rel="canonical" href={canonical} />}
+    {(preview || notFound) && <meta name="robots" content="noindex, nofollow" />}
     <meta name="color-scheme" content="dark light" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={person.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {!notFound && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
