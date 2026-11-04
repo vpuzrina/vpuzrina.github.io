@@ -1,0 +1,30 @@
+---
+import type { Entry } from '../data/about';
+import Text from './Text.astro';
+import { u } from '../lib/url';
+interface Props { items: Entry[] }
+---
+<ul class="entries">
+  {Astro.props.items.map((e) => (
+    <li class="entry">
+      <p class="org">{e.org}</p>
+      <p class="meta mono muted"><Text s={e.role} /> · {e.place} · <Text s={e.dates} /></p>
+      {e.note && <p class="note mono muted">{e.note}</p>}
+      <ul class="bul">
+        {e.bullets.map((b) => <li><Text s={b} /></li>)}
+      </ul>
+      {e.paper && <p class="more"><a href={u(`/${e.paper}/`)}>Read the paper →</a></p>}
+    </li>
+  ))}
+</ul>
+<style>
+  .entries { list-style: none; max-width: var(--measure); }
+  .entry { margin-bottom: var(--space-4); }
+  .entry:last-child { margin-bottom: 0; }
+  .org { font-weight: 600; margin: 0; }
+  .meta, .note { margin: 0; }
+  .note { margin-top: 0.1rem; }
+  .bul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
+  .bul li { margin-bottom: 0.35rem; }
+  .more { margin: 0.4rem 0 0; }
+</style>

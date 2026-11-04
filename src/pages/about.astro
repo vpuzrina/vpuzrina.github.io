@@ -1,9 +1,90 @@
 ---
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EntryList from '../components/EntryList.astro';
+import Text from '../components/Text.astro';
+import LinkRow from '../components/LinkRow.astro';
+import { person, availability } from '../data/site';
+import { research, work, leadership, activities, educationDetail as ed, skills, certifications } from '../data/about';
+import { u } from '../lib/url';
+
+// Photo slot: shows only once public/photo.jpg exists
+const hasPhoto = existsSync(resolve('public/photo.jpg'));
 ---
-<BaseLayout title="About" description="Experience, research, education, coursework, skills and certifications of Varvara Puzrina.">
-  <div class="wrap prose" style="padding: 4rem 0 2rem">
-    <h1>About</h1>
-    <p><mark class="todo">[TODO: Experience, Research, Education, Skills, Certifications, drafted in Phase 3]</mark></p>
+<BaseLayout title="About" description="Research, work, education, coursework, skills and certifications of Varvara Puzrina, Computer Science and Economics at Boston University, class of 2028.">
+  <div class="wrap about">
+    <header class="head">
+      <div class="prose">
+        <h1>About</h1>
+        <p>
+          I'm a junior at Boston University in the joint Computer Science and Economics program, class of 2028. I work on
+          two research projects as an assistant, write a directed study on athlete marketability, and run an event study of
+          the Cobre Panamá closure on my own.
+        </p>
+        <p>{availability.sentence}</p>
+        <p class="mono muted">{availability.location}</p>
+        <LinkRow />
+      </div>
+      {hasPhoto && <img class="photo" src={u('/photo.jpg')} alt={person.name} width="200" height="200" />}
+    </header>
+
+    <section class="section" aria-labelledby="research"><h2 id="research">Research</h2><EntryList items={research} /></section>
+    <section class="section" aria-labelledby="work"><h2 id="work">Work</h2><EntryList items={work} /></section>
+    <section class="section" aria-labelledby="lead">
+      <h2 id="lead">Leadership and activities</h2>
+      <EntryList items={leadership} />
+      <p class="activities"><span class="label">Activities</span> {activities}</p>
+    </section>
+
+    <section class="section" aria-labelledby="edu">
+      <h2 id="edu">Education</h2>
+      <div class="prose">
+        <p class="org">{ed.school}</p>
+        <p class="mono muted meta">{ed.degree} · {ed.place} · {ed.grad}</p>
+        <p class="mono muted meta"><Text s={ed.minor} /></p>
+        <p class="mono muted meta">{ed.honors}</p>
+        <h3 class="label sub">Coursework, through Fall 2026</h3>
+        <dl class="courses">
+          {ed.coursework.map(([code, name]) => (<><dt class="mono"><Text s={code} /></dt><dd><Text s={name} /></dd></>))}
+        </dl>
+        <p class="next"><span class="label">Next</span> <span class="mono">{ed.next}</span></p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="skills">
+      <h2 id="skills">Skills</h2>
+      <dl class="skills prose">
+        {skills.map(([k, v]) => (<><dt class="label">{k}</dt><dd><Text s={v} /></dd></>))}
+      </dl>
+    </section>
+
+    <section class="section prose-wrap" aria-labelledby="cert">
+      <h2 id="cert">Certifications</h2>
+      <p class="prose">{certifications.issuer}, {certifications.date}: {certifications.items}.</p>
+      <p class="more"><a href={u('/cv/')}>The one-page CV →</a></p>
+    </section>
   </div>
 </BaseLayout>
+<style>
+  .head { padding: var(--space-5) 0 var(--space-3); display: flex; gap: var(--space-4); align-items: flex-start; justify-content: space-between; }
+  .head h1 { margin-bottom: var(--space-3); }
+  .photo { width: 160px; height: 160px; object-fit: cover; filter: grayscale(1); border: 1px solid var(--rule); }
+  .org { font-weight: 600; margin: 0; }
+  .meta { margin: 0; }
+  .sub { margin: var(--space-3) 0 0.6rem; }
+  .courses { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 1.25rem; margin: 0; }
+  .courses dt { color: var(--muted); padding-top: 0.15rem; }
+  .courses dd { margin: 0; }
+  .next { margin-top: var(--space-2); }
+  .skills { display: grid; grid-template-columns: 8rem 1fr; gap: 0.6rem 1.25rem; margin: 0; }
+  .skills dt { padding-top: 0.3rem; }
+  .skills dd { margin: 0; }
+  .activities { margin-top: var(--space-3); max-width: var(--measure); }
+  .activities .label, .next .label { margin-right: 0.6rem; }
+  @media (max-width: 560px) {
+    .skills { grid-template-columns: 1fr; gap: 0.1rem; }
+    .skills dd { margin-bottom: 0.6rem; }
+    .head { flex-direction: column-reverse; }
+  }
+</style>
