@@ -1,7 +1,8 @@
 // Post-build checks on dist/. Fails the build when:
 //  1. a banned word or phrase from the writing rules appears in page text,
 //  2. a page loads a resource (script, stylesheet, image, font, iframe) from another domain,
-//  3. STRICT=1 (main-site deploy) and a [TODO] marker is still in the HTML.
+//  3. a paragraph has more than one em dash (writing rules),
+//  4. STRICT=1 (main-site deploy) and a [TODO] marker is still in the HTML.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -50,6 +51,10 @@ for (const file of files) {
     if (/^(https?:)?\/\//.test(url) && !url.startsWith('https://vpuzrina.github.io')) problems.push(`${file}: third-party ${tag} ${url}`);
   }
   for (const m of html.matchAll(/url\((['"]?)(https?:)?\/\/[^)]+\)/g)) problems.push(`${file}: third-party CSS url ${m[0]}`);
+  for (const m of html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)) {
+    const t = m[1].replace(/<[^>]+>/g, '');
+    if ((t.match(/—/g) || []).length > 1) problems.push(`${file}: more than one em dash in "${t.slice(0, 60)}..."`);
+  }
   if (process.env.STRICT === '1' && html.includes('[TODO')) problems.push(`${file}: [TODO] marker left`);
 }
 
