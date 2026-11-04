@@ -11,4 +11,45 @@ provenance: { repo: 'none, the data is not public', data: 'belongs to the resear
 updated: 2026-11-04
 ---
 
-[TODO: paper text, drafted in Phase 3]
+import Figure from '../../components/Figure.astro';
+import SumCheckTable from '../../figures/SumCheckTable/SumCheckTable';
+import table from '../../data/imperial-mortality/synthetic.json';
+
+Since September 2026 I have been a research assistant to Artem Vyshinskiy, a PhD researcher in economics at Boston University, on a project about the 1892–93 cholera epidemic in Imperial Russia, funded by a BU research grant. I digitize monthly deaths by uezd (district) from scanned Russian-language statistical yearbooks: 16 provinces, 72 months each, from 1888 to 1893, plus medical-capacity data for 1892. Before a table goes into the panel, I check every row and column against the totals printed in the source. The panel is merged with an MIT famine dataset and used for regressions in R and Stata.
+
+<p class="note">Data belongs to the research team and isn't shown here. The table below is synthetic.</p>
+
+## The question
+
+The project studies cholera outcomes across districts in 1892–93. [TODO: one sentence on the research question I may share] The monthly panel starts in 1888, four years before the epidemic, so each district has several ordinary years to compare against.
+
+## The source
+
+The Imperial statistical yearbooks report deaths by uezd and month, with printed totals that make it possible to check a transcription. [TODO: confirm the layout, e.g. uezds in rows and months in columns, and whether I type the tables by hand or correct an OCR pass]
+
+## The checks
+
+A transcribed table passes only when every row and every column adds up to the total printed in the yearbook. When one row and one column both miss by the same amount, the likely error is the cell where they cross, often two swapped digits. When a row misses but every column adds up, the cells are right and the printed total is wrong. That is an error in the source, and I correct it. [TODO: how corrections are recorded, e.g. a log of changed cells]
+
+<Figure n={1} title="Row and column checks on a transcribed table" tag="Synthetic example" params="5 districts × 6 months · invented numbers · one cell typed with two digits swapped">
+  <SumCheckTable client:visible id="sct" {...table} />
+  <Fragment slot="caption">
+    <p>One cell was typed as 126 instead of 162, so its row and its column both come up 36 short. Click any cell and change it to see the checks update. The numbers are made up and have nothing to do with the project's data.</p>
+  </Fragment>
+</Figure>
+
+## Linking two coding systems
+
+The mortality tables and the famine dataset identify districts with different coding systems. I built a crosswalk between them so the two datasets could be merged. [TODO: name the two systems, if I can]
+
+## Where it stands
+
+The panel covers 16 provinces, 72 months each. [TODO: confirm all 16 are finished] I am running regressions in R and Stata on the district panel, merged with the MIT famine dataset (harvests, taxes, serfdom). No results are public.
+
+## What could be wrong with it
+
+Sum checks catch any single error that changes a total. They miss two errors in the same row and column that cancel out, and they miss a figure that was already wrong when the yearbook's compilers added it into the printed total.
+
+The crosswalk is the second weak point. If a district appears under a different name or with different borders in the two sources, it can be paired with the wrong one.
+
+The third is registration. The yearbooks count registered deaths. During an epidemic, registration may lag or break down, so monthly counts for 1892 could understate deaths in the districts hit hardest.
