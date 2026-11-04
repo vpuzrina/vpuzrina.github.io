@@ -54,12 +54,12 @@ import ThemeToggle from './ThemeToggle.astro';
     display: flex;
     gap: 1rem;
   }
-  .nav a { text-decoration: none; }
+  .nav a { text-decoration: none; display: inline-block; padding: 0.3rem 0; min-height: 24px; }
   .nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
 
   /* Phone: name and theme on the first line, links on the second. The hero repeats the availability. */
   @media (max-width: 719px) {
-    .bar { gap: 0.15rem 1rem; }
+    .bar { gap: 0 1rem; padding-top: 0.4rem; padding-bottom: 0.2rem; }
     .badge { display: none; }
     nav { order: 3; width: 100%; }
     .nav { gap: 0; justify-content: space-between; }

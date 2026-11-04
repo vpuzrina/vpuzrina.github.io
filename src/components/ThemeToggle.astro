@@ -1,8 +1,9 @@
 ---
 // "light / dark" text button. Hidden without JS (the page then follows the system setting).
+// The accessible name contains the visible text ("Theme: light / dark, now dark"), so voice control works.
 ---
-<button class="theme-toggle mono" type="button" aria-label="Switch theme">
-  <span data-t="light">light</span><span aria-hidden="true"> / </span><span data-t="dark">dark</span>
+<button class="theme-toggle mono" type="button">
+  <span class="visually-hidden">Theme: </span><span data-t="light">light</span> / <span data-t="dark">dark</span><span class="visually-hidden">, now <span data-cur>dark</span></span>
 </button>
 
 <script is:inline>
@@ -10,10 +11,8 @@
     var b = document.querySelector('.theme-toggle');
     if (!b) return;
     var d = document.documentElement;
-    function sync() {
-      var t = d.dataset.theme;
-      b.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
-    }
+    var cur = b.querySelector('[data-cur]');
+    function sync() { cur.textContent = d.dataset.theme; }
     b.addEventListener('click', function () {
       var t = d.dataset.theme === 'dark' ? 'light' : 'dark';
       d.dataset.theme = t;
@@ -29,8 +28,9 @@
     display: none;
     background: none;
     border: 0;
-    padding: 0.25rem 0;
-    margin: -0.25rem 0;
+    padding: 0.3rem 0;
+    margin: -0.3rem 0;
+    min-height: 24px;
     font-size: var(--fs-mono);
     color: var(--muted);
     cursor: pointer;
