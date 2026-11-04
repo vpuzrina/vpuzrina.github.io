@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import preact from '@astrojs/preact';
+import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeTodo from './src/lib/rehype/todo.mjs';
 
@@ -15,6 +16,6 @@ export default defineConfig({
   build: { format: 'directory', inlineStylesheets: 'auto' },
   // unified so the [TODO] highlighter runs on MDX; smartypants off keeps straight quotes and apostrophes
   markdown: { processor: unified({ rehypePlugins: [rehypeTodo], smartypants: false }) },
-  integrations: [mdx(), preact()],
+  integrations: [mdx(), preact(), sitemap({ filter: (page) => !/\/404\/?$/.test(page) })],
   devToolbar: { enabled: false },
 });

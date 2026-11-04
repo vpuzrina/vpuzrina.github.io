@@ -8,12 +8,26 @@ import EventStudy from '../figures/EventStudy/EventStudy';
 import { FIG1_PARAMS, FIG1_TAG } from '../figures/EventStudy/meta';
 import { person, availability, experience, otherWork } from '../data/site';
 import { u } from '../lib/url';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.name,
+  url: new URL(import.meta.env.BASE_URL, Astro.site).href,
+  email: `mailto:${person.email}`,
+  sameAs: [person.linkedin, person.github],
+  address: { '@type': 'PostalAddress', addressLocality: 'Boston', addressRegion: 'MA', addressCountry: 'US' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Boston University' },
+  knowsLanguage: ['ru', 'en', 'es'],
+  knowsAbout: ['Economics', 'Computer Science', 'Event studies', 'Econometrics', 'Data validation'],
+};
 ---
 <BaseLayout
   title={person.name}
   description="Varvara Puzrina, Computer Science and Economics at Boston University, class of 2028. Research assistant on an NBER project and a BU economic history project. Looking for 2027 internships in economic consulting, research analytics and due diligence."
   footerContact={false}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="wrap">
     <section class="hero prose" aria-labelledby="hero-title">
       <h1 id="hero-title">{person.name}</h1>
