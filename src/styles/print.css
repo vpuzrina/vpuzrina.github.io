@@ -1,0 +1,25 @@
+/* Print: light, serif, no navigation, URLs written after links. Refined for /cv in Phase 4. */
+@media print {
+  :root, :root[data-theme] {
+    --bg: #fff;
+    --surface: #fff;
+    --text: #000;
+    --muted: #444;
+    --rule: #bbb;
+    --accent: #000;
+    color-scheme: light;
+  }
+  body { font-size: 10.5pt; line-height: 1.45; }
+  .site-header, .site-footer, .skip, .theme-toggle, .no-print { display: none !important; }
+  a { text-decoration: none; }
+  main a[href^='http']::after,
+  main a[href^='mailto:']::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--mono);
+    font-size: 0.85em;
+    color: var(--muted);
+    word-break: break-all;
+  }
+  figure, table, .entry { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}

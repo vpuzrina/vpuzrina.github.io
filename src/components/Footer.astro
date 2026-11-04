@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import { person } from '../data/site';
+import { u, buildDate, fmtDate } from '../lib/url';
+
+interface Props { contact?: boolean }
+const { contact = true } = Astro.props;
+const papers = (await getCollection('papers')).sort((a, b) => a.data.order - b.data.order);
+---
+<footer class="site-footer">
+  <div class="wrap grid">
+    {contact && (
+      <section aria-labelledby="f-contact">
+        <h2 id="f-contact" class="label">Contact</h2>
+        <ul>
+          <li><a href={`mailto:${person.email}`}>{person.email}</a></li>
+          <li><a href={person.linkedin}>LinkedIn</a></li>
+          <li><a href={person.github}>GitHub</a></li>
+        </ul>
+      </section>
+    )}
+    <section aria-labelledby="f-papers">
+      <h2 id="f-papers" class="label">Papers</h2>
+      <ol>
+        {papers.map((p) => <li><a href={u(`/${p.id}/`)}>{p.data.short}</a></li>)}
+      </ol>
+    </section>
+    <section aria-labelledby="f-pages">
+      <h2 id="f-pages" class="label">Pages</h2>
+      <ul>
+        <li><a href={u('/#contents')}>Contents</a></li>
+        <li><a href={u('/about/')}>About</a></li>
+        <li><a href={u('/cv/')}>CV</a></li>
+        <li><a href={u('/event-study-lab/')}>Event study lab</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="f-colophon" class="colophon">
+      <h2 id="f-colophon" class="label">Colophon</h2>
+      <p>Set in IBM Plex Serif and IBM Plex Mono, served from this site. No third-party requests, no cookies.</p>
+      <p>Built with Astro, hosted on GitHub Pages. <a href={person.repo}>Source</a>.</p>
+      <p class="mono muted">Last updated <time datetime={buildDate.toISOString().slice(0, 10)}>{fmtDate(buildDate)}</time></p>
+    </section>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-4);
+    padding: var(--space-4) 0 var(--space-5);
+    font-size: var(--fs-small);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: var(--space-3) var(--space-4);
+  }
+  .colophon { grid-column: span 2; }
+  h2 { margin-bottom: 0.6rem; }
+  ul, ol { list-style: none; }
+  li { margin-bottom: 0.3rem; }
+  p { margin-bottom: 0.5rem; }
+  @media (max-width: 560px) {
+    .colophon { grid-column: auto; }
+  }
+</style>

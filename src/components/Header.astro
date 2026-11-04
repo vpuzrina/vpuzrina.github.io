@@ -1,0 +1,67 @@
+---
+import { person, availability } from '../data/site';
+import { u } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="name" href={u('/')}>{person.name}</a>
+    <span class="badge mono">{availability.badge}</span>
+    <nav aria-label="Main">
+      <ul class="nav mono">
+        <li><a href={u('/#contents')}>Contents</a></li>
+        <li><a href={u('/about/')}>About</a></li>
+        <li><a href={u(person.cvPdf)}>CV (PDF)</a></li>
+        <li><a href={`mailto:${person.email}`}>Email</a></li>
+      </ul>
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    transition: background-color var(--t);
+  }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+  .name {
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .badge {
+    color: var(--muted);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+    border: 1px solid var(--rule);
+    padding: 0.05rem 0.45rem;
+    white-space: nowrap;
+  }
+  .nav {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  .nav a { text-decoration: none; }
+  .nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+
+  /* Phone: name and theme on the first line, links on the second. The hero repeats the availability. */
+  @media (max-width: 719px) {
+    .bar { gap: 0.15rem 1rem; }
+    .badge { display: none; }
+    nav { order: 3; width: 100%; }
+    .nav { gap: 0; justify-content: space-between; }
+  }
+</style>

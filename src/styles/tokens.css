@@ -1,0 +1,62 @@
+/* Design tokens. Dark is the default; light follows the system on first visit or the toggle after that. */
+:root {
+  --bg: #0f1113;
+  --surface: #16191c;
+  --text: #e6e3dc;
+  --muted: #9a968d;
+  --rule: #2a2e33;
+  --accent: #c47a4a;
+  --todo-bg: #2e2716;
+  --todo-text: #e9d9a6;
+  color-scheme: dark;
+
+  --serif: 'Plex Serif', 'Plex Serif Fallback', 'Plex Serif Fallback TNR', Georgia, serif;
+  --mono: 'Plex Mono', 'Plex Mono Fallback', ui-monospace, 'Courier New', monospace;
+
+  --fs-body: 1.0625rem; /* 17px */
+  --fs-small: 0.9375rem;
+  --fs-mono: 0.8125rem; /* 13px */
+  --fs-label: 0.75rem;
+  --lh: 1.6;
+
+  --measure: 68ch;
+  --wide: 900px;
+  --gutter: 16px;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --t: 150ms;
+}
+
+:root[data-theme='light'] {
+  --bg: #f7f5f0;
+  --surface: #efece5;
+  --text: #1a1a1a;
+  --muted: #6b675f;
+  --rule: #ddd8ce;
+  --accent: #a25a2c;
+  --todo-bg: #f3e6b8;
+  --todo-text: #3d3110;
+  color-scheme: light;
+}
+
+/* No JS and no saved choice: follow the system setting */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: #f7f5f0;
+    --surface: #efece5;
+    --text: #1a1a1a;
+    --muted: #6b675f;
+    --rule: #ddd8ce;
+    --accent: #a25a2c;
+    --todo-bg: #f3e6b8;
+    --todo-text: #3d3110;
+    color-scheme: light;
+  }
+}
+
+@media (min-width: 720px) {
+  :root { --fs-body: 1.125rem; --gutter: 32px; }
+}

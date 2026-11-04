@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#14213D"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="600" fill="#FAFAF7">VP</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#0F1113"/><text x="16" y="22" font-family="Georgia,serif" font-size="17" font-weight="600" fill="#E6E3DC" text-anchor="middle">VP</text><rect x="6" y="26" width="20" height="1.5" fill="#C47A4A"/></svg>

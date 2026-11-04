@@ -1,0 +1,46 @@
+---
+// "light / dark" text button. Hidden without JS (the page then follows the system setting).
+---
+<button class="theme-toggle mono" type="button" aria-label="Switch theme">
+  <span data-t="light">light</span><span aria-hidden="true"> / </span><span data-t="dark">dark</span>
+</button>
+
+<script is:inline>
+  (function () {
+    var b = document.querySelector('.theme-toggle');
+    if (!b) return;
+    var d = document.documentElement;
+    function sync() {
+      var t = d.dataset.theme;
+      b.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' theme');
+    }
+    b.addEventListener('click', function () {
+      var t = d.dataset.theme === 'dark' ? 'light' : 'dark';
+      d.dataset.theme = t;
+      try { localStorage.setItem('theme', t); } catch (e) {}
+      sync();
+    });
+    sync();
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: none;
+    background: none;
+    border: 0;
+    padding: 0.25rem 0;
+    margin: -0.25rem 0;
+    font-size: var(--fs-mono);
+    color: var(--muted);
+    cursor: pointer;
+  }
+  :global(.js) .theme-toggle { display: inline-block; }
+  .theme-toggle:hover { color: var(--accent); }
+  :global([data-theme='light']) .theme-toggle [data-t='light'],
+  :global([data-theme='dark']) .theme-toggle [data-t='dark'] {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+</style>
