@@ -1,0 +1,70 @@
+.sct { max-width: 44rem; }
+.sct-scroll { overflow-x: auto; }
+.sct-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sct table {
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: var(--fs-mono);
+  font-variant-numeric: tabular-nums;
+  min-width: 34rem;
+  width: 100%;
+}
+.sct th, .sct td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0;
+  height: 2.4rem;
+  text-align: right;
+  font-weight: 400;
+  vertical-align: middle;
+}
+.sct thead th { color: var(--muted); font-size: var(--fs-label); padding: 0 0.5rem; border-bottom-color: var(--muted); }
+.sct tbody th, .sct tfoot th { text-align: left; color: var(--muted); white-space: nowrap; padding-right: 0.75rem; }
+.sct .tot { color: var(--text); padding: 0.3rem 0.5rem; white-space: nowrap; line-height: 1.25; text-align: right; }
+.sct thead .tot, .sct tfoot th.tot { color: var(--muted); font-size: var(--fs-label); }
+.sct tfoot th.tot { text-align: left; padding-left: 0; }
+.sct tbody .tot { border-left: 1px solid var(--rule); }
+.sct tfoot td, .sct tfoot th { border-top: 1px solid var(--muted); border-bottom: 0; }
+.sct .sum { display: block; font-size: var(--fs-label); color: var(--muted); }
+.sct .tot.flag { color: var(--accent); }
+.sct .tot.flag .sum { color: var(--accent); }
+
+.sct input {
+  width: 100%;
+  min-width: 3.25rem;
+  height: 2.4rem;
+  padding: 0 0.5rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: right;
+  cursor: text;
+  transition: border-color var(--t), background-color var(--t);
+}
+.sct input:hover { border-color: var(--rule); }
+.sct input:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--surface); }
+.sct .cell.flag input { border: 1px solid var(--accent); color: var(--accent); }
+
+.sct-status {
+  margin: 0.75rem 0 0;
+  font-size: var(--fs-mono);
+  color: var(--text);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+.sct-reset {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  font-size: var(--fs-mono);
+}
+.sct-reset:hover { color: var(--accent); }
+
+.sct-hint { display: none; margin: 0 0 0.4rem; font-size: var(--fs-label); color: var(--muted); }
+@media (max-width: 600px) { .sct-hint { display: block; } }

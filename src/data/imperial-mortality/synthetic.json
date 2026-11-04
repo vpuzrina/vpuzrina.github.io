@@ -1,0 +1,16 @@
+{
+  "_note": "SYNTHETIC. Invented numbers for the sum-check figure. Not from the project, not from any yearbook.",
+  "rows": ["Uezd A", "Uezd B", "Uezd C", "Uezd D", "Uezd E"],
+  "cols": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  "typed": [
+    [112, 98, 105, 120, 131, 140],
+    [210, 195, 188, 201, 230, 247],
+    [64, 71, 59, 66, 80, 93],
+    [158, 149, 126, 171, 168, 190],
+    [95, 88, 91, 102, 110, 121]
+  ],
+  "printedRowTotals": [706, 1271, 433, 998, 607],
+  "printedColTotals": [639, 601, 605, 660, 719, 791],
+  "printedGrandTotal": 4015,
+  "error": { "row": 3, "col": 2, "printed": 162, "typed": 126, "kind": "two digits swapped" }
+}
