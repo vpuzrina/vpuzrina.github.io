@@ -38,7 +38,7 @@ export default function SumCheckTable({ rows, cols, typed: initial, printedRowTo
   return (
     <div class="sct">
       <p class="sct-hint mono" aria-hidden="true">table scrolls sideways →</p>
-      <div class="sct-scroll" role="region" aria-label="Synthetic table, scrolls sideways on small screens" tabIndex={0}>
+      <section class="sct-scroll" aria-label="Synthetic table, scrolls sideways on small screens" tabIndex={0}>
         <table>
           <caption class="visually-hidden">Synthetic deaths by district and month, with printed totals and checks</caption>
           <thead>
@@ -100,7 +100,7 @@ export default function SumCheckTable({ rows, cols, typed: initial, printedRowTo
             </tr>
           </tfoot>
         </table>
-      </div>
+      </section>
       <p class="sct-status mono" aria-live="polite">
         {status}
         {dirty && (

@@ -164,7 +164,7 @@ export default function EventStudy({ source, id, est: est0 = DEFAULT_EST, evt: e
       </fieldset>
 
       <div class="es-grid">
-        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} class="es-svg" aria-labelledby={`${id}-title ${id}-desc`}>
+        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} class="es-svg" role="group" aria-labelledby={`${id}-title ${id}-desc`}>
           <title id={`${id}-title`}>Cumulative abnormal return around day 0</title>
           <desc id={`${id}-desc`}>{desc}</desc>
 
