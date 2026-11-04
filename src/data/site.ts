@@ -46,7 +46,7 @@ export const experience: Role[] = [
     place: 'Boston',
     dates: 'Fall 2026',
     line:
-      'With Prof. Onur Celik, I am writing a paper on whether women in Power 4 college basketball draw smaller Instagram audiences than men with the same on-court numbers. I am drafting the introduction and literature review.',
+      'With Prof. Onur Celik, I am writing a paper on whether women in Power 4 college basketball draw smaller Instagram audiences than men with the same on-court numbers. The department chair approved my proposal, and I am drafting the introduction and literature review.',
     paper: 'nil-gender-gap',
   },
   {
@@ -64,7 +64,7 @@ export const experience: Role[] = [
     place: 'Boston',
     dates: 'Mar 2026 – present',
     line:
-      'On an NBER project on racial expulsions in the U.S. in the 1880s (Prof. Martin Fiszbein, BU, and Prof. A. Ferrara, Pittsburgh), I have classified 5,000+ newspaper articles against the coding rubric, 300–600 a week, alongside 12+ RAs at BU, UT Austin and Tulane.',
+      'On an NBER project on racial expulsions in the U.S. in the 1880s (Prof. Martin Fiszbein, BU, and Prof. A. Ferrara, Pittsburgh), I have classified 5,000+ newspaper articles against the coding rubric, 300–600 a week, with 12+ RAs at BU, UT Austin and Tulane. I have been approved to join the data-analysis stage.',
     paper: 'newspaper-expulsions',
   },
   {
