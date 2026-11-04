@@ -1,0 +1,65 @@
+---
+// Small static schematic for each paper. No data: these show the method, not results.
+interface Props { kind: 'event-window' | 'research-design' | 'rubric' | 'sum-check'; alt: string }
+const { kind, alt } = Astro.props;
+---
+<svg class="thumb" viewBox="0 0 120 72" width="120" height="72" role="img" aria-label={alt}>
+  {kind === 'event-window' && (
+    <g>
+      <line x1="6" y1="56" x2="114" y2="56" class="ax" />
+      <rect x="8" y="46" width="72" height="5" class="bar" />
+      <rect x="90" y="46" width="10" height="5" class="bar strong" />
+      <line x1="95" y1="10" x2="95" y2="60" class="acc" />
+      <text x="98" y="16" class="t">0</text>
+      <text x="8" y="40" class="t">estimation</text>
+      <text x="80" y="68" class="t">event</text>
+    </g>
+  )}
+  {kind === 'research-design' && (
+    <g>
+      <rect x="4" y="24" width="40" height="22" class="box" />
+      <text x="24" y="38" class="t c">stats</text>
+      <rect x="72" y="24" width="46" height="22" class="box" />
+      <text x="95" y="38" class="t c">audience</text>
+      <line x1="44" y1="35" x2="69" y2="35" class="ln" />
+      <path d="M66 31 L72 35 L66 39" class="ln" />
+      <line x1="57" y1="11" x2="57" y2="35" class="ln dash" />
+      <text x="57" y="8" class="t c">gender</text>
+    </g>
+  )}
+  {kind === 'rubric' && (
+    <g>
+      <rect x="44" y="4" width="32" height="12" class="box" />
+      <line x1="60" y1="16" x2="60" y2="26" class="ln" />
+      <rect x="44" y="26" width="32" height="12" class="box" />
+      <line x1="60" y1="38" x2="20" y2="52" class="ln" />
+      <line x1="60" y1="38" x2="60" y2="52" class="ln" />
+      <line x1="60" y1="38" x2="100" y2="52" class="ln" />
+      <text x="20" y="64" class="t c">YES</text>
+      <text x="60" y="64" class="t c">POT.</text>
+      <text x="100" y="64" class="t c">NO</text>
+    </g>
+  )}
+  {kind === 'sum-check' && (
+    <g>
+      {[0, 1, 2, 3].map((r) =>
+        [0, 1, 2, 3].map((c) => (
+          <rect x={10 + c * 26} y={6 + r * 15} width="24" height="13" class={r === 1 && c === 2 ? 'cell flag' : r === 3 || c === 3 ? 'cell total' : 'cell'} />
+        ))
+      )}
+    </g>
+  )}
+</svg>
+
+<style>
+  .thumb { display: block; color: var(--muted); overflow: visible; }
+  .ax, .ln, .box, .cell { stroke: currentColor; stroke-width: 1; fill: none; }
+  .dash { stroke-dasharray: 2 2; }
+  .bar { fill: currentColor; opacity: 0.45; }
+  .bar.strong { opacity: 0.9; }
+  .acc { stroke: var(--accent); stroke-width: 1.25; }
+  .t { font-family: var(--mono); font-size: 7.5px; fill: currentColor; }
+  .c { text-anchor: middle; }
+  .total { fill: var(--rule); }
+  .flag { stroke: var(--accent); stroke-width: 1.5; }
+</style>

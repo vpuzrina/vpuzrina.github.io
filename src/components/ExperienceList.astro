@@ -1,0 +1,27 @@
+---
+import type { Role } from '../data/site';
+import Text from './Text.astro';
+import { u } from '../lib/url';
+interface Props { items: Role[] }
+const { items } = Astro.props;
+---
+<ul class="xp">
+  {items.map((r) => (
+    <li>
+      <p class="org">{r.org}</p>
+      <p class="meta mono muted">{r.role} · {r.place} · <Text s={r.dates} /></p>
+      <p class="line">
+        <Text s={r.line} />
+        {r.paper && <> <a class="more" href={u(`/${r.paper}/`)}>Read the paper →</a></>}
+      </p>
+    </li>
+  ))}
+</ul>
+<style>
+  .xp { list-style: none; max-width: var(--measure); }
+  li { margin-bottom: var(--space-3); }
+  .org { font-weight: 600; margin: 0; }
+  .meta { margin: 0 0 0.3rem; }
+  .line { margin: 0; }
+  .more { white-space: nowrap; }
+</style>

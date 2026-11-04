@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import PaperThumb from './PaperThumb.astro';
+import ContextLine from './ContextLine.astro';
+import Text from './Text.astro';
+import { u } from '../lib/url';
+const papers = (await getCollection('papers')).sort((a, b) => a.data.order - b.data.order);
+---
+<ol class="papers">
+  {papers.map((p, i) => (
+    <li class="entry">
+      <span class="num mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <a class="thumb-link" href={u(`/${p.id}/`)} tabindex="-1" aria-hidden="true">
+        <PaperThumb kind={p.data.thumb} alt={p.data.thumbAlt} />
+      </a>
+      <div class="body">
+        <h3>
+          <a href={u(`/${p.id}/`)}>{p.data.title}</a>
+          {p.data.inProgress && <span class="tag mono">in progress</span>}
+        </h3>
+        <ContextLine items={p.data.context} />
+        <p class="summary"><Text s={p.data.summary} /></p>
+        <p class="path mono muted">/{p.id}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .papers { list-style: none; }
+  .entry {
+    display: grid;
+    grid-template-columns: 2.25rem 120px 1fr;
+    gap: 0 1.25rem;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .entry:first-child { border-top: 0; padding-top: 0; }
+  .num { color: var(--muted); padding-top: 0.15rem; }
+  .thumb-link { padding-top: 0.3rem; }
+  .body { max-width: var(--measure); }
+  h3 { font-size: 1.125rem; margin-bottom: 0.35rem; }
+  h3 a { text-decoration-color: var(--rule); }
+  .tag {
+    display: inline-block;
+    vertical-align: 0.15em;
+    margin-left: 0.5rem;
+    font-size: var(--fs-label);
+    font-weight: 400;
+    color: var(--muted);
+    border: 1px solid var(--rule);
+    padding: 0 0.35rem;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+  .summary { margin: 0.5rem 0 0.25rem; }
+  .path { margin: 0; font-size: var(--fs-label); }
+  @media (max-width: 600px) {
+    .entry { grid-template-columns: 2rem 1fr; }
+    .thumb-link { grid-column: 2; grid-row: 1; margin-bottom: 0.75rem; }
+    .body { grid-column: 2; }
+  }
+</style>

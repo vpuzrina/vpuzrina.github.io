@@ -1,0 +1,28 @@
+---
+// Numbered figure: "Fig. N" + bold title, mono parameters line, the graphic, a short caption.
+import Text from './Text.astro';
+interface Props { n: number | string; title: string; params?: string; tag?: string; id?: string }
+const { n, title, params, tag, id } = Astro.props;
+---
+<figure class="fig" id={id}>
+  <div class="fig-head">
+    <p class="fig-title"><span class="fig-n mono">Fig. {n}</span> <strong>{title}</strong></p>
+    {(params || tag) && (
+      <p class="fig-params mono muted">
+        {tag && <span class="fig-tag">{tag}</span>}
+        {params && <Text s={params} />}
+      </p>
+    )}
+  </div>
+  <div class="fig-body"><slot /></div>
+  <figcaption class="fig-caption"><slot name="caption" /></figcaption>
+</figure>
+<style>
+  .fig { margin: var(--space-3) 0 var(--space-4); max-width: var(--wide); }
+  .fig-title { margin: 0; }
+  .fig-n { color: var(--muted); margin-right: 0.35rem; }
+  .fig-params { margin: 0.15rem 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; }
+  .fig-tag { color: var(--text); border: 1px solid var(--rule); padding: 0 0.4rem; }
+  .fig-caption { margin-top: 0.75rem; font-size: var(--fs-small); color: var(--muted); max-width: var(--measure); }
+  .fig-caption :global(p) { margin-bottom: 0.4rem; }
+</style>

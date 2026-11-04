@@ -1,0 +1,10 @@
+---
+import { person } from '../data/site';
+import { u } from '../lib/url';
+---
+<ul class="linkrow" aria-label="Links">
+  <li><a href={u(person.cvPdf)}>CV (PDF)</a></li>
+  <li><a href={`mailto:${person.email}`}>Email</a></li>
+  <li><a href={person.linkedin}>LinkedIn</a></li>
+  <li><a href={person.github}>GitHub</a></li>
+</ul>

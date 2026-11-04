@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import PaperList from '../components/PaperList.astro';
+import ExperienceList from '../components/ExperienceList.astro';
+import LinkRow from '../components/LinkRow.astro';
+import { person, availability, experience, otherWork } from '../data/site';
+import { u } from '../lib/url';
+---
+<BaseLayout
+  title={person.name}
+  description="Varvara Puzrina, Computer Science and Economics at Boston University, class of 2028. Research assistant on an NBER project and a BU economic history project. Looking for 2027 internships in economic consulting, research analytics and due diligence."
+  footerContact={false}
+>
+  <div class="wrap">
+    <section class="hero prose" aria-labelledby="hero-title">
+      <h1 id="hero-title">{person.name}</h1>
+      <p>
+        I'm a junior at Boston University in the joint Computer Science and Economics program, class of 2028.
+      </p>
+      <p>
+        I work as a research assistant on two economic history projects. On an NBER project about racial expulsions in the
+        1880s, I have classified 5,000+ newspaper articles. On a BU project about mortality in Imperial Russia, I digitize
+        archive tables and check that they add up. On my own, I am running an event study of the Cobre Panamá mine closure.
+      </p>
+      <p>{availability.sentence}</p>
+      <p class="loc mono muted">{availability.location}</p>
+      <LinkRow />
+    </section>
+
+    <Figure
+      n={1}
+      title="Event study of a one-day shock, market model"
+      tag="Simulated · market model · not market data"
+      params="R_m ~ N(0.0003, 0.01) · α = 0, β = 1.2, σ(ε) = 0.015 · shock −25% on day 0, −1% a day on days +1 to +3 · seed 2027"
+      id="fig-1"
+    >
+      <div class="fig-pending mono muted">
+        <mark class="todo">[TODO: interactive figure, built in Phase 2]</mark>
+      </div>
+      <Fragment slot="caption">
+        <p>
+          The line is the cumulative abnormal return of a simulated firm from day −10 to +10, with a 95% band. Drag the
+          event window and watch the t-stat. The returns are simulated; the Cobre Panamá paper uses real prices.
+        </p>
+        <p><a class="more" href={u('/event-study-lab/')}>Open the full version →</a></p>
+      </Fragment>
+    </Figure>
+
+    <section class="section" id="contents" aria-labelledby="contents-title">
+      <h2 id="contents-title">Contents</h2>
+      <PaperList />
+    </section>
+
+    <section class="section" id="experience" aria-labelledby="xp-title">
+      <h2 id="xp-title">Experience</h2>
+      <ExperienceList items={experience} />
+      <ul class="onward more">
+        <li><a href={u('/about/')}>Every role in full, with education and coursework →</a></li>
+        <li><a href={u('/cv/')}>The one-page CV →</a></li>
+      </ul>
+    </section>
+
+    <section class="section" id="other" aria-labelledby="other-title">
+      <h2 id="other-title">Other work</h2>
+      <ExperienceList items={otherWork} />
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact</h2>
+      <p class="prose">{availability.sentence} Email is the fastest way to reach me.</p>
+      <LinkRow />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero { padding: var(--space-5) 0 var(--space-3); }
+  .hero h1 { margin-bottom: var(--space-3); }
+  .loc { margin-bottom: 0.6rem; }
+  .fig-pending {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 900 / 420;
+    border: 1px dashed var(--rule);
+    background: var(--surface);
+  }
+  .onward { list-style: none; }
+  .onward li { margin-bottom: 0.3rem; }
+  @media (max-width: 719px) {
+    .hero { padding-top: var(--space-4); }
+    .fig-pending { aspect-ratio: 4 / 3; }
+  }
+</style>

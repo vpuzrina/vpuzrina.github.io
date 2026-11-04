@@ -1,0 +1,7 @@
+---
+// Renders a string, highlighting any [TODO: ...] marker so unknown facts stay visible.
+import { todoParts } from '../lib/url';
+interface Props { s: string }
+const parts = todoParts(Astro.props.s);
+---
+{parts.map((p) => (p.todo ? <mark class="todo">{p.text}</mark> : p.text))}

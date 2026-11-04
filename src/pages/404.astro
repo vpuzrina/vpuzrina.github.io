@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { u } from '../lib/url';
+---
+<BaseLayout title="Page not found" description="This page does not exist.">
+  <div class="wrap prose" style="padding: 4rem 0 2rem">
+    <p class="label">404</p>
+    <h1>There is no page at this address</h1>
+    <p>The papers are listed under <a href={u('/#contents')}>Contents</a> on the home page.</p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+import Text from './Text.astro';
+interface Props { items: [string, string][] }
+---
+<dl class="prov mono">
+  {Astro.props.items.map(([k, v]) => (<><dt class="muted">{k}</dt><dd>{/^https?:/.test(v) ? <a href={v}>{v.replace(/^https?:\/\//, '')}</a> : <Text s={v} />}</dd></>))}
+</dl>
+<style>
+  .prov { display: grid; grid-template-columns: 6rem 1fr; gap: 0.2rem 1rem; margin: 0; }
+  dd { margin: 0; }
+</style>
