@@ -23,6 +23,20 @@ const server = createServer((req, res) => {
 }).listen(0);
 const origin = `http://localhost:${server.address().port}${base}`;
 
+// Astro writes its island display rule as a <style> inside <body>; move it to <head> so the HTML validates.
+(function fixIslandStyle(d) {
+  for (const f of readdirSync(d)) {
+    const p = join(d, f);
+    if (statSync(p).isDirectory()) { fixIslandStyle(p); continue; }
+    if (!p.endsWith('.html')) continue;
+    let html = readFileSync(p, 'utf8');
+    const m = html.match(/<style>astro-island,astro-slot,astro-static-slot\{display:contents\}<\/style>/);
+    if (!m) continue;
+    html = html.split(m[0]).join('').replace('</head>', `${m[0]}</head>`);
+    writeFileSync(p, html);
+  }
+})('dist');
+
 const browser = await chromium.launch();
 try {
   // 1. CV PDF
