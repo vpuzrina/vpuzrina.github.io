@@ -4,7 +4,7 @@ title: 'Same stats, smaller audience: the gender gap in athlete marketability in
 short: Gender gap in athlete marketability
 description: A directed study on whether women in Power 4 college basketball get less social-media engagement than men with the same on-court performance.
 summary: Do women in Power 4 college basketball get fewer Instagram followers than men with the same on-court performance? I use followers as a measure of marketability. Drafting the introduction and literature review.
-context: ['CAS Directed Study', 'Fall 2026', '[TODO: data sources]', 'R', 'in progress']
+context: ['CAS Directed Study in Economics', 'Fall 2026', '[TODO: data sources]', 'R', 'in progress']
 inProgress: true
 thumb: research-design
 thumbAlt: Schematic of the research design, with on-court performance pointing to Instagram followers and gender shown as a factor on that link.
@@ -12,4 +12,46 @@ provenance: { repo: '[TODO: repo link or none]', data: '[TODO: data sources]', s
 updated: 2026-11-04
 ---
 
-[TODO: paper text, drafted in Phase 3]
+import Figure from '../../components/Figure.astro';
+import ResearchDesign from '../../figures/ResearchDesign/ResearchDesign.astro';
+
+This fall I am writing a directed study in economics with Prof. Onur Celik at Boston University. The question is whether women in Power 4 college basketball get less social-media engagement than men with the same on-court performance. I use Instagram followers as the measure of marketability and will estimate the gap with regressions in R. The department chair approved my proposal, and I am now drafting the introduction and literature review, so there are no results yet.
+
+## The question
+
+Since college athletes were allowed to earn money from their name, image and likeness (NIL), an athlete's audience has a price. If two players put up the same season and one has a much smaller following, she has less to sell. I want to measure how much of the difference in following between women and men is left once performance is held fixed.
+
+The paper's broader working title is "The Evolution of the Gender Pay Gap in American Sports Compensation: From Title IX to NIL." The marketability question is the empirical part of it.
+
+## Why followers
+
+Pay from NIL deals is mostly private, so I can't observe it directly for a full sample. [TODO: confirm this is the reason for using followers] A follower count is public, recorded the same way for every player, and is what a sponsor pays to reach. It measures audience, not pay, and the paper treats it that way.
+
+## The data
+
+[TODO: data sources for follower counts and season statistics, the season, how players are matched, and the sample size]
+
+## The method
+
+<Figure n={1} title="Research design" tag="Schematic" params="no data yet · controls to be confirmed">
+  <ResearchDesign />
+  <Fragment slot="caption">
+    <p>Performance predicts followers. The question is whether that relationship is different for women and men once the other factors are held fixed. The figure shows the design only; there are no estimates yet.</p>
+  </Fragment>
+</Figure>
+
+The plan is an OLS regression of followers on season statistics, a female indicator and their interaction, in levels and in logs. The coefficient on the female indicator measures the gap at the same performance, and the interaction shows whether better performance pays off in followers equally for women and men. [TODO: confirm the specification and the controls]
+
+The literature I am working from starts with Becker's model of taste-based discrimination, Blau and Kahn on the gender wage gap, and Kahn and Sherer on pay differences in professional basketball.
+
+## Where it stands
+
+I am drafting the introduction and the literature review. [TODO: data collection status and expected date for first estimates]
+
+## What could be wrong with it
+
+A gap in followers is not by itself a gap in fan interest. Women's games get less television time, and a player people cannot watch is a player fewer people follow. If coverage differs by gender, the estimate will mix audience preferences with media exposure, and I will need a way to separate them. [TODO: how you plan to handle coverage]
+
+Performance is hard to compare across the two games. Points per game in the women's game and the men's game may not be the same unit, so a comparison on raw statistics could be off from the start. I have not settled how to put the two on one scale.
+
+Followers also build up over years. A player may arrive at college with an audience from high school, which a single season's statistics cannot explain.
