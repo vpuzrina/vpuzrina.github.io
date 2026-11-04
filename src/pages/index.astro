@@ -4,6 +4,8 @@ import Figure from '../components/Figure.astro';
 import PaperList from '../components/PaperList.astro';
 import ExperienceList from '../components/ExperienceList.astro';
 import LinkRow from '../components/LinkRow.astro';
+import EventStudy from '../figures/EventStudy/EventStudy';
+import { FIG1_PARAMS, FIG1_TAG } from '../figures/EventStudy/meta';
 import { person, availability, experience, otherWork } from '../data/site';
 import { u } from '../lib/url';
 ---
@@ -28,20 +30,13 @@ import { u } from '../lib/url';
       <LinkRow />
     </section>
 
-    <Figure
-      n={1}
-      title="Event study of a one-day shock, market model"
-      tag="Simulated · market model · not market data"
-      params="R_m ~ N(0.0003, 0.01) · α = 0, β = 1.2, σ(ε) = 0.015 · shock −25% on day 0, −1% a day on days +1 to +3 · seed 2027"
-      id="fig-1"
-    >
-      <div class="fig-pending mono muted">
-        <mark class="todo">[TODO: interactive figure, built in Phase 2]</mark>
-      </div>
+    <Figure n={1} title="Event study of a one-day shock" tag={FIG1_TAG} params={FIG1_PARAMS} id="fig-1">
+      <EventStudy client:visible id="fig1" source={{ kind: 'sim' }} />
       <Fragment slot="caption">
         <p>
-          The line is the cumulative abnormal return of a simulated firm from day −10 to +10, with a 95% band. Drag the
-          event window and watch the t-stat. The returns are simulated; the Cobre Panamá paper uses real prices.
+          The line is the cumulative abnormal return of a simulated firm, summed from day −10, with a 95% band. The table
+          gives the CAR over the event window, with SE(CAR) = <span class="hat">σ</span>·√L, which ignores the estimation error in <span class="hat">α</span> and <span class="hat tall">β</span>. Drag
+          the event window and watch the t‑stat. The returns are simulated; the Cobre Panamá paper uses real prices.
         </p>
         <p><a class="more" href={u('/event-study-lab/')}>Open the full version →</a></p>
       </Fragment>
@@ -78,17 +73,9 @@ import { u } from '../lib/url';
   .hero { padding: var(--space-5) 0 var(--space-3); }
   .hero h1 { margin-bottom: var(--space-3); }
   .loc { margin-bottom: 0.6rem; }
-  .fig-pending {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 900 / 420;
-    border: 1px dashed var(--rule);
-    background: var(--surface);
-  }
   .onward { list-style: none; }
   .onward li { margin-bottom: 0.3rem; }
   @media (max-width: 719px) {
     .hero { padding-top: var(--space-4); }
-    .fig-pending { aspect-ratio: 4 / 3; }
   }
 </style>
