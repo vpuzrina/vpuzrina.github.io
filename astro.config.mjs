@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import preact from '@astrojs/preact';
+import { unified } from '@astrojs/markdown-remark';
+import rehypeTodo from './src/lib/rehype/todo.mjs';
 
 // Production: https://vpuzrina.github.io (root). Preview: SITE_BASE=/site-preview PREVIEW=1,
 // served from the vpuzrina/site-preview repo with noindex on every page.
@@ -11,6 +13,8 @@ export default defineConfig({
   base,
   trailingSlash: 'ignore',
   build: { format: 'directory', inlineStylesheets: 'auto' },
+  // unified so the [TODO] highlighter runs on MDX; smartypants off keeps straight quotes and apostrophes
+  markdown: { processor: unified({ rehypePlugins: [rehypeTodo], smartypants: false }) },
   integrations: [mdx(), preact()],
   devToolbar: { enabled: false },
 });
