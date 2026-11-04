@@ -12,4 +12,37 @@ provenance: { repo: '[TODO: repo link]', data: '[TODO: data source]', stack: '[T
 updated: 2026-11-04
 ---
 
-[TODO: paper text, drafted in Phase 3]
+import CobreFigure from '../../figures/EventStudy/CobreFigure.astro';
+import { u } from '../../lib/url';
+
+I am running an event study of how the stock market priced the shutdown of First Quantum's Cobre Panamá copper mine. I compare First Quantum's abnormal returns around the closure with those of other copper producers, using a market model. [TODO: event date, data source and tickers] The work started in September 2026 and the results are not final, so this page shows the method and leaves out numbers until they are checked.
+
+## The question
+
+[TODO: one or two sentences on what happened to the mine and when]
+
+The closure can show up in two places. For First Quantum it is a loss of future cash flow, and the question is how much of that loss the market priced on the day and how much it had already priced in. For other copper producers the sign is not obvious: less supply could raise the copper price and help them, while a shutdown ordered by a government could make investors worry about country risk at mines elsewhere.
+
+## The data
+
+[TODO: price source, tickers for First Quantum and the comparison producers, market index, date range]
+
+## The method
+
+The method is the same one behind <a href={u('/#fig-1')}>Fig. 1 on the home page</a>. For each firm I regress its daily return on the market index over an estimation window, use the fitted model to predict returns around the event, and add up the differences between actual and predicted returns over the event window. [TODO: estimation and event windows]
+
+<CobreFigure n={1}>
+  <p>Cumulative abnormal return for First Quantum around the closure, from the same code as the home-page figure. [TODO: caption once the data is in]</p>
+</CobreFigure>
+
+## Where it stands
+
+[TODO: current status and what is left before results]
+
+## What could be wrong with it
+
+The event date may not be one day. If the news came out over several days, or leaked before the announcement, a short event window will miss part of the price move, and a long one will pick up unrelated news.
+
+Other news on the same days can contaminate the result. Copper prices and mining stocks move together, so a shock to the whole sector on the event date would look like a reaction to the closure.
+
+The comparison producers share one event date. Their abnormal returns are correlated with each other on that day, so treating them as independent would make the standard errors too small.
