@@ -56,7 +56,7 @@ export const research: Entry[] = [
     ],
     cvRole: 'Research assistant (BU grant), 1892–93 cholera in Imperial Russia, for PhD researcher Artem Vyshinskiy',
     cv: [
-      'Built a monthly mortality panel by district for 16 provinces over 1888–1893 (72 months each) from scanned Russian-language statistical yearbooks.',
+      'Built a monthly district mortality panel for 16 provinces, 1888–1893 (72 months each), from scanned statistical yearbooks.',
       'Checked every table against its printed row and column totals, corrected source errors and built a crosswalk between two district-coding systems.',
       'Running regressions in R and Stata on the panel merged with an MIT famine dataset (harvests, taxes, serfdom).',
     ],
@@ -109,7 +109,7 @@ export const work: Entry[] = [
       'Analyzed the revenue of local competitors and compiled statistical summaries for department leadership.',
     ],
     cv: [
-      'Wrote the market-entry report "E-commerce Market of Uzbekistan: Barriers and Opportunities," adopted by the department.',
+      'Wrote the report "E-commerce Market of Uzbekistan: Barriers and Opportunities," adopted by the department.',
       'Ran 19 interviews with small-business owners, surveyed 60+ consumers, benchmarked 8 platforms and analyzed competitor revenue.',
     ],
   },
