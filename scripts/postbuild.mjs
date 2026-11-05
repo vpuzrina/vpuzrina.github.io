@@ -40,9 +40,23 @@ const origin = `http://localhost:${server.address().port}${base}`;
 const browser = await chromium.launch();
 try {
   // 1. CV PDF
-  const page = await browser.newPage();
+  // printable width of US Letter with 0.5in side margins: 7.5in = 720 CSS px
+  const page = await browser.newPage({ viewport: { width: 720, height: 979 } });
   await page.goto(`${origin}cv/`, { waitUntil: 'networkidle' });
-  await page.evaluate(() => document.fonts.ready);
+  await page.emulateMedia({ media: 'print' });
+  // Load every face the CV uses before printing. Italic appears only here, so on a slow machine it can
+  // still be in flight when the PDF is made, and a wider fallback then pushes the CV onto a second page.
+  const faces = ['400 12px "Plex Serif"', 'italic 400 12px "Plex Serif"', '600 12px "Plex Serif"', '400 12px "Plex Mono"', '500 12px "Plex Mono"'];
+  const missing = await page.evaluate(async (faces) => {
+    await Promise.all(faces.map((f) => document.fonts.load(f)));
+    await document.fonts.ready;
+    return faces.filter((f) => !document.fonts.check(f));
+  }, faces);
+  if (missing.length) throw new Error(`CV fonts did not load: ${missing.join(', ')}`);
+  // How full the page is: content height against the printable height (11in minus 0.4in margins, at 96 px/in)
+  const fill = await page.evaluate(() => document.querySelector('.cv').getBoundingClientRect().height / ((11 - 0.8) * 96));
+  console.log(`CV fills ${(fill * 100).toFixed(1)}% of the page`);
+  if (fill > 0.95) console.warn('Warning: the CV is within 5% of a second page; small rendering differences on another machine can push it over.');
   const pdf = await page.pdf({ format: 'Letter', preferCSSPageSize: true, printBackground: false, tagged: true, outline: false });
   const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page(?!s)/g) || []).length;
   writeFileSync('dist/varvara-puzrina-cv.pdf', pdf);
