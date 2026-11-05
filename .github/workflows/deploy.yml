@@ -1,3 +1,5 @@
+# Deploys https://vpuzrina.github.io from main. Runs only on main, so the v2-papers branch
+# never touches the live site. STRICT=1 refuses to publish while any [TODO] marker is left.
 name: Deploy to GitHub Pages
 
 on:
@@ -24,17 +26,23 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # Chromium prints the CV PDF and renders the Open Graph images after the build
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: Build (strict: no [TODO] markers, banned words or third-party resources)
+        run: npm run build
+        env:
+          STRICT: '1'
       - name: Check the build
-        # Fail the deploy if the CV is missing or an unfinished marker reached the page
         run: |
+          test -f dist/varvara-puzrina-cv.pdf
           test -f dist/resume.pdf
-          if grep -RIl --include='*.html' --include='*.js' -e '\[TODO' -e '\[FILL' -e 'blob:' dist; then
-            echo "Unfinished content or blob URL found in the build" && exit 1
-          fi
+          node tests/e2e/links.mjs
+          npx html-validate "dist/**/*.html"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
