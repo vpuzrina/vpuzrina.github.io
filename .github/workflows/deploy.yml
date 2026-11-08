@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # also run by hand (Actions → Deploy to GitHub Pages → Run workflow) to refresh the preview
   workflow_dispatch:
 
 permissions:
@@ -32,6 +33,26 @@ jobs:
           if grep -RIl --include='*.html' --include='*.js' -e '\[TODO' -e '\[FILL' -e 'blob:' dist; then
             echo "Unfinished content or blob URL found in the build" && exit 1
           fi
+      # Preview of the next version, built from the v2-papers branch into /site-preview/ (noindex on
+      # every page). Runs after the check above, so the old site's [TODO] rule does not apply to it.
+      # Remove these steps when v2-papers is merged into main.
+      - name: Check out the v2-papers preview
+        uses: actions/checkout@v4
+        with:
+          ref: v2-papers
+          path: preview-src
+      - name: Build the preview into dist/site-preview
+        working-directory: preview-src
+        env:
+          SITE_BASE: /site-preview
+          PREVIEW: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm test
+          npm run build
+          node tests/e2e/links.mjs
+          cp -r dist ../dist/site-preview
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
