@@ -7,7 +7,7 @@ import Text from '../components/Text.astro';
 import LinkRow from '../components/LinkRow.astro';
 import { person, availability } from '../data/site';
 import { research, work, leadership, activities, educationDetail as ed, skills, certifications } from '../data/about';
-import { u } from '../lib/url';
+import { u, isTodoOnly } from '../lib/url';
 
 // Photo slot: shows only once public/photo.jpg exists
 const hasPhoto = existsSync(resolve('public/photo.jpg'));
@@ -42,7 +42,7 @@ const hasPhoto = existsSync(resolve('public/photo.jpg'));
       <div class="prose">
         <p class="org">{ed.school}</p>
         <p class="mono muted meta">{ed.degree} · {ed.place} · {ed.grad}</p>
-        <p class="mono muted meta"><Text s={ed.minor} /></p>
+        {!isTodoOnly(ed.minor) && <p class="mono muted meta"><Text s={ed.minor} /></p>}
         <p class="mono muted meta">{ed.honors}</p>
         <h3 class="label sub">Coursework, through Fall 2026</h3>
         <dl class="courses">

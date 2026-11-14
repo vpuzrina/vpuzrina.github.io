@@ -7,7 +7,7 @@ import { loadCobre } from './loadCobre';
 interface Props { n: number }
 const data = loadCobre();
 ---
-<Figure n={Astro.props.n} title="Cumulative abnormal return around the closure" params={data ? `${data.firm} against ${data.market} · market model` : '[TODO: firm, index, event date, windows]'}>
+<Figure n={Astro.props.n} title="Cumulative abnormal return around the closure" params={data ? `${data.firm} against ${data.market} · market model` : 'data being finalized'}>
   {data ? (
     <EventStudy client:visible id="cobre" source={{ kind: 'data', series: data.series }} est={data.est} evt={data.evt} />
   ) : (

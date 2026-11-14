@@ -1,11 +1,12 @@
 ---
 // type · dates · data · tools · status, in mono
-import Text from './Text.astro';
+import { stripTodo } from '../lib/url';
 interface Props { items: string[]; class?: string }
-const { items, class: cls } = Astro.props;
+const { items: raw, class: cls } = Astro.props;
+const items = raw.map(stripTodo).filter(Boolean);
 ---
 <p class:list={['context mono muted', cls]}>
-  {items.map((it, i) => (<>{i > 0 && <span aria-hidden="true"> · </span>}<Text s={it} /></>))}
+  {items.map((it, i) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{it}</>))}
 </p>
 <style>
   .context { margin: 0; }

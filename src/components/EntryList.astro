@@ -1,17 +1,17 @@
 ---
 import type { Entry } from '../data/about';
 import Text from './Text.astro';
-import { u } from '../lib/url';
+import { u, stripTodo } from '../lib/url';
 interface Props { items: Entry[] }
 ---
 <ul class="entries">
   {Astro.props.items.map((e) => (
     <li class="entry">
       <p class="org">{e.org}</p>
-      <p class="meta mono muted"><Text s={e.role} /> · {e.place} · <Text s={e.dates} /></p>
+      <p class="meta mono muted">{[e.role, e.place, e.dates].map(stripTodo).filter(Boolean).join(' · ')}</p>
       {e.note && <p class="note mono muted">{e.note}</p>}
       <ul class="bul">
-        {e.bullets.map((b) => <li><Text s={b} /></li>)}
+        {e.bullets.map(stripTodo).filter(Boolean).map((b) => <li>{b}</li>)}
       </ul>
       {e.paper && <p class="more"><a href={u(`/${e.paper}/`)}>Read the paper →</a></p>}
     </li>

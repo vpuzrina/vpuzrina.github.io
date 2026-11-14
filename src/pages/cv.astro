@@ -39,7 +39,6 @@ const cvSkills: [string, string][] = [
         <div class="item">
           <p class="row"><strong>{ed.school}</strong><span>{ed.place}</span></p>
           <p class="row"><em>{ed.degree}{!ed.minor.includes('TODO') && `; ${ed.minor}`}</em><span>{ed.grad}</span></p>
-          {ed.minor.includes('TODO') && <p class="line"><Text s={ed.minor} /></p>}
           <p class="line">Honors: {ed.honors}</p>
           <p class="line">Coursework: {ed.cvCoursework}</p>
         </div>

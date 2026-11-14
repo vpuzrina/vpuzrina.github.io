@@ -1,9 +1,9 @@
 ---
-import Text from './Text.astro';
+import { stripTodo } from '../lib/url';
 interface Props { items: [string, string][] }
 ---
 <dl class="prov mono">
-  {Astro.props.items.map(([k, v]) => (<><dt class="muted">{k}</dt><dd>{/^https?:/.test(v) ? <a href={v}>{v.replace(/^https?:\/\//, '')}</a> : <Text s={v} />}</dd></>))}
+  {Astro.props.items.map(([k, v]) => (<><dt class="muted">{k}</dt><dd>{/^https?:/.test(v) ? <a href={v}>{v.replace(/^https?:\/\//, '')}</a> : (stripTodo(v) || 'being finalized')}</dd></>))}
 </dl>
 <style>
   .prov { display: grid; grid-template-columns: 6rem 1fr; gap: 0.2rem 1rem; margin: 0; }

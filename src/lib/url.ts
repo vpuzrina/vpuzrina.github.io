@@ -6,7 +6,6 @@ export const buildDate = new Date();
 export const fmtDate = (d: Date | string) =>
   new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
-// Splits a string into plain text and [TODO: ...] markers so the markers can be highlighted.
-export function todoParts(s: string): { todo: boolean; text: string }[] {
-  return s.split(/(\[TODO[^\]]*\])/).filter(Boolean).map((text) => ({ todo: text.startsWith('[TODO'), text }));
-}
+// Removes [TODO: ...] markers (and the space around them) from public text.
+export const stripTodo = (s: string) => s.replace(/\s*\[TODO[^\]]*\]\s*/g, ' ').replace(/\s+([.,;:])/g, '$1').trim();
+export const isTodoOnly = (s: string) => stripTodo(s) === '';
