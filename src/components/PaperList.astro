@@ -1,26 +1,26 @@
 ---
-import { getCollection } from 'astro:content';
+// Home-page Contents: the whole entry is one link target (stretched link on the title),
+// ending in "Read · N min →".
 import PaperThumb from './PaperThumb.astro';
 import ContextLine from './ContextLine.astro';
 import Text from './Text.astro';
 import { u } from '../lib/url';
-const papers = (await getCollection('papers')).sort((a, b) => a.data.order - b.data.order);
+import { papers } from '../lib/papers';
+const list = await papers();
 ---
 <ol class="papers">
-  {papers.map((p, i) => (
+  {list.map(({ entry: p, slug, stats }, i) => (
     <li class="entry">
       <span class="num mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-      <a class="thumb-link" href={u(`/${p.id}/`)} tabindex="-1" aria-hidden="true">
-        <PaperThumb kind={p.data.thumb} alt={p.data.thumbAlt} />
-      </a>
+      <span class="thumb-wrap" aria-hidden="true"><PaperThumb kind={p.data.thumb} alt={p.data.thumbAlt} /></span>
       <div class="body">
         <h3>
-          <a href={u(`/${p.id}/`)}>{p.data.title}</a>
+          <a class="stretch" href={u(`/${slug}/`)}>{p.data.title}</a>
           {p.data.inProgress && <span class="tag mono">in progress</span>}
         </h3>
         <ContextLine items={p.data.context} />
         <p class="summary"><Text s={p.data.summary} /></p>
-        <p class="path mono muted">/{p.id}</p>
+        <p class="foot mono"><span class="muted">/{slug}</span><span class="read" aria-hidden="true">Read · {stats.minutes} min →</span></p>
       </div>
     </li>
   ))}
@@ -29,35 +29,37 @@ const papers = (await getCollection('papers')).sort((a, b) => a.data.order - b.d
 <style>
   .papers { list-style: none; }
   .entry {
+    position: relative;
     display: grid;
     grid-template-columns: 2.25rem 120px 1fr;
     gap: 0 1.25rem;
-    padding: var(--space-3) 0;
+    padding: var(--space-3) 0.75rem var(--space-3) 0;
     border-top: 1px solid var(--rule);
+    transition: background-color var(--t);
   }
-  .entry:first-child { border-top: 0; padding-top: 0; }
-  .num { color: var(--muted); padding-top: 0.15rem; }
-  .thumb-link { padding-top: 0.3rem; }
+  .entry:first-child { border-top: 0; }
+  .entry:hover { background: var(--surface); }
+  .entry:hover h3 a { color: var(--accent); text-decoration-color: var(--accent); }
+  .entry:hover .read { color: var(--accent); }
+  .stretch::after { content: ''; position: absolute; inset: 0; }
+  /* the focus ring goes around the whole entry, on the stretched link's overlay */
+  .stretch:focus-visible { outline: none; }
+  .stretch:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .num { color: var(--muted); padding-top: 0.15rem; padding-left: 0.25rem; }
+  .thumb-wrap { padding-top: 0.3rem; }
   .body { max-width: var(--measure); }
   h3 { font-size: 1.125rem; margin-bottom: 0.35rem; }
   h3 a { text-decoration-color: var(--rule); }
   .tag {
-    display: inline-block;
-    vertical-align: 0.15em;
-    margin-left: 0.5rem;
-    font-size: var(--fs-label);
-    font-weight: 400;
-    color: var(--muted);
-    border: 1px solid var(--rule);
-    padding: 0 0.35rem;
-    line-height: 1.5;
-    white-space: nowrap;
+    display: inline-block; vertical-align: 0.15em; margin-left: 0.5rem; font-size: var(--fs-label); font-weight: 400;
+    color: var(--muted); border: 1px solid var(--rule); padding: 0 0.35rem; line-height: 1.5; white-space: nowrap;
   }
-  .summary { margin: 0.5rem 0 0.25rem; }
-  .path { margin: 0; font-size: var(--fs-label); }
+  .summary { margin: 0.5rem 0 0.35rem; }
+  .foot { display: flex; justify-content: space-between; gap: 1rem; margin: 0; font-size: var(--fs-label); }
+  .read { color: var(--text); white-space: nowrap; transition: color var(--t); }
   @media (max-width: 600px) {
-    .entry { grid-template-columns: 2rem 1fr; }
-    .thumb-link { grid-column: 2; grid-row: 1; margin-bottom: 0.75rem; }
+    .entry { grid-template-columns: 2rem 1fr; padding-right: 0; }
+    .thumb-wrap { grid-column: 2; grid-row: 1; margin-bottom: 0.75rem; }
     .body { grid-column: 2; }
   }
 </style>

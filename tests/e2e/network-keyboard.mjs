@@ -50,6 +50,7 @@ for (const p of ['', 'imperial-mortality/']) {
       const knob = el.querySelector?.('.knob');
       const visible =
         (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) ||
+        (getComputedStyle(el, '::after').outlineStyle !== 'none' && parseFloat(getComputedStyle(el, '::after').outlineWidth) > 0) ||
         (knob && getComputedStyle(knob).strokeWidth !== '1.5px') ||
         (el.closest('label') && getComputedStyle(el.closest('label')).outlineStyle !== 'none');
       const name = el.getAttribute('aria-label') || el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40) || el.tagName;

@@ -11,6 +11,8 @@ export const person = {
   githubLabel: 'github.com/vpuzrina',
   repo: 'https://github.com/vpuzrina/vpuzrina.github.io',
   cvPdf: '/varvara-puzrina-cv.pdf',
+  // the most finished paper; switch when another one is further along
+  writingSample: '/papers/cobre-panama.pdf',
   city: 'Boston, MA',
 };
 
@@ -38,17 +40,8 @@ export type Role = {
   paper?: string; // slug of the paper page, if any
 };
 
-// Home page "Experience", newest first. CarPot is on /about and /cv only.
+// Home page "Experience": roles only, newest first. The directed study is in Contents, not here.
 export const experience: Role[] = [
-  {
-    org: 'Boston University, CAS Directed Study',
-    role: 'Independent researcher',
-    place: 'Boston',
-    dates: 'Fall 2026',
-    line:
-      'With Prof. Onur Celik, I am writing a paper on whether women in Power 4 college basketball draw smaller Instagram audiences than men with the same on-court numbers. The department chair approved my proposal, and I am drafting the introduction and literature review.',
-    paper: 'nil-gender-gap',
-  },
   {
     org: 'Boston University, Department of Economics',
     role: 'Research assistant, BU grant',
@@ -57,6 +50,13 @@ export const experience: Role[] = [
     line:
       'For PhD researcher Artem Vyshinskiy, I am building a monthly mortality panel for 16 provinces of Imperial Russia, 72 months each, from scanned statistical yearbooks, and checking every table against its printed totals.',
     paper: 'imperial-mortality',
+  },
+  {
+    org: 'CarPot',
+    role: 'Marketing and analytics intern',
+    place: 'Boston',
+    dates: 'May – Jul 2026',
+    line: 'At a car-repair marketplace startup, I analyzed website and app data and benchmarked competing platforms on pricing and fee models.',
   },
   {
     org: 'National Bureau of Economic Research',

@@ -148,15 +148,15 @@ export const educationDetail = {
   honors: "Dean's List",
   // Completed or in progress by the end of Fall 2026
   coursework: [
-    ['EC 101', '[TODO: course name]'],
-    ['EC 102', '[TODO: course name]'],
+    ['EC 101', 'Introductory Microeconomic Analysis'],
+    ['EC 102', 'Introductory Macroeconomic Analysis'],
     ['EC 201', 'Intermediate Microeconomics'],
     ['EC 202', 'Intermediate Macroeconomics (in progress)'],
     ['EC 203', 'Empirical Economics I'],
     ['EC 204', 'Empirical Economics II'],
     ['CS 111', 'Introduction to Computer Science I (Python)'],
     ['CS 112', 'Introduction to Computer Science II (Java), taken as the intensive section CS 392 XI'],
-    ['[TODO: code]', 'Calculus I'],
+    ['MA 123', 'Calculus I'],
   ] as [string, string][],
   next: 'CS 131, CS 132, CS 210, CS 330 (2027)',
   cvCoursework:
@@ -166,7 +166,7 @@ export const educationDetail = {
 export const skills: [string, string][] = [
   ['Analysis', 'R, Stata (regressions), Python (pandas), SQL (basic), Excel'],
   ['Programming', 'Python, Java (coursework)'],
-  ['Methods', 'event studies, OLS regression, data cleaning and validation, text classification against a rubric [TODO: confirm]'],
+  ['Methods', 'event studies, OLS regression, data cleaning and validation, text classification against a rubric'],
   ['Languages', 'Russian (native), English (fluent), Spanish (basic)'],
 ];
 
