@@ -55,12 +55,12 @@ for (const file of files) {
     const t = m[1].replace(/<[^>]+>/g, '');
     if ((t.match(/—/g) || []).length > 1) problems.push(`${file}: more than one em dash in "${t.slice(0, 60)}..."`);
   }
-  if (process.env.STRICT === '1' && html.includes('[TODO')) problems.push(`${file}: [TODO] marker left`);
+  // Raw markers must never reach the HTML; the open list lives in todo-report.md
+  if (html.includes('[TODO')) problems.push(`${file}: raw [TODO] marker in the HTML`);
 }
 
 if (problems.length) {
   console.error(`\nBuild checks failed:\n  - ${problems.join('\n  - ')}\n`);
   process.exit(1);
 }
-const todos = files.filter((f) => readFileSync(f, 'utf8').includes('[TODO')).length;
-console.log(`Build checks passed on ${files.length} pages. Pages with [TODO] markers: ${todos}${todos ? ' (allowed on preview, blocked with STRICT=1)' : ''}.`);
+console.log(`Build checks passed on ${files.length} pages.`);
