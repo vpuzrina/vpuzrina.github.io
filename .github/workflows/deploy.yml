@@ -29,7 +29,7 @@ jobs:
       # Chromium prints the CV PDF and renders the Open Graph images after the build
       - run: npx playwright install --with-deps chromium
       - run: npm test
-      - name: Build (strict: no [TODO] markers, banned words or third-party resources)
+      - name: Build in strict mode (fails on TODO markers, banned words, third-party resources)
         run: npm run build
         env:
           STRICT: '1'
