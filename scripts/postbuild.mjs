@@ -1,7 +1,8 @@
 // After `astro build`: serve dist/ locally and use Playwright (Chromium) to
 //  1. print /cv to dist/varvara-puzrina-cv.pdf (US Letter) and copy it to dist/resume.pdf,
 //     failing the build if the CV runs past one page;
-//  2. render a 1200×630 Open Graph image for every page into dist/og/<slug>.png.
+//  2. print every paper page to dist/papers/<slug>.pdf;
+//  3. render a 1200×630 Open Graph image for every page into dist/og/<slug>.png.
 // The base path (/ or /site-preview/) comes from SITE_BASE, as in astro.config.mjs.
 import { createServer } from 'node:http';
 import { readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
@@ -64,13 +65,31 @@ try {
   console.log(`CV PDF: ${pages} page(s), ${(pdf.length / 1024).toFixed(0)} KB`);
   if (pages !== 1) throw new Error(`The CV is ${pages} pages; it must be one. Shorten src/data/about.ts (cv bullets).`);
 
-  // 2. Open Graph images
+  // 2. One PDF per paper, printed from the page with the print stylesheet: dist/papers/<slug>.pdf
+  mkdirSync('dist/papers', { recursive: true });
+  const slugs = readdirSync('src/content/papers').filter((f) => f.endsWith('.mdx')).map((f) => f.replace(/\.mdx$/, ''));
+  const pp = await browser.newPage({ viewport: { width: 816, height: 1056 } });
+  for (const slug of slugs) {
+    await pp.goto(`${origin}${slug}/`, { waitUntil: 'networkidle' });
+    await pp.emulateMedia({ media: 'print' });
+    await pp.evaluate(async () => { await document.fonts.ready; });
+    await pp.pdf({
+      path: `dist/papers/${slug}.pdf`, format: 'Letter', printBackground: false, tagged: true,
+      margin: { top: '0.75in', bottom: '0.75in', left: '0.85in', right: '0.85in' },
+      displayHeaderFooter: true,
+      headerTemplate: '<span></span>',
+      footerTemplate: `<div style="width:100%;font:8px monospace;color:#555;padding:0 0.85in;display:flex;justify-content:space-between"><span>Varvara Puzrina · vpuzrina.github.io/${slug}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
+    });
+  }
+  console.log(`Paper PDFs: ${slugs.length}`);
+
+  // 3. Open Graph images
   mkdirSync('dist/og', { recursive: true });
   const files = [];
   (function walk(d) {
     for (const f of readdirSync(d)) {
       const p = join(d, f);
-      if (statSync(p).isDirectory()) { if (f !== 'og' && f !== '_astro' && f !== 'fonts') walk(p); }
+      if (statSync(p).isDirectory()) { if (f !== 'og' && f !== '_astro' && f !== 'fonts' && f !== 'papers') walk(p); }
       else if (f.endsWith('.html')) files.push(p);
     }
   })('dist');
