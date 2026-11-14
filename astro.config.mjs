@@ -3,7 +3,9 @@ import mdx from '@astrojs/mdx';
 import preact from '@astrojs/preact';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
-import rehypeTodo from './src/lib/rehype/todo.mjs';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import rehypePaper from './src/lib/rehype/paper.mjs';
 
 // Production: https://vpuzrina.github.io (root). Preview: SITE_BASE=/site-preview PREVIEW=1,
 // served from the vpuzrina/site-preview repo with noindex on every page.
@@ -14,8 +16,11 @@ export default defineConfig({
   base,
   trailingSlash: 'ignore',
   build: { format: 'directory', inlineStylesheets: 'auto' },
-  // unified so the [TODO] highlighter runs on MDX; smartypants off keeps straight quotes and apostrophes
-  markdown: { processor: unified({ rehypePlugins: [rehypeTodo], smartypants: false }) },
+  // unified so the paper plugins run on MDX: KaTeX at build time (no client JS), then rehypePaper
+  // (TODO removal, status notes, abstract, sidenotes, citations). smartypants off keeps straight quotes.
+  markdown: {
+    processor: unified({ remarkPlugins: [remarkMath], rehypePlugins: [[rehypeKatex, { output: 'htmlAndMathml' }], rehypePaper], smartypants: false }),
+  },
   integrations: [mdx(), preact(), sitemap({ filter: (page) => !/\/404\/?$/.test(page) })],
   devToolbar: { enabled: false },
 });
