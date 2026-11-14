@@ -1,0 +1,16 @@
+{
+  "_note": "Shell: variable names only. Fill coef, se and p (one value per column) and the footer values once estimates exist; the table then drops the 'Table shell' label.",
+  "label": "Instagram followers and on-court performance, by gender",
+  "depvar": "Instagram followers",
+  "columns": ["(1)", "(2)"],
+  "colNotes": ["levels", "log(1 + followers)"],
+  "rows": [
+    { "label": "Female" },
+    { "label": "Performance" },
+    { "label": "Female × Performance" },
+    { "label": "Constant" }
+  ],
+  "footer": [{ "label": "Controls" }, { "label": "N" }, { "label": "R²" }],
+  "notes": "Specification and controls to be confirmed.",
+  "shell": true
+}

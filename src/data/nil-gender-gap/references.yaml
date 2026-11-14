@@ -1,0 +1,23 @@
+# References for /nil-gender-gap. Cite in the MDX as [@id] or [@id1; @id2].
+- id: becker1957
+  authors: ["Becker, Gary S."]
+  year: 1957
+  title: The Economics of Discrimination
+  place: Chicago
+  publisher: University of Chicago Press
+- id: blaukahn2017
+  authors: ["Blau, Francine D.", "Kahn, Lawrence M."]
+  year: 2017
+  title: "The Gender Wage Gap: Extent, Trends, and Explanations"
+  journal: Journal of Economic Literature
+  volume: 55
+  issue: 3
+  pages: 789–865
+- id: kahnsherer1988
+  authors: ["Kahn, Lawrence M.", "Sherer, Peter D."]
+  year: 1988
+  title: "Racial Differences in Professional Basketball Players' Compensation"
+  journal: Journal of Labor Economics
+  volume: 6
+  issue: 1
+  pages: 40–61

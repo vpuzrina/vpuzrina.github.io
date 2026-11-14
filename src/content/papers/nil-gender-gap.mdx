@@ -1,5 +1,5 @@
 ---
-order: 2
+order: 3
 title: 'Same stats, smaller audience: the gender gap in athlete marketability in Power 4 basketball'
 short: Gender gap in athlete marketability
 description: A directed study on whether women in Power 4 college basketball get less social-media engagement than men with the same on-court performance.
@@ -9,25 +9,31 @@ inProgress: true
 thumb: research-design
 thumbAlt: Schematic of the research design, with on-court performance pointing to Instagram followers and gender shown as a factor on that link.
 provenance: { repo: '[TODO: repo link or none]', data: '[TODO: data sources]', stack: 'R', status: 'drafting introduction and literature review' }
-updated: 2026-11-04
+reader: true
 ---
 
 import Figure from '../../components/Figure.astro';
+import RegressionTable from '../../components/paper/RegressionTable.astro';
 import ResearchDesign from '../../figures/ResearchDesign/ResearchDesign.astro';
+import table from '../../data/nil-gender-gap/table-main.json';
 
 This fall I am writing a directed study in economics with Prof. Onur Celik at Boston University. The question is whether women in Power 4 college basketball get less social-media engagement than men with the same on-court performance. I use Instagram followers as the measure of marketability and will estimate the gap with regressions in R. The department chair approved my proposal, and I am now drafting the introduction and literature review, so there are no results yet.
 
 ## The question
 
-Since college athletes were allowed to earn money from their name, image and likeness (NIL), an athlete's audience has a price. If two players put up the same season and one has a much smaller following, she has less to sell. I want to measure how much of the difference in following between women and men is left once performance is held fixed.
+Since college athletes were allowed to earn money from their name, image and likeness (NIL),[^1] an athlete's audience has a price. If two players put up the same season and one has a much smaller following, she has less to sell. I want to measure how much of the difference in following between women and men is left once performance is held fixed.
 
 The paper's broader working title is "The Evolution of the Gender Pay Gap in American Sports Compensation: From Title IX to NIL." The marketability question is the empirical part of it.
 
+[^1]: The NCAA's interim policy allowing athletes to earn money from their name, image and likeness took effect on 1 July 2021.
+
 ## Why followers
 
-Pay from NIL deals is mostly private, so I can't observe it directly for a full sample. [TODO: confirm this is the reason for using followers] A follower count is public, recorded the same way for every player, and is what a sponsor pays to reach. It measures audience, not pay, and the paper treats it that way.
+A follower count is public, recorded the same way for every player, and it measures the audience a sponsor pays to reach. It measures audience, not pay, and the paper treats it that way. [TODO: you flagged "NIL pay is mostly private" as the reason for using followers; confirm before I add it back]
 
 ## The data
+
+Status: Data section in progress: the sources for follower counts and season statistics are being finalized.
 
 [TODO: data sources for follower counts and season statistics, the season, how players are matched, and the sample size]
 
@@ -40,13 +46,31 @@ Pay from NIL deals is mostly private, so I can't observe it directly for a full 
   </Fragment>
 </Figure>
 
-The plan is an OLS regression of followers on season statistics, a female indicator and their interaction, in levels and in logs. The coefficient on the female indicator measures the gap at the same performance, and the interaction shows whether better performance pays off in followers equally for women and men. [TODO: confirm the specification and the controls]
+The plan is an OLS regression of followers on season statistics, a female indicator and their interaction, in levels and in logs:
 
-The literature I am working from starts with Becker's model of taste-based discrimination, Blau and Kahn on the gender wage gap, and Kahn and Sherer on pay differences in professional basketball.
+$$
+\text{Followers}_i = \beta_0 + \beta_1\,\text{Female}_i + \beta_2\,\text{Perf}_i + \beta_3\,(\text{Female}_i \times \text{Perf}_i) + X_i'\gamma + \varepsilon_i
+$$
+
+Here $\beta_1$ is the gap at the same performance and $\beta_3$ shows whether better performance pays off in followers equally for women and men. $X_i$ holds the controls.
+
+Status: Specification to be confirmed with my advisor, including the list of controls.
+
+[TODO: confirm the specification and the controls]
+
+<RegressionTable spec={table} id="table-1" />
+
+### Literature
+
+The literature I am working from starts with Becker's model of taste-based discrimination [@becker1957], Blau and Kahn on the gender wage gap [@blaukahn2017], and Kahn and Sherer on pay differences in professional basketball [@kahnsherer1988].
+
+Status: Literature review in progress: the full draft will replace this paragraph.
 
 ## Where it stands
 
-I am drafting the introduction and the literature review. [TODO: data collection status and expected date for first estimates]
+I am drafting the introduction and the literature review.
+
+[TODO: data collection status and expected date for first estimates]
 
 ## What could be wrong with it
 
