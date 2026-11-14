@@ -1,14 +1,30 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import PaperLayout from '../layouts/PaperLayout.astro';
+import ReaderLayout from '../layouts/ReaderLayout.astro';
+import { papers } from '../lib/papers';
 
 export async function getStaticPaths() {
-  const papers = await getCollection('papers');
-  return papers.map((p) => ({ params: { paper: p.id }, props: { p } }));
+  const list = await papers();
+  return list.map((p, i) => ({
+    params: { paper: p.slug },
+    props: {
+      p,
+      prev: i > 0 ? { slug: list[i - 1].slug, title: list[i - 1].entry.data.title } : undefined,
+      next: i < list.length - 1 ? { slug: list[i + 1].slug, title: list[i + 1].entry.data.title } : undefined,
+    },
+  }));
 }
-const { p } = Astro.props;
-const { Content } = await render(p);
+const { p, prev, next } = Astro.props;
+const d = p.entry.data;
+const { Content, headings } = await render(p.entry);
 ---
-<PaperLayout title={p.data.title} description={p.data.description} context={p.data.context} provenance={p.data.provenance} updated={p.data.updated}>
-  <Content />
-</PaperLayout>
+{d.reader ? (
+  <ReaderLayout slug={p.slug} title={d.title} description={d.description} context={d.context} provenance={d.provenance} updated={p.updated} stats={p.stats} headings={headings} prev={prev} next={next}>
+    <Content />
+  </ReaderLayout>
+) : (
+  <PaperLayout title={d.title} description={d.description} context={d.context} provenance={d.provenance} updated={p.updated}>
+    <Content />
+  </PaperLayout>
+)}

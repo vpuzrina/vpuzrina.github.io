@@ -12,8 +12,9 @@ interface Props {
   footerContact?: boolean;
   bare?: boolean; // full-screen figure pages: no footer
   notFound?: boolean; // 404: no canonical URL, noindex
+  progress?: boolean; // reading-progress bar under the header (paper pages)
 }
-const { title, description, footerContact = true, bare = false, notFound = false } = Astro.props;
+const { title, description, footerContact = true, bare = false, notFound = false, progress = false } = Astro.props;
 const fullTitle = title === person.name ? person.name : `${title} · ${person.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const preview = process.env.PREVIEW === '1';
@@ -57,7 +58,7 @@ const ogImage = new URL(u(`/og/${rel === '' ? 'home' : rel.replace(/\//g, '-')}.
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <Header />
+    <Header progress={progress} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

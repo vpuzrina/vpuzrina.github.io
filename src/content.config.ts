@@ -16,7 +16,8 @@ const papers = defineCollection({
     thumb: z.enum(['event-window', 'research-design', 'rubric', 'sum-check']),
     thumbAlt: z.string(),
     provenance: z.object({ repo: z.string(), data: z.string(), stack: z.string(), status: z.string() }),
-    updated: z.coerce.date(),
+    updated: z.coerce.date().optional(), // fallback only; the page uses the file's last git commit date
+    reader: z.boolean().default(false), // new reading layout (abstract, contents, sidenotes, references)
   }),
 });
 

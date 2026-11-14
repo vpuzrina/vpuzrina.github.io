@@ -1,0 +1,222 @@
+---
+// Paper page as a short, typeset working paper: title block with word count and reading time,
+// abstract box, numbered sections, sticky contents with scroll-spy (≥1200px) or a "Contents"
+// disclosure, sidenotes, references, provenance, PDF download, previous / next.
+import 'katex/dist/katex.min.css';
+import BaseLayout from './BaseLayout.astro';
+import ContextLine from '../components/ContextLine.astro';
+import Provenance from '../components/Provenance.astro';
+import References from '../components/paper/References.astro';
+import { u, fmtDate } from '../lib/url';
+
+interface Heading { depth: number; slug: string; text: string }
+interface Nav { slug: string; title: string }
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  context: string[];
+  provenance: { repo: string; data: string; stack: string; status: string };
+  updated: Date;
+  stats: { label: string };
+  headings: Heading[];
+  prev?: Nav;
+  next?: Nav;
+}
+const { slug, title, description, context, provenance, updated, stats, headings, prev, next } = Astro.props;
+const h1 = title.replace(/(\d)–(\d)/g, '$1–⁠$2');
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const hasRefs = (await import('node:fs')).existsSync(`src/data/${slug}/references.yaml`);
+---
+<BaseLayout title={title} description={description} progress>
+  <article class="reader wrap-reader">
+    <header class="r-head">
+      <h1>{h1}</h1>
+      <ContextLine items={context} />
+      <p class="r-meta mono muted">{stats.label} · updated <time datetime={updated.toISOString().slice(0, 10)}>{fmtDate(updated)}</time> · <a href={u(`/papers/${slug}.pdf`)}>PDF</a></p>
+      <details class="toc-mobile no-print">
+        <summary class="mono">Contents</summary>
+        <ol class="toc-list">
+          {toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          {hasRefs && <li class="d2 unnumbered"><a href="#references">References</a></li>}
+        </ol>
+      </details>
+    </header>
+
+    <div class="r-grid">
+      <nav class="toc no-print" aria-label="Sections">
+        <p class="label">Contents</p>
+        <ol class="toc-list">
+          {toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          {hasRefs && <li class="d2 unnumbered"><a href="#references">References</a></li>}
+        </ol>
+      </nav>
+
+      <div class="r-body paper-body">
+        <slot />
+        <References slug={slug} />
+
+        <footer class="r-foot">
+          <section aria-labelledby="prov-title">
+            <h2 id="prov-title" class="label unnumbered">Provenance</h2>
+            <Provenance items={[['repo', provenance.repo], ['data', provenance.data], ['stack', provenance.stack], ['status', provenance.status], ['updated', fmtDate(updated)]]} />
+          </section>
+          <p class="r-pdf no-print"><a href={u(`/papers/${slug}.pdf`)} download>Download PDF →</a></p>
+          <nav class="r-pager no-print" aria-label="Other papers">
+            {prev ? <a class="prev" href={u(`/${prev.slug}/`)}><span class="label">Previous</span><span>{prev.title}</span></a> : <span></span>}
+            {next && <a class="next" href={u(`/${next.slug}/`)}><span class="label">Next</span><span>{next.title}</span></a>}
+          </nav>
+          <p class="more no-print"><a href={u('/#contents')}>← Contents</a></p>
+        </footer>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var bar = document.querySelector('.progress-bar');
+    var body = document.querySelector('.r-body');
+    if (bar && body) {
+      var ticking = false;
+      function update() {
+        var r = body.getBoundingClientRect();
+        var total = r.height - window.innerHeight;
+        var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 1;
+        bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+        ticking = false;
+      }
+      window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    }
+    // Scroll-spy: highlight the section currently in view
+    var links = document.querySelectorAll('.toc a');
+    if (!('IntersectionObserver' in window) || !links.length) return;
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var visible = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      var ids = Object.keys(map);
+      var current = null;
+      for (var i = 0; i < ids.length; i++) if (visible[ids[i]]) { current = ids[i]; break; }
+      if (!current) return;
+      links.forEach(function (a) { a.removeAttribute('aria-current'); });
+      map[current].setAttribute('aria-current', 'location');
+    }, { rootMargin: '-10% 0px -75% 0px' });
+    Object.keys(map).forEach(function (id) { var h = document.getElementById(id); if (h) io.observe(h); });
+  })();
+</script>
+
+<style>
+  .wrap-reader {
+    --body: 66ch;
+    --toc: 13rem;
+    --margin: 15rem;
+    --gap: 2.5rem;
+    width: 100%;
+    max-width: calc(var(--toc) + var(--body) + var(--margin) + 2 * var(--gap) + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    font-size: 1.1875rem; /* 19px */
+  }
+  @media (min-width: 1440px) { .wrap-reader { font-size: 1.25rem; } } /* 20px */
+  .r-head { max-width: var(--body); padding: var(--space-5) 0 var(--space-3); }
+  @media (min-width: 1200px) { .r-head { margin-left: calc(var(--toc) + var(--gap)); } }
+  .r-head h1 { font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem); margin-bottom: var(--space-2); }
+  .r-head :global(.context) { font-size: var(--fs-mono); }
+  .r-meta { font-size: var(--fs-mono); margin: 0.35rem 0 0; }
+
+  .r-grid { display: block; }
+  .toc { display: none; }
+  @media (min-width: 1200px) {
+    .r-grid { display: grid; grid-template-columns: var(--toc) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+    .toc { display: block; position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow-y: auto; font-size: var(--fs-small); }
+    .toc-mobile { display: none; }
+  }
+
+  /* Section numbers from CSS counters, so headings and anchors stay clean */
+  .r-body { counter-reset: h2; }
+  .r-body :global(h2:not(.unnumbered)) { counter-increment: h2; counter-reset: h3; }
+  .r-body :global(h3) { counter-increment: h3; }
+  .r-body :global(h2:not(.unnumbered))::before { content: counter(h2) '\2002'; font-family: var(--mono); font-size: 0.75em; font-weight: 400; color: var(--muted); }
+  .r-body :global(h3)::before { content: counter(h2) '.' counter(h3) '\2002'; font-family: var(--mono); font-size: 0.8em; font-weight: 400; color: var(--muted); }
+  .toc-list { list-style: none; margin: 0.5rem 0 0; padding: 0; counter-reset: t2; }
+  .toc-list li { margin: 0 0 0.35rem; line-height: 1.35; padding-left: 1.6rem; text-indent: -1.6rem; }
+  .toc-list li.d2:not(.unnumbered) { counter-increment: t2; counter-reset: t3; }
+  .toc-list li.d3 { counter-increment: t3; padding-left: 3.2rem; text-indent: -2rem; }
+  .toc-list li.d2:not(.unnumbered)::before { content: counter(t2); display: inline-block; width: 1.6rem; text-indent: 0; font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+  .toc-list li.d3::before { content: counter(t2) '.' counter(t3); display: inline-block; width: 2rem; text-indent: 0; font-family: var(--mono); font-size: 0.8em; color: var(--muted); }
+  .toc-list li.unnumbered { padding-left: 1.6rem; text-indent: 0; }
+  .toc-list a { text-decoration: none; color: var(--muted); }
+  .toc-list a:hover { color: var(--accent); }
+  .toc-list a[aria-current] { color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.25em; }
+  .toc-mobile { margin-top: var(--space-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.5rem 0; font-size: var(--fs-small); }
+  .toc-mobile summary { cursor: pointer; font-size: var(--fs-mono); }
+  .toc-mobile[open] summary { margin-bottom: 0.25rem; }
+
+  /* Body column and margin */
+  .r-body { line-height: 1.65; }
+  .r-body > :global(*) { max-width: var(--body); }
+  .r-body > :global(figure:not(.regtab)) { max-width: calc(var(--body) + var(--margin) + var(--gap)); }
+  .r-body > :global(.regtab) { max-width: var(--body); }
+  .r-body :global(p) { margin-bottom: 1.1em; }
+  .r-body > :global(h2), .r-body :global(.refs > h2) { font-size: 1.3em; margin: 2.2em 0 0.7em; padding-top: 1.2em; border-top: 1px solid var(--rule); }
+  .r-body > :global(h3) { font-size: 1.05em; margin: 1.6em 0 0.5em; }
+  .r-body :global(ul:not([class])) { padding-left: 1.2rem; }
+  .r-body :global(.fig-caption), .r-body :global(.rt-notes) { font-size: 0.82em; }
+
+  .r-body :global(.katex) { font-size: 1.05em; }
+  /* Display equations scroll inside their own box on narrow screens */
+  .r-body :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+  .r-body :global(.katex-display > .katex) { max-width: 100%; }
+
+  /* Abstract box */
+  .r-body :global(.abstract) { border: 1px solid var(--rule); background: var(--surface); padding: 1rem 1.25rem 0.25rem; margin: 0 0 1.5rem; }
+  .r-body :global(.abstract-label) { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.35rem; }
+
+  /* Status notes for sections still in progress */
+  .r-body :global(.status-note) { font-size: 0.88em; color: var(--muted); border-left: 2px solid var(--rule); padding-left: 0.9rem; }
+  .r-body :global(.status-label) { font-family: var(--mono); font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 0.6rem; color: var(--muted); }
+
+  /* Sidenotes: margin notes at ≥1380px (room for contents, body and margin), tap-to-expand below */
+  .r-body :global(.sn) { position: static; }
+  .r-body :global(.sn-ref) {
+    font-family: var(--mono); font-size: 0.65em; vertical-align: super; line-height: 0;
+    color: var(--accent); cursor: pointer; padding: 0.6em 0.45em; margin: -0.6em -0.2em;
+  }
+  .r-body :global(.sn-toggle) { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .r-body :global(.sn-toggle:focus-visible + .sidenote), .r-body :global(.sn-ref:has(+ .sn-toggle:focus-visible)) { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .r-body :global(.sidenote) { display: none; font-size: 0.8em; line-height: 1.5; color: var(--muted); }
+  .r-body :global(.sn-toggle:checked + .sidenote) { display: block; margin: 0.5rem 0 0.75rem; padding: 0.5rem 0.75rem; border-left: 2px solid var(--accent); background: var(--surface); }
+  .r-body :global(.sn-num) { font-family: var(--mono); color: var(--accent); }
+  @media (min-width: 1380px) {
+    .r-body :global(.sn-ref) { cursor: default; }
+    .r-body :global(.sidenote), .r-body :global(.sn-toggle:checked + .sidenote) {
+      display: block; float: right; clear: right; width: var(--margin);
+      margin: 0.2rem calc(-1 * (var(--margin) + var(--gap))) 0.8rem 0; padding: 0; border: 0; background: none;
+    }
+  }
+
+  .r-foot { margin-top: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--rule); font-size: 0.9em; }
+  .r-foot h2 { margin: 0 0 var(--space-2); font-size: var(--fs-label); border: 0; padding: 0; }
+  .r-pdf { margin: var(--space-3) 0 var(--space-2); font-family: var(--mono); font-size: var(--fs-mono); }
+  .r-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: var(--space-3) 0; }
+  .r-pager a { display: flex; flex-direction: column; gap: 0.15rem; text-decoration: none; border-top: 1px solid var(--rule); padding-top: 0.5rem; font-size: var(--fs-small); line-height: 1.35; }
+  .r-pager a:hover span:last-child { color: var(--accent); }
+  .r-pager .next { text-align: right; grid-column: 2; }
+  @media (max-width: 600px) { .r-pager { grid-template-columns: 1fr; } .r-pager .next { grid-column: 1; text-align: left; } }
+
+  @media print {
+    .wrap-reader { font-size: 10.5pt; max-width: none; padding: 0; }
+    .r-head { margin-left: 0; padding-top: 0; }
+    .r-grid { display: block; }
+    .r-body > :global(*), .r-body > :global(figure) { max-width: none; }
+    .r-body :global(.sn-ref) { color: #000; }
+    .r-body :global(.sidenote), .r-body :global(.sn-toggle:checked + .sidenote) { display: inline; float: none; margin: 0; padding: 0; border: 0; background: none; font-size: 0.85em; color: #333; }
+    .r-body :global(.sidenote)::before { content: ' ['; }
+    .r-body :global(.sidenote)::after { content: ']'; }
+    .r-body :global(.abstract) { background: none; }
+  }
+</style>

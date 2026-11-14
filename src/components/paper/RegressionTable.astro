@@ -1,0 +1,77 @@
+---
+// Econ-style regression table from a JSON file: thin rules at top and bottom, one under the header,
+// coefficients with standard errors in parentheses underneath, stars, N and R² in the footer.
+// With "shell": true (no estimates yet) it renders variable names and empty cells, labelled "Table shell".
+// JSON: { "label", "depvar", "columns": ["(1)", ...], "colNotes": ["OLS, levels", ...],
+//         "rows": [{ "label", "coef": [..|null], "se": [..|null], "p": [..|null] }],
+//         "footer": [{ "label": "N", "values": [..|null] }], "notes", "shell": bool }
+interface Row { label: string; coef?: (number | null)[]; se?: (number | null)[]; p?: (number | null)[] }
+interface Spec {
+  label: string; depvar: string; columns: string[]; colNotes?: string[]; rows: Row[];
+  footer?: { label: string; values?: (number | string | null)[]; digits?: number }[]; notes?: string; shell?: boolean; digits?: number;
+}
+interface Props { spec: Spec; id?: string }
+const { spec, id } = Astro.props;
+const d = spec.digits ?? 3;
+const MINUS = '−';
+const fmt = (v: number | null | undefined, digits = d) => (v == null ? '' : v.toFixed(digits).replace(/^-/, MINUS));
+const stars = (p: number | null | undefined) => (p == null ? '' : p < 0.01 ? '***' : p < 0.05 ? '**' : p < 0.1 ? '*' : '');
+const shell = spec.shell || spec.rows.every((r) => !r.coef || r.coef.every((c) => c == null));
+const n = spec.columns.length;
+---
+<figure class="regtab" id={id}>
+  <figcaption class="rt-cap">
+    <span class="label">{spec.label}</span>
+    {shell && <span class="rt-shell mono">Table shell · no estimates yet</span>}
+  </figcaption>
+  <section class="rt-scroll" tabindex="0" aria-label={`${spec.label} (scrolls sideways on small screens)`}>
+    <table>
+      <thead>
+        <tr><th scope="col" class="rt-dep">Dependent variable: {spec.depvar}</th>{spec.columns.map((c) => <th scope="col">{c}</th>)}</tr>
+        {spec.colNotes && <tr class="rt-colnotes"><th scope="row"><span class="visually-hidden">Specification</span></th>{spec.colNotes.map((c) => <td>{c}</td>)}</tr>}
+      </thead>
+      <tbody>
+        {spec.rows.map((r) => (
+          <>
+            <tr class="rt-coef">
+              <th scope="row">{r.label}</th>
+              {Array.from({ length: n }, (_, j) => <td>{fmt(r.coef?.[j])}<sup class="rt-stars">{stars(r.p?.[j])}</sup>{shell && <span class="rt-empty" aria-hidden="true">&nbsp;</span>}</td>)}
+            </tr>
+            <tr class="rt-se">
+              <th scope="row"><span class="visually-hidden">standard error of {r.label}</span></th>
+              {Array.from({ length: n }, (_, j) => <td>{r.se?.[j] != null ? `(${fmt(r.se[j])})` : ''}</td>)}
+            </tr>
+          </>
+        ))}
+      </tbody>
+      <tfoot>
+        {(spec.footer ?? [{ label: 'N' }, { label: 'R²' }]).map((f) => (
+          <tr><th scope="row">{f.label}</th>{Array.from({ length: n }, (_, j) => { const v = f.values?.[j]; return <td>{v == null ? '' : typeof v === 'number' ? (Number.isInteger(v) ? v.toLocaleString('en-US') : fmt(v, f.digits ?? d)) : v}</td>; })}</tr>
+        ))}
+      </tfoot>
+    </table>
+  </section>
+  <p class="rt-notes">{shell ? 'Shell only: the cells fill in from the estimates file once results exist. ' : 'Standard errors in parentheses. *** p < 0.01, ** p < 0.05, * p < 0.1. '}{spec.notes}</p>
+</figure>
+
+<style>
+  .regtab { margin: var(--space-3) 0 var(--space-4); max-width: 44rem; }
+  .rt-cap { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; align-items: baseline; margin-bottom: 0.5rem; }
+  .rt-shell { font-size: var(--fs-label); color: var(--text); border: 1px solid var(--rule); padding: 0 0.4rem; }
+  .rt-scroll { overflow-x: auto; }
+  .rt-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums lining-nums; font-size: 0.95em; border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); }
+  th, td { padding: 0.15rem 0.75rem; text-align: center; font-weight: 400; white-space: nowrap; }
+  th[scope='row'], .rt-dep { text-align: left; padding-left: 0; }
+  thead tr:last-child th, thead tr:last-child td { border-bottom: 1px solid var(--text); padding-bottom: 0.35rem; }
+  thead th { padding-top: 0.35rem; }
+  .rt-dep { font-style: italic; white-space: normal; }
+  .rt-colnotes td { font-family: var(--mono); font-size: var(--fs-label); color: var(--muted); }
+  .rt-coef th, .rt-coef td { padding-top: 0.4rem; }
+  .rt-se td { color: var(--muted); padding-bottom: 0.2rem; }
+  tfoot tr:first-child th, tfoot tr:first-child td { border-top: 1px solid var(--rule); padding-top: 0.4rem; }
+  tfoot tr:last-child th, tfoot tr:last-child td { padding-bottom: 0.4rem; }
+  .rt-stars { font-size: 0.7em; }
+  .rt-empty { display: inline-block; width: 3.5rem; border-bottom: 1px dotted var(--rule); }
+  .rt-notes { font-size: var(--fs-small); color: var(--muted); margin-top: 0.5rem; }
+</style>

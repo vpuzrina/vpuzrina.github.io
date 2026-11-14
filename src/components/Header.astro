@@ -2,6 +2,8 @@
 import { person, availability } from '../data/site';
 import { u } from '../lib/url';
 import ThemeToggle from './ThemeToggle.astro';
+interface Props { progress?: boolean }
+const { progress = false } = Astro.props;
 ---
 <header class="site-header">
   <div class="wrap bar">
@@ -11,15 +13,21 @@ import ThemeToggle from './ThemeToggle.astro';
       <ul class="nav mono">
         <li><a href={u('/#contents')}>Contents</a></li>
         <li><a href={u('/about/')}>About</a></li>
-        <li><a href={u(person.cvPdf)}>CV (PDF)</a></li>
+        <li><a href={u(person.cvPdf)}>CV<span class="wide"> (PDF)</span></a></li>
+        <li><a href={u(person.writingSample)}><span class="wide">Writing sample (PDF)</span><span class="narrow">Sample</span></a></li>
         <li><a href={`mailto:${person.email}`}>Email</a></li>
       </ul>
     </nav>
     <ThemeToggle />
   </div>
+  {progress && <div class="progress" aria-hidden="true"><span class="progress-bar"></span></div>}
 </header>
 
 <style>
+  .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; }
+  .progress-bar { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+  /* scroll-linked movement is motion: hide the bar for readers who ask for less */
+  @media (prefers-reduced-motion: reduce) { .progress { display: none; } }
   .site-header {
     position: sticky;
     top: 0;
@@ -28,6 +36,9 @@ import ThemeToggle from './ThemeToggle.astro';
     border-bottom: 1px solid var(--rule);
     transition: background-color var(--t);
   }
+  /* wider than the 900px text column, so name, badge, five links and the theme switch fit on one line */
+  .bar { max-width: calc(1200px + 2 * var(--gutter)); }
+  @media (max-width: 1239px) { .badge { display: none; } }
   .bar {
     display: flex;
     flex-wrap: wrap;
@@ -56,6 +67,8 @@ import ThemeToggle from './ThemeToggle.astro';
   }
   .nav a { text-decoration: none; display: inline-block; padding: 0.3rem 0; min-height: 24px; }
   .nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+  .narrow { display: none; }
+  @media (max-width: 719px) { .wide { display: none; } .narrow { display: inline; } }
 
   /* Phone: name and theme on the first line, links on the second. The hero repeats the availability. */
   @media (max-width: 719px) {
