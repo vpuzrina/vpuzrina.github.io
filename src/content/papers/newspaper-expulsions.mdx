@@ -8,7 +8,7 @@ context: ['Research assistant, NBER project', 'Mar 2026 – present', '1880s U.S
 thumb: rubric
 thumbAlt: Schematic of a decision flow in which each article passes a series of checks and ends as YES, POTENTIAL or NO.
 provenance: { repo: 'none, the data is not public', data: 'belongs to the research team, not shown', stack: 'coding rubric, spreadsheets', status: 'ongoing' }
-updated: 2026-11-04
+reader: true
 ---
 
 import Figure from '../../components/Figure.astro';
@@ -20,13 +20,17 @@ Since March 2026 I have been a research assistant on an NBER project on racial e
 
 ## The task
 
-An expulsion here means a group of people forced out of a place because of their race. [TODO: confirm this one-line definition, or give me the rubric's wording]
+An expulsion here means a group of people forced out of a place because of their race.
+
+Status: This one-line definition is my summary; the project's own wording may differ. [TODO: confirm this one-line definition, or give me the rubric's wording]
 
 The project builds its record of these events from newspaper reports, and a report is not the same thing as an event. One expulsion can appear in several papers. A paper printed in one town often reports something that happened in another. My job is to turn articles into entries that can be counted, each event once, at the place where it happened.
 
 ## The rubric
 
-Most of the rules I apply are exclusions. An article is a NO if it is an opinion piece rather than a report, if the event took place outside the United States, if it describes one person being driven out rather than a group, if the people moved by choice, or if it is about federal Indigenous policy. What is left is a YES when the article confirms that an expulsion took place, and a POTENTIAL when it suggests one without confirming it. [TODO: check that this matches how the rubric separates YES from POTENTIAL]
+Most of the rules I apply are exclusions. An article is a NO if it is an opinion piece rather than a report, if the event took place outside the United States, if it describes one person being driven out rather than a group, if the people moved by choice, or if it is about federal Indigenous policy. What is left is a YES when the article confirms that an expulsion took place, and a POTENTIAL when it suggests one without confirming it.
+
+Status: The YES and POTENTIAL split above is my summary of the rubric and is being checked against its wording. [TODO: check that this matches how the rubric separates YES from POTENTIAL]
 
 <Figure n={1} title="How an article becomes YES, POTENTIAL or NO" tag="Schematic" params="simplified from the project rubric · the order of checks is mine">
   <RubricFlow />
