@@ -1,0 +1,44 @@
+---
+// Schematic of the Uzbekistan market-entry research: four inputs feeding one report.
+// HTML so it reflows on a phone. Counts only; no company data.
+const inputs: [string, string, string][] = [
+  ['Interviews', '19', 'small-business owners, with an interview guide I designed'],
+  ['Survey', '60+', 'local consumers'],
+  ['Benchmark', '8', 'e-commerce platforms'],
+  ['Revenue analysis', '', 'local competitors'],
+];
+---
+<div class="mrd" role="group" aria-label="Research design: interviews with 19 small-business owners, a survey of 60+ consumers, a benchmark of 8 platforms and a revenue analysis of local competitors feed one report, which the International Marketing Department adopted.">
+  <ol class="inputs">
+    {inputs.map(([k, n, d]) => (
+      <li class="box"><span class="k mono">{k}</span>{n && <span class="n">{n}</span>}<span class="d">{d}</span></li>
+    ))}
+  </ol>
+  <div class="arrow" aria-hidden="true"></div>
+  <div class="out">
+    <div class="box report"><span class="k mono">report</span><span>"E-commerce Market of Uzbekistan: Barriers and Opportunities"</span></div>
+    <div class="down" aria-hidden="true"></div>
+    <div class="box adopted"><span class="k mono">outcome</span><span>Adopted by the International Marketing Department</span></div>
+  </div>
+</div>
+<style>
+  .mrd { display: grid; grid-template-columns: minmax(0, 1fr) 3rem minmax(0, 1fr); align-items: center; max-width: 46rem; }
+  .inputs { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .box { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.5rem; border: 1px solid var(--rule); background: var(--surface); padding: 0.5rem 0.75rem; font-size: var(--fs-small); line-height: 1.35; }
+  .k { width: 100%; font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .n { font-family: var(--mono); font-size: 1.15em; }
+  .d { color: var(--text); }
+  .arrow { position: relative; height: 100%; }
+  .arrow::before { content: ''; position: absolute; left: 0.3rem; right: 0.6rem; top: 50%; border-top: 1px solid var(--text); }
+  .arrow::after { content: ''; position: absolute; right: 0.3rem; top: calc(50% - 4px); border: 4px solid transparent; border-left: 7px solid var(--text); border-right: 0; }
+  .out { display: flex; flex-direction: column; align-items: stretch; }
+  .report { border-color: var(--muted); }
+  .adopted { border-style: dashed; background: transparent; }
+  .down { height: 1.25rem; border-left: 1px solid var(--muted); margin-left: 50%; }
+  @media (max-width: 640px) {
+    .mrd { grid-template-columns: 1fr; }
+    .arrow { height: 1.5rem; }
+    .arrow::before { left: 50%; right: auto; top: 0.1rem; bottom: 0.5rem; border-top: 0; border-left: 1px solid var(--text); }
+    .arrow::after { left: calc(50% - 4px); right: auto; top: auto; bottom: 0.1rem; border: 4px solid transparent; border-top: 7px solid var(--text); border-bottom: 0; }
+  }
+</style>
