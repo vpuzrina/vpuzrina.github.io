@@ -1,6 +1,6 @@
 ---
 // Small static schematic for each paper. No data: these show the method, not results.
-interface Props { kind: 'event-window' | 'research-design' | 'rubric' | 'sum-check'; alt: string }
+interface Props { kind: 'event-window' | 'research-design' | 'rubric' | 'sum-check' | 'regression-table' | 'research-flow'; alt: string }
 const { kind, alt } = Astro.props;
 ---
 <svg class="thumb" viewBox="0 0 120 72" width="120" height="72" role="img" aria-label={alt}>
@@ -47,6 +47,38 @@ const { kind, alt } = Astro.props;
           <rect x={10 + c * 26} y={6 + r * 15} width="24" height="13" class={r === 1 && c === 2 ? 'cell flag' : r === 3 || c === 3 ? 'cell total' : 'cell'} />
         ))
       )}
+    </g>
+  )}
+  {kind === 'regression-table' && (
+    <g>
+      <line x1="6" y1="8" x2="114" y2="8" class="ln" />
+      <line x1="6" y1="20" x2="114" y2="20" class="ln" />
+      <line x1="6" y1="64" x2="114" y2="64" class="ln" />
+      <text x="70" y="17" class="t c">(1)</text>
+      <text x="98" y="17" class="t c">(2)</text>
+      {[30, 40, 50].map((y) => (
+        <g>
+          <line x1="8" y1={y} x2="40" y2={y} class="ln" />
+          <line x1="62" y1={y + 2} x2="78" y2={y + 2} class="ln dash" />
+          <line x1="90" y1={y + 2} x2="106" y2={y + 2} class="ln dash" />
+        </g>
+      ))}
+      <line x1="6" y1="56" x2="114" y2="56" class="ln dash" />
+    </g>
+  )}
+  {kind === 'research-flow' && (
+    <g>
+      <rect x="4" y="6" width="38" height="14" class="box" />
+      <rect x="4" y="29" width="38" height="14" class="box" />
+      <rect x="4" y="52" width="38" height="14" class="box" />
+      <text x="23" y="16" class="t c">19</text>
+      <text x="23" y="39" class="t c">60+</text>
+      <text x="23" y="62" class="t c">8</text>
+      <line x1="42" y1="13" x2="70" y2="36" class="ln" />
+      <line x1="42" y1="36" x2="70" y2="36" class="ln" />
+      <line x1="42" y1="59" x2="70" y2="36" class="ln" />
+      <rect x="70" y="26" width="46" height="20" class="box" />
+      <text x="93" y="39" class="t c">report</text>
     </g>
   )}
 </svg>

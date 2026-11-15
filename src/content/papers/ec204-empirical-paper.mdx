@@ -1,0 +1,66 @@
+---
+order: 2
+title: 'Group empirical paper for EC 204: cross-sectional OLS in Stata'
+short: EC 204 empirical paper
+description: A group empirical paper for EC 204 Empirical Economics II at Boston University, Fall 2026, applying cross-sectional OLS in Stata. In progress.
+summary: An empirical paper for EC 204 Empirical Economics II, written with two classmates, that answers one question with cross-sectional OLS in Stata. The proposal is graded; initial results are due before Thanksgiving.
+context: ['Course paper, EC 204 Empirical Economics II', 'Fall 2026', 'group of 3', 'Stata', 'in progress']
+inProgress: true
+thumb: regression-table
+thumbAlt: Schematic of an empty regression table with two columns, rows for the estimates and rules at the top, under the header and at the bottom.
+provenance: { repo: 'none yet', data: '[TODO: dataset and source]', stack: 'Stata', status: 'proposal graded; initial results due before Thanksgiving; final paper at the end of the semester' }
+reader: true
+---
+
+import RegressionTable from '../../components/paper/RegressionTable.astro';
+import table from '../../data/ec204-empirical-paper/table-main.json';
+
+This fall I am writing an empirical paper with two classmates for EC 204 Empirical Economics II, taught by Prof. Ishita Dey at Boston University (section A1). The paper applies the course's cross-sectional regression tools in Stata to one question. Our proposal is done and graded, initial results are due before Thanksgiving, and the final paper is due at the end of the semester. A panel-data extension may follow later as a separate add-on.
+
+## The question
+
+Status: The research question and the title are being finalized by the group and will appear here once they are fixed.
+
+[TODO: research question and title (then rename the slug /ec204-empirical-paper)]
+
+## The data
+
+Status: The dataset, its source and the sample size will be added with the initial results.
+
+[TODO: dataset and source, N]
+
+## The model
+
+The paper estimates a cross-sectional OLS regression of an outcome on the regressor of interest and a set of controls:
+
+$$
+y_i = \beta_0 + \beta_1\, x_i + Z_i'\gamma + \varepsilon_i
+$$
+
+Here $\beta_1$ is the association between $x_i$ and the outcome $y_i$ once the controls in $Z_i$ are held fixed.
+
+Status: The dependent variable, the key regressors and the controls will be named here.
+
+[TODO: dependent variable and key regressors]
+
+## Results
+
+<RegressionTable spec={table} id="table-1" />
+
+Status: Initial results are due before Thanksgiving; the table fills in from them.
+
+[TODO: initial results]
+
+## What could be wrong with it
+
+A single cross-section shows an association, not by itself a cause. A variable we leave out that moves both the outcome and the regressor would bias $\beta_1$, and so would causation running the other way.
+
+Status: This section will name the specific threats once the question and the data are fixed.
+
+## My part
+
+This is a group paper, so not all of the work on this page is mine.
+
+Status: This section will list exactly which parts I did once the division of work is final.
+
+[TODO: my part of the work; may I name Nikita Afanaskin and Gabriel Burr?]
