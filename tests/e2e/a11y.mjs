@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import { AxeBuilder } from '@axe-core/playwright';
 
 const base = process.argv[2] || 'http://localhost:4321/';
-const pages = ['', 'about/', 'cv/', 'event-study-lab/', 'cobre-panama/', 'nil-gender-gap/', 'newspaper-expulsions/', 'imperial-mortality/', '404'];
+const pages = ['', 'about/', 'cv/', 'event-study-lab/', 'cobre-panama/', 'ec204-empirical-paper/', 'nil-gender-gap/', 'imperial-mortality/', 'newspaper-expulsions/', 'uzbekistan-ecommerce/', '404'];
 const browser = await chromium.launch();
 let failures = 0;
 for (const theme of ['dark', 'light']) {

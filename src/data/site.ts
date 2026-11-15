@@ -74,6 +74,7 @@ export const experience: Role[] = [
     dates: 'Jun – Aug 2025',
     line:
       'I wrote a market-entry report on e-commerce in Uzbekistan from 19 interviews with small-business owners, a survey of 60+ consumers and a benchmark of 8 platforms. The department adopted it.',
+    paper: 'uzbekistan-ecommerce',
   },
 ];
 

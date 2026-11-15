@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 
 const base = process.argv[2] || 'http://localhost:4321/';
 const origin = new URL(base).origin;
-const pages = ['', 'about/', 'cv/', 'event-study-lab/', 'cobre-panama/', 'nil-gender-gap/', 'newspaper-expulsions/', 'imperial-mortality/', '404'];
+const pages = ['', 'about/', 'cv/', 'event-study-lab/', 'cobre-panama/', 'ec204-empirical-paper/', 'nil-gender-gap/', 'imperial-mortality/', 'newspaper-expulsions/', 'uzbekistan-ecommerce/', '404'];
 const browser = await chromium.launch();
 let fail = 0;
 

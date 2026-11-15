@@ -32,6 +32,18 @@ export const research: Entry[] = [
     paper: 'nil-gender-gap',
   },
   {
+    org: 'Boston University, EC 204 Empirical Economics II',
+    role: 'Course research: group empirical paper',
+    place: 'Boston, MA',
+    dates: 'Fall 2026',
+    note: 'Prof. Ishita Dey, section A1; with two classmates',
+    bullets: [
+      'Empirical paper applying cross-sectional OLS in Stata. The proposal is done and graded; initial results are due before Thanksgiving and the final paper at the end of the semester.',
+    ],
+    cvHide: true,
+    paper: 'ec204-empirical-paper',
+  },
+  {
     org: 'Independent research',
     role: 'Event study of the Cobre Panamá closure',
     place: 'Boston, MA',
@@ -112,6 +124,7 @@ export const work: Entry[] = [
       'Wrote the report "E-commerce Market of Uzbekistan: Barriers and Opportunities," adopted by the department.',
       'Ran 19 interviews with small-business owners, surveyed 60+ consumers, benchmarked 8 platforms and analyzed competitor revenue.',
     ],
+    paper: 'uzbekistan-ecommerce',
   },
 ];
 
