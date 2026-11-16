@@ -49,10 +49,11 @@ export const research: Entry[] = [
     place: 'Boston, MA',
     dates: 'Sep 2026 – present',
     bullets: [
-      "Measuring how equity markets priced the shutdown of First Quantum's Cobre Panamá copper mine, against a set of comparison copper producers. Results are not final.",
-      '[TODO: data source, tools and current status]',
+      'Measured how equity markets priced the 2023–2026 political and legal events around the Cobre Panamá copper mine: 15 firms, five events, a two-factor market model with home-market and copper returns, in R.',
+      "First Quantum's abnormal return was −43.6% over two days after the October 2023 referendum announcement, about US$6.1 billion; Franco-Nevada's was −12.1%, about US$3.1 billion. Rival miners and smelters showed no significant response in placebo tests on 639 ordinary days.",
+      'Code, event list and decision log: github.com/vpuzrina/cobre-panama-event-study.',
     ],
-    cv: ["Event study of how equity markets priced the Cobre Panamá shutdown for First Quantum and other copper producers."],
+    cv: ["Event study of 15 firms and 5 Cobre Panamá events in R; First Quantum's 2-day CAR after the referendum: −43.6% (US$6.1 bn)."],
     paper: 'cobre-panama',
   },
   {
