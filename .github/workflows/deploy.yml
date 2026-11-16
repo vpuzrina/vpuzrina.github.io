@@ -41,6 +41,7 @@ jobs:
         with:
           ref: v2-papers
           path: preview-src
+          fetch-depth: 0 # full history for per-paper "updated" dates
       - name: Build the preview into dist/site-preview
         working-directory: preview-src
         env:
