@@ -172,6 +172,17 @@ const hasRefs = (await import('node:fs')).existsSync(`src/data/${slug}/reference
   .r-body :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
   .r-body :global(.katex-display > .katex) { max-width: 100%; }
 
+  /* Tables from Markdown: thin rules at top and bottom, one under the header, tabular figures */
+  .r-body :global(.table-label) { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 1.6em 0 0.5em; }
+  .r-body :global(.table-wrap) { overflow-x: auto; margin-bottom: 0.5em; }
+  .r-body :global(.table-wrap:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .r-body :global(.table-wrap > table) { border-collapse: collapse; width: 100%; font-size: 0.82em; font-variant-numeric: tabular-nums lining-nums; border-top: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); }
+  .r-body :global(.table-wrap th), .r-body :global(.table-wrap td) { padding: 0.3rem 0.7rem 0.3rem 0; text-align: left; vertical-align: top; font-weight: 400; }
+  .r-body :global(.table-wrap thead th) { border-bottom: 1px solid var(--text); font-style: italic; }
+  .r-body :global(.table-wrap td[align='right']), .r-body :global(.table-wrap th[align='right']) { text-align: right; }
+  .r-body :global(.table-note) { font-size: 0.78em; color: var(--muted); margin: 0 0 1.6em; }
+  .r-body :global(figure img) { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); }
+
   /* Abstract box */
   .r-body :global(.abstract) { border: 1px solid var(--rule); background: var(--surface); padding: 1rem 1.25rem 0.25rem; margin: 0 0 1.5rem; }
   .r-body :global(.abstract-label) { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.35rem; }

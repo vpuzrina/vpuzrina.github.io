@@ -18,17 +18,23 @@ const el = (tagName, properties = {}, children = []) => ({ type: 'element', tagN
 const txt = (value) => ({ type: 'text', value });
 const textOf = (n) => (n.type === 'text' ? n.value : (n.children || []).map(textOf).join(''));
 
-export function citeLabel(ref) {
+export function citeWho(ref) {
   const last = ref.authors.map((a) => a.split(',')[0].trim());
-  const who = last.length === 1 ? last[0] : last.length === 2 ? `${last[0]} and ${last[1]}` : `${last[0]} et al.`;
-  return `${who} ${ref.year}`;
+  return last.length === 1 ? last[0] : last.length === 2 ? `${last[0]} and ${last[1]}` : `${last[0]} et al.`;
+}
+// parenthetical (Author, Year) and narrative Author (Year)
+export const citeLabel = (ref) => `${citeWho(ref)}, ${ref.year}`;
+export const citeNarrative = (ref) => `${citeWho(ref)} (${ref.year})`;
+
+export function readRefs(path) {
+  if (!existsSync(path)) return { references: [], sources: [] };
+  const y = YAML.parse(readFileSync(path, 'utf8')) || [];
+  return Array.isArray(y) ? { references: y, sources: [] } : { references: y.references || [], sources: y.sources || [] };
 }
 
 function loadRefs(file) {
   const slug = basename(file.path || '', '.mdx');
-  const p = `src/data/${slug}/references.yaml`;
-  if (!existsSync(p)) return {};
-  return Object.fromEntries((YAML.parse(readFileSync(p, 'utf8')) || []).map((r) => [r.id, r]));
+  return Object.fromEntries(readRefs(`src/data/${slug}/references.yaml`).references.map((r) => [r.id, r]));
 }
 
 function mergeText(node) {
@@ -55,6 +61,21 @@ export default function rehypePaper() {
       for (const c of node.children) {
         if (c.type !== 'text') { walk(c); out.push(c); continue; }
         let v = c.value.replace(TODO, '');
+        if (reader && /(^|[\s(])@[a-z]/i.test(v) && !CITE.test(v)) {
+          CITE.lastIndex = 0;
+          let last = 0;
+          for (const m of v.matchAll(/(^|[\s(])@([a-z][\w-]*)/gi)) {
+            const r = refs[m[2]];
+            if (!r) continue;
+            const at = m.index + m[1].length;
+            if (at > last) out.push(txt(v.slice(last, at)));
+            out.push(el('a', { href: `#ref-${m[2]}`, className: ['cite'] }, [txt(citeNarrative(r))]));
+            last = at + 1 + m[2].length;
+          }
+          if (last < v.length) out.push(txt(v.slice(last)));
+          continue;
+        }
+        CITE.lastIndex = 0;
         if (!reader || !CITE.test(v)) { if (v) out.push({ ...c, value: v }); continue; }
         CITE.lastIndex = 0;
         let last = 0;
@@ -107,6 +128,22 @@ export default function rehypePaper() {
     })(tree);
 
     if (!reader) return;
+
+    // Markdown tables scroll sideways on a phone: wrap each in a focusable, labelled section
+    tree.children = tree.children.flatMap((c, k, all) => {
+      if (!(c.type === 'element' && c.tagName === 'table')) return [c];
+      let label = 'Table';
+      for (let j = k - 1; j >= 0; j--) {
+        const prev = all[j];
+        if (prev.type === 'text' && !prev.value.trim()) continue;
+        const isLabel =
+          (prev.type === 'element' && (prev.properties?.className || []).includes('table-label')) ||
+          (prev.type === 'mdxJsxFlowElement' && (prev.attributes || []).some((a) => (a.name === 'class' || a.name === 'className') && String(a.value).includes('table-label')));
+        if (isLabel) label = textOf(prev).trim();
+        break;
+      }
+      return [el('section', { className: ['table-wrap'], tabIndex: 0, ariaLabel: `${label} (scrolls sideways on small screens)` }, [c])];
+    });
 
     // Abstract: the first top-level paragraph
     const i = tree.children.findIndex((c) => c.type === 'element' && c.tagName === 'p');

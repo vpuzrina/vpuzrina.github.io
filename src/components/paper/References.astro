@@ -1,12 +1,11 @@
 ---
 // Author–year reference list with hanging indent, from src/data/<slug>/references.yaml.
 // In-text citations [@key] link here (see src/lib/rehype/paper.mjs).
-import { readFileSync, existsSync } from 'node:fs';
-import YAML from 'yaml';
-interface Ref { id: string; authors: string[]; year: number | string; title: string; journal?: string; volume?: string | number; issue?: string | number; pages?: string; publisher?: string; place?: string; url?: string }
+import { readRefs } from '../../lib/rehype/paper.mjs';
+interface Ref { id: string; authors: string[]; note?: string; year: number | string; title: string; journal?: string; volume?: string | number; issue?: string | number; pages?: string; publisher?: string; place?: string; url?: string }
 interface Props { slug: string }
-const p = `src/data/${Astro.props.slug}/references.yaml`;
-const refs: Ref[] = existsSync(p) ? (YAML.parse(readFileSync(p, 'utf8')) || []) : [];
+const { references, sources } = readRefs(`src/data/${Astro.props.slug}/references.yaml`) as { references: Ref[]; sources: string[] };
+const refs = [...references];
 refs.sort((a, b) => a.authors[0].localeCompare(b.authors[0]) || String(a.year).localeCompare(String(b.year)));
 const names = (a: string[]) => (a.length === 1 ? a[0] : a.length === 2 ? `${a[0]}, and ${a[1]}` : `${a.slice(0, -1).join(', ')}, and ${a[a.length - 1]}`);
 ---
@@ -18,14 +17,26 @@ const names = (a: string[]) => (a.length === 1 ? a[0] : a.length === 2 ? `${a[0]
         <li id={`ref-${r.id}`}>
           {names(r.authors).replace(/\.$/, '')}. {r.year}.{' '}
           {r.journal ? <>"{r.title}." <em>{r.journal}</em>{r.volume && ` ${r.volume}`}{r.issue && ` (${r.issue})`}{r.pages && `: ${r.pages}`}.</> : <><em>{r.title}</em>.{r.place && ` ${r.place}:`}{r.publisher && ` ${r.publisher}`}.</>}
-          {r.url && <> <a href={r.url}>{r.url.replace(/^https?:\/\//, '')}</a></>}
+          {r.note && ` ${r.note}.`}
+          {r.url && <> <a href={r.url}>{r.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a></>}
         </li>
       ))}
     </ul>
+    {sources.length > 0 && (
+      <>
+        <h3 id="sources" class="src-head">Industry, company and data sources</h3>
+        <ul class="src-list">{sources.map((x) => <li>{x}</li>)}</ul>
+      </>
+    )}
   </section>
 )}
 <style>
   .ref-list { list-style: none; padding: 0; margin: 0; }
   .refs li { padding-left: 2em; text-indent: -2em; margin-bottom: 0.5rem; font-size: 0.95em; }
   .refs li:target { background: var(--surface); }
+  .refs .src-head { font-size: 1em; margin: 1.5em 0 0.5em; }
+  .refs .src-head::before { content: none !important; }
+  .src-list { padding-left: 1.2rem; margin: 0; font-size: 0.95em; }
+  .src-list li { margin-bottom: 0.35rem; word-break: break-word; }
+  .refs li a { word-break: break-all; }
 </style>
