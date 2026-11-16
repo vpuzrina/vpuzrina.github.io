@@ -12,7 +12,8 @@ const banned = [
   "it's worth noting", 'plays a crucial role', 'i am excited to', "i'm excited to", 'data-driven insights',
   'turning data into stories',
 ];
-const allowed = ['robust standard errors', 'landscape orientation'];
+// 'robustness' (robustness checks) is allowed for the Cobre Panamá paper, approved by Varvara
+const allowed = ['robust standard errors', 'landscape orientation', 'robustness'];
 
 const files = [];
 (function walk(d) {
