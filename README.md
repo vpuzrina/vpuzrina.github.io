@@ -22,6 +22,24 @@ Cobre Panamá data: put daily simple returns in `returns.csv` (`date,firm_ret,mk
 `config.json`. From prices: `node scripts/prices-to-returns.mjs prices.csv > src/data/cobre-panama/returns.csv`
 (columns `date,firm_close,mkt_close`). Until both are filled, the figure shows "Data coming soon".
 
+## Drafts (.docx / .pdf)
+
+```bash
+node scripts/import-draft.mjs ~/Downloads/intro.docx nil-gender-gap
+```
+
+Writes `drafts/<slug>/<file>.md` with the wording unchanged (git-ignored, so an unpublished draft never
+reaches the public repo). Word footnotes become sidenotes, headings move down one level. pandoc cannot
+read PDF: a .pdf comes out as plain paragraphs and needs its headings marked by hand.
+
+## Paper pages
+
+Each paper is MDX in `src/content/papers/` with `reader: true`. In the text: `[^1]` for a sidenote,
+`[@key]` for a citation from `src/data/<slug>/references.yaml`, `$...$` / `$$...$$` for KaTeX,
+a paragraph starting `Status: ` for a neutral in-progress note, and `<RegressionTable spec={...} />`
+fed from a JSON file (it shows a labelled shell until estimates exist). `[TODO: ...]` never shows on the
+page; `todo-report.md` lists them all, and the main-site deploy fails while any remain.
+
 ## Commands
 
 ```bash
