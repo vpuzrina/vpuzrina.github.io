@@ -1,0 +1,64 @@
+# References for /cobre-panama, from the paper (November 2026). Cite as [@id] for (Author, Year)
+# or @id in running text for Author (Year).
+references:
+  - id: cru2026
+    authors: [CRU]
+    year: 2026
+    title: The changing nature of copper smelter economics
+    publisher: CRU
+    url: https://www.crugroup.com/en/communities/thought-leadership/2026/The-changing-nature-of-copper-smelter-economics/
+  - id: dellepiane2011
+    authors: ["Dellepiane, S."]
+    year: 2011
+    title: Event studies in investment treaty arbitration
+    journal: Journal of International Arbitration
+    volume: 28
+    issue: 4
+  - id: fernandez2023
+    authors: ["Fernandez, V.", "Pastén-Henríquez, B.", "Tapia-Griñen, P.", "Wagner, R."]
+    year: 2023
+    title: "Commodity prices under the threat of operational disruptions: Labor strikes at copper mines"
+    journal: Journal of Commodity Markets
+    volume: 32
+  - id: gelbach2013
+    authors: ["Gelbach, J.", "Helland, E.", "Klick, J."]
+    year: 2013
+    title: Valid inference in single-firm, single-event studies
+    journal: American Law and Economics Review
+    volume: 15
+    issue: 2
+  - id: kolari2010
+    authors: ["Kolari, J.", "Pynnönen, S."]
+    year: 2010
+    title: Event study testing with cross-sectional correlation of abnormal returns
+    journal: Review of Financial Studies
+    volume: 23
+    issue: 11
+  - id: lang1992
+    authors: ["Lang, L.", "Stulz, R."]
+    year: 1992
+    title: Contagion and competitive intra-industry effects of bankruptcy announcements
+    journal: Journal of Financial Economics
+    volume: 32
+    issue: 1
+  - id: mackinlay1997
+    authors: ["MacKinlay, A. C."]
+    year: 1997
+    title: Event studies in economics and finance
+    journal: Journal of Economic Literature
+    volume: 35
+    issue: 1
+  - id: restrepo2016
+    authors: ["Restrepo Ochoa, D. C.", "Peña, J. I."]
+    year: 2016
+    title: "The impact of expropriations on the stock prices of the parent companies: Sell on the rumor, buy on the news?"
+    publisher: EAFIT working paper 15007
+sources:
+  - "Fastmarkets (2024). Copper concentrate TCs still negative: how?"
+  - "First Quantum Minerals. Q3 2023 and Q2 2025 financial statements (shares outstanding)."
+  - "Franco-Nevada. 2023 results and annual report on Form 40-F (impairment, stream revenue)."
+  - "Mining Weekly (2023). China's Jiangxi Copper boosts First Quantum stake after stock rout."
+  - "Event dates: Bloomberg (2023), BNN Bloomberg (2023, 2026), Reuters via Yahoo Finance (2023), Mining.com (2023), La Prensa (2026)."
+  - "Prices: Yahoo Finance via the R package tidyquant, August 2022 to October 2026. Cross-check: Stooq."
+  - "Copper output by country: 2023 annual reports and results releases of Freeport-McMoRan, Teck, Lundin Mining, Hudbay, Southern Copper."
+  - "Code, event list, exclusions and decision log: github.com/vpuzrina/cobre-panama-event-study."
