@@ -13,7 +13,7 @@ const papers = defineCollection({
     summary: z.string(), // 1–2 sentences for Contents
     context: z.array(z.string()), // type · dates · data · tools · status
     inProgress: z.boolean().default(false),
-    thumb: z.enum(['event-window', 'research-design', 'rubric', 'sum-check', 'regression-table', 'research-flow']),
+    thumb: z.enum(['event-window', 'research-design', 'rubric', 'sum-check', 'regression-table', 'research-flow', 'did']),
     thumbAlt: z.string(),
     provenance: z.object({ repo: z.string(), data: z.string(), stack: z.string(), status: z.string() }),
     updated: z.coerce.date().optional(), // fallback only; the page uses the file's last git commit date

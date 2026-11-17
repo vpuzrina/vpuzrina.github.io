@@ -1,6 +1,6 @@
 ---
 // Small static schematic for each paper. No data: these show the method, not results.
-interface Props { kind: 'event-window' | 'research-design' | 'rubric' | 'sum-check' | 'regression-table' | 'research-flow'; alt: string }
+interface Props { kind: 'event-window' | 'research-design' | 'rubric' | 'sum-check' | 'regression-table' | 'research-flow' | 'did'; alt: string }
 const { kind, alt } = Astro.props;
 ---
 <svg class="thumb" viewBox="0 0 120 72" width="120" height="72" role="img" aria-label={alt}>
@@ -64,6 +64,17 @@ const { kind, alt } = Astro.props;
         </g>
       ))}
       <line x1="6" y1="56" x2="114" y2="56" class="ln dash" />
+    </g>
+  )}
+  {kind === 'did' && (
+    <g>
+      <line x1="6" y1="62" x2="114" y2="62" class="ax" />
+      <polyline points="8,30 30,28 52,31 74,29 96,30 112,29" class="ln" />
+      <polyline points="8,40 30,38 52,41 66,40 80,54 96,57 112,58" class="ln dash" />
+      <line x1="66" y1="8" x2="66" y2="66" class="acc" />
+      <text x="69" y="14" class="t">rule</text>
+      <text x="8" y="24" class="t">other</text>
+      <text x="8" y="50" class="t">China</text>
     </g>
   )}
   {kind === 'research-flow' && (

@@ -19,22 +19,27 @@ const txt = (value) => ({ type: 'text', value });
 const textOf = (n) => (n.type === 'text' ? n.value : (n.children || []).map(textOf).join(''));
 
 export function citeWho(ref) {
+  if (ref.cite) return ref.cite; // per-reference override, e.g. "Macey, O'Hara, and Pompilio"
   const last = ref.authors.map((a) => a.split(',')[0].trim());
   return last.length === 1 ? last[0] : last.length === 2 ? `${last[0]} and ${last[1]}` : `${last[0]} et al.`;
 }
-// parenthetical (Author, Year) and narrative Author (Year)
-export const citeLabel = (ref) => `${citeWho(ref)}, ${ref.year}`;
+// parenthetical (Author, Year), or (Author Year) when the paper's references.yaml sets citeStyle: plain;
+// narrative Author (Year)
+export const citeLabel = (ref) => `${citeWho(ref)}${ref._sep ?? ', '}${ref.year}`;
 export const citeNarrative = (ref) => `${citeWho(ref)} (${ref.year})`;
 
 export function readRefs(path) {
   if (!existsSync(path)) return { references: [], sources: [] };
   const y = YAML.parse(readFileSync(path, 'utf8')) || [];
-  return Array.isArray(y) ? { references: y, sources: [] } : { references: y.references || [], sources: y.sources || [] };
+  if (Array.isArray(y)) return { references: y, sources: [], citeStyle: 'comma' };
+  return { references: y.references || [], sources: y.sources || [], citeStyle: y.citeStyle || 'comma', sourcesTitle: y.sourcesTitle };
 }
 
 function loadRefs(file) {
   const slug = basename(file.path || '', '.mdx');
-  return Object.fromEntries(readRefs(`src/data/${slug}/references.yaml`).references.map((r) => [r.id, r]));
+  const { references, citeStyle } = readRefs(`src/data/${slug}/references.yaml`);
+  const sep = citeStyle === 'plain' ? ' ' : ', ';
+  return Object.fromEntries(references.map((r) => [r.id, { ...r, _sep: sep }]));
 }
 
 function mergeText(node) {

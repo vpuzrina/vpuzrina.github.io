@@ -4,7 +4,7 @@
 import { readRefs } from '../../lib/rehype/paper.mjs';
 interface Ref { id: string; authors: string[]; note?: string; year: number | string; title: string; journal?: string; volume?: string | number; issue?: string | number; pages?: string; publisher?: string; place?: string; url?: string }
 interface Props { slug: string }
-const { references, sources } = readRefs(`src/data/${Astro.props.slug}/references.yaml`) as { references: Ref[]; sources: string[] };
+const { references, sources, sourcesTitle } = readRefs(`src/data/${Astro.props.slug}/references.yaml`) as { references: Ref[]; sources: string[]; sourcesTitle?: string };
 const refs = [...references];
 refs.sort((a, b) => a.authors[0].localeCompare(b.authors[0]) || String(a.year).localeCompare(String(b.year)));
 const names = (a: string[]) => (a.length === 1 ? a[0] : a.length === 2 ? `${a[0]}, and ${a[1]}` : `${a.slice(0, -1).join(', ')}, and ${a[a.length - 1]}`);
@@ -24,7 +24,7 @@ const names = (a: string[]) => (a.length === 1 ? a[0] : a.length === 2 ? `${a[0]
     </ul>
     {sources.length > 0 && (
       <>
-        <h3 id="sources" class="src-head">Industry, company and data sources</h3>
+        <h3 id="sources" class="src-head">{sourcesTitle ?? 'Industry, company and data sources'}</h3>
         <ul class="src-list">{sources.map((x) => <li>{x}</li>)}</ul>
       </>
     )}
