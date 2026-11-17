@@ -12,8 +12,10 @@ const banned = [
   "it's worth noting", 'plays a crucial role', 'i am excited to', "i'm excited to", 'data-driven insights',
   'turning data into stories',
 ];
-// 'robustness' (robustness checks) is allowed for the Cobre Panamá paper, approved by Varvara
-const allowed = ['robust standard errors', 'landscape orientation', 'robustness'];
+// Approved by Varvara for her papers' own wording: 'robustness' (Cobre), 'robust to heteroskedasticity'
+// and 'dynamics' (Nasdaq paper). 'Yahoo!' is a company name, not an exclamation mark.
+const allowed = ['robust standard errors', 'landscape orientation', 'robustness', 'robust to heteroskedasticity', 'dynamics'];
+const brandNames = ['yahoo!'];
 
 const files = [];
 (function walk(d) {
@@ -41,6 +43,7 @@ for (const file of files) {
     const re = new RegExp(`\\b${w.replace(/[-']/g, (c) => `\\${c}`)}`, 'i');
     if (re.test(text)) problems.push(`${file}: banned word "${w}"`);
   }
+  for (const b of brandNames) text = text.split(b).join(b.replace('!', ''));
   if (/!\s/.test(text.replace(/<!--[\s\S]*?-->/g, ''))) {
     // exclamation marks in prose
     const m = text.match(/.{0,30}![^=].{0,10}/);
