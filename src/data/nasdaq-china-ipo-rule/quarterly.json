@@ -1,0 +1,154 @@
+{
+ "_source": "event_study.csv and monthly_panel.csv from replication/analysis.py in github.com/vpuzrina/nasdaq-china-ipo-rule. Poisson of monthly IPO counts on China x quarter dummies with month fixed effects, HC1 standard errors, base 2025Q2. coef and se are null in quarters with no China/HK IPOs, where the estimate is not identified.",
+ "base": "2025Q2",
+ "proposed": {
+  "date": "2025-09-03",
+  "q": "2025Q3"
+ },
+ "effective": {
+  "date": "2026-06-14",
+  "q": "2026Q2"
+ },
+ "quarters": [
+  {
+   "q": "2022Q1",
+   "coef": null,
+   "se": null,
+   "china": 0,
+   "other": 4
+  },
+  {
+   "q": "2022Q2",
+   "coef": null,
+   "se": null,
+   "china": 0,
+   "other": 9
+  },
+  {
+   "q": "2022Q3",
+   "coef": -0.1178,
+   "se": 0.4243,
+   "china": 6,
+   "other": 6
+  },
+  {
+   "q": "2022Q4",
+   "coef": -1.5041,
+   "se": 0.6609,
+   "china": 1,
+   "other": 4
+  },
+  {
+   "q": "2023Q1",
+   "coef": 0.0,
+   "se": 0.4591,
+   "china": 9,
+   "other": 8
+  },
+  {
+   "q": "2023Q2",
+   "coef": -0.2356,
+   "se": 0.4462,
+   "china": 8,
+   "other": 9
+  },
+  {
+   "q": "2023Q3",
+   "coef": -0.9933,
+   "se": 0.4792,
+   "china": 5,
+   "other": 12
+  },
+  {
+   "q": "2023Q4",
+   "coef": -0.4543,
+   "se": 0.4564,
+   "china": 5,
+   "other": 7
+  },
+  {
+   "q": "2024Q1",
+   "coef": 0.0,
+   "se": 0.3832,
+   "china": 9,
+   "other": 8
+  },
+  {
+   "q": "2024Q2",
+   "coef": -0.1178,
+   "se": 0.3657,
+   "china": 9,
+   "other": 9
+  },
+  {
+   "q": "2024Q3",
+   "coef": 0.1699,
+   "se": 0.4488,
+   "china": 12,
+   "other": 9
+  },
+  {
+   "q": "2024Q4",
+   "coef": 0.3417,
+   "se": 0.4015,
+   "china": 19,
+   "other": 12
+  },
+  {
+   "q": "2025Q1",
+   "coef": 0.5328,
+   "se": 0.4125,
+   "china": 23,
+   "other": 12
+  },
+  {
+   "q": "2025Q2",
+   "coef": 0.0,
+   "se": 0.0,
+   "china": 18,
+   "other": 16
+  },
+  {
+   "q": "2025Q3",
+   "coef": -0.0637,
+   "se": 0.3369,
+   "china": 19,
+   "other": 18
+  },
+  {
+   "q": "2025Q4",
+   "coef": -0.9651,
+   "se": 0.4128,
+   "china": 6,
+   "other": 14
+  },
+  {
+   "q": "2026Q1",
+   "coef": -1.9095,
+   "se": 0.9454,
+   "china": 1,
+   "other": 6
+  },
+  {
+   "q": "2026Q2",
+   "coef": -1.5041,
+   "se": 1.0568,
+   "china": 1,
+   "other": 4
+  },
+  {
+   "q": "2026Q3",
+   "coef": -2.0637,
+   "se": 0.8382,
+   "china": 1,
+   "other": 7
+  },
+  {
+   "q": "2026Q4",
+   "coef": null,
+   "se": null,
+   "china": 0,
+   "other": 1
+  }
+ ]
+}
