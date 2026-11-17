@@ -1,0 +1,9 @@
+{
+  "_source": "Table 4 of the paper: IPOs per month by the six specialist underwriters (D. Boral, Craft, WestPark, Dominari, Revere, Bancroft).",
+  "unit": "deals per month",
+  "periods": ["Before proposal", "Proposal to effective date", "After effective date"],
+  "series": [
+    { "key": "china", "label": "China / HK / Macau issuers", "values": [1.0, 0.32, 0] },
+    { "key": "other", "label": "Other issuers", "values": [0.34, 0.75, 0.22] }
+  ]
+}
