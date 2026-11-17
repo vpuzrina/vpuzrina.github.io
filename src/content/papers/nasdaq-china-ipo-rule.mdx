@@ -1,0 +1,197 @@
+---
+order: 2
+title: "Nasdaq's $25 Million Minimum Valuation for IPOs by Companies with Operations in China"
+short: Nasdaq Rule 5210(l) and China IPOs
+description: How Nasdaq's 2026 rule requiring China-based issuers to raise at least $25 million changed IPOs, underwriters and aftermarket outcomes, using data on 939 foreign F-1 filers from 2022 to 2026.
+summary: IPOs by mainland Chinese, Hong Kong and Macau issuers fell 67% relative to other foreign IPOs between Nasdaq's September 2025 proposal of Rule 5210(l) and its effective date, and 88% after it, in data on 939 F-1 filers. Small Chinese IPOs showed similar ramp-and-dump rates to other small foreign IPOs (13% versus 10%, p = 0.49).
+context: ['Independent research', 'November 2026', 'SEC EDGAR F-1 filings, 939 foreign issuers; Yahoo Finance prices', '[TODO: tools used]', 'working paper']
+thumb: did
+thumbAlt: Schematic of a difference-in-differences design, with two lines that move together until a vertical rule marks the new rule and one of them drops.
+provenance: { repo: '[TODO: code repository, if public]', data: 'SEC EDGAR filings (F-1, F-1/A, 424B1, 424B4, RW, EFFECT), Jan 2022 – Oct 2026; Yahoo Finance prices', stack: '[TODO: tools used]', status: 'working paper, November 2026' }
+reader: true
+---
+
+import Figure from '../../components/Figure.astro';
+import { u } from '../../lib/url';
+
+In June 2026, Nasdaq introduced a requirement that mainland Chinese and Hong Kong and Macau issuers raise at least \$25 million in a firm-commitment IPO. Before the announcement, 85% of mainland Chinese and Hong Kong and Macau IPOs raised less than \$25 million. I collected data on 939 foreign issuers who filed Form F-1s between January 2022 and October 2026 in EDGAR and determined their mainland Chinese and Hong Kong and Macau status based on information in their Form F-1s. IPOs by mainland Chinese and Hong Kong and Macau issuers fell by 67% relative to other foreign IPOs between the proposal announcement in September 2025 and the effective date of the rule and by 88% after the effective date. IPOs by mainland Chinese and Hong Kong and Macau issuers began declining immediately after the proposal announcement, not after SEC approval. Only two mainland Chinese and Hong Kong and Macau IPOs have been completed since the effective date, raising \$51 million and \$94 million. Boutique underwriters with expertise in small mainland Chinese and Hong Kong and Macau IPOs quickly pivoted to other small Asian issuers after the proposal announcement and largely stopped IPO activity. In the secondary market, small mainland Chinese and Hong Kong and Macau IPOs had higher initial returns than other small IPOs, but similar ramp-and-dump activity (13% versus 10%, p = 0.49) as other small foreign IPOs, especially in Southeast Asia and Japan. The Nasdaq rule has eliminated small mainland Chinese and Hong Kong and Macau IPOs, but the rule targets the issuers' geography; similar activity occurs among other small IPOs, including those of \$4 Asian microcap stocks.
+
+## Introduction
+
+From 2022 to mid-2025, issuers from mainland China and Hong Kong made up about 50% of IPOs by foreign issuers in the U.S. and had minimal market caps. Per a rule filing with Nasdaq, 143 of 151 IPOs by China-based issuers between August 2022 and April 2025 were under \$25 million. Other statistics about Chinese IPOs show 2 million shares issued at \$4 each, gross proceeds of \$8 million, and a low number of shares outstanding. Regulators came to see IPOs by Chinese issuers as a channel for pump-and-dump schemes. FINRA addressed pump-and-dump schemes involving Chinese issuers in Regulatory Notice 22-25.
+
+On 3 September 2025, Nasdaq proposed Listing Rule 5210(l). On 14 May 2026, the SEC approved Listing Rule 5210(l), which took effect the following month on 14 June 2026. Under the new rule, companies with headquarters in mainland China or Hong Kong or Macau or otherwise managed from these locations may list securities by completing an underwritten firm commitment IPO with gross proceeds of at least \$25 million. Other listing methods include direct listings on the Global Select Market and de-SPAC transactions and other cross-listings from the Over-the-Counter market and other exchanges with gross proceeds of at least \$25 million. Listing Rule 5210(l) is based on location, among other things, and does not consider whether a company's securities are traded on certain markets.
+
+This paper examines three questions. Did the new regulation impact IPO decisions and, if so, in what way? Which party or parties, issuers waiting to go public or underwriters assisting them with the IPO process, suffered from the regulation? Were smaller IPOs from China traded differently in the aftermarket than other smaller foreign IPOs, consistent with a location-based rule?
+
+I answer these questions with data on F-1 issuers from 2022 to October 2026 that I manually collect from EDGAR. I apply a text classifier to extract the locations of issuers' headquarters and other business locations described in F-1 prospectuses; I find evidence of missing data for Chinese issuers, as about half of China-based issuers' addresses are missing from EDGAR. I compare Chinese and other foreign issuers using a difference-in-differences approach with month fixed effects.
+
+Three key findings are presented. First, the rule helped curb Chinese IPOs in the market. Chinese IPOs declined 67% relative to other foreign IPOs in the nine months from September 2025 to June 2026. Eight Chinese IPOs were completed in the first seven weeks following the rule announcement, and there were no Chinese IPOs from mid-January to late June 2026. Two Chinese IPOs were completed after the effective date of the rule. Both were over the minimum public offering size. Second, underwriters with prior experience in small Chinese IPOs were most responsive to the rule. These underwriters have completed small IPOs in Singapore, Malaysia, Taiwan, and Japan that were not subject to the rule. After October 2025, the six experienced underwriters completed no more IPOs for Chinese issuers, and since the effective date they have completed one IPO in total. Third, small Chinese IPOs had superior post-IPO stock price performance to other small foreign IPOs, and other small Asian IPOs showed similar levels of stock price manipulation. The findings are also relevant to the broader micro-cap IPO market, which has an average offering size of \$4 million.
+
+The paper makes contributions to research on stock price manipulation [@aggarwal2006; @leuz2026] and underwriter reputation [@carter1990] and stock exchange listing standards as market regulation [@macey2008]. The paper also builds on prior research about Chinese companies listed on U.S. exchanges [@lee2015], including research on reverse mergers. No prior empirical research exists on Rule 5210(l); legal publications by law firms discuss this rule.
+
+## Institutional background
+
+The surge in small-cap Chinese IPOs is driven by two factors. First, starting in 2021, Chinese authorities took steps to restrict Chinese IPOs in the United States. Many smaller Chinese companies planning IPOs in the United States were Hong Kong-based service firms with parent companies in the Cayman Islands. Second, some small U.S. brokerage firms set up businesses to arrange IPOs for these Chinese companies, often at an IPO price of \$4 per share, 7% underwriting fee, listing on the Nasdaq Capital Market, and low IPO float, giving a handful of shareholders significant control over the stock price.
+
+Regulators acted over time. Table 1 lists the key dates for the events of interest.
+
+<p class="table-label" id="table-1">Table 1: Regulatory timeline</p>
+
+| Date | Event | Role in the analysis |
+| --- | --- | --- |
+| Nov 2022 | FINRA Regulatory Notice 22-25 on ramp-and-dump schemes in small-cap IPOs | Background; Nasdaq already slowed reviews of small IPOs from September 2022 |
+| 3 Sep 2025 | Nasdaq files the proposal for Rule 5210(l) (SR-NASDAQ-2025-069) | Start of the "interim" period; pipeline cohort fixed on this date |
+| 5 Sep 2025 | SEC announces a Cross-Border Task Force | Common shock to foreign issuers, absorbed by month effects |
+| 18 Dec 2025 | SEC approves SR-NASDAQ-2025-068: minimum public float under the net income standard rises from \$5M to \$15M | Shock to all small IPOs, absorbed by month effects |
+| Mar 2026 | NYSE American tightens its listing standards; House Select Committee on the CCP sends letters to D. Boral Capital, Dominari Securities and Revere Securities | Closes the main alternative venue; shock to the specialist underwriters |
+| 14 May 2026 | SEC approves Rule 5210(l) | — |
+| 3 Jun 2026 | SEC approves IM-5101-4, letting Nasdaq delist securities with manipulative-looking trading | Common shock to small listings |
+| 14 Jun 2026 | Rule 5210(l) takes effect | Start of the "post" period |
+
+Two features of the sequence of events guide the research design. Multiple foreign IPOs were affected at the same time by shock events. Other foreign IPOs during the same months should be used as the comparison group, not Chinese IPOs during earlier months. The regulation was announced publicly nine months before it was implemented. The announcement date, not the implementation date, should be used to divide the sample into two groups.
+
+## Data
+
+*Filings.* I gather URLs for F-1, F-1/A, 424B1, 424B4, RW, and EFFECT filings in the EDGAR quarterly database from January 2022 to October 2026. Data at the company level come from the SEC submission API. I find 939 foreign private issuers that filed at least one F-1. For each F-1 and final prospectus filing, I download the first 600 KB of the document and gather information on offer price or price range, number of shares offered, amount in the proceeds table, underwriting commission, whether the offering is firm commitment or best efforts, proposed listing exchange, and underwriters.
+
+*What is an IPO.* Any issuer that files a 424B1 or 424B4 on or after the initial F-1 filing is classified as a priced offering. I exclude 54 follow-on offerings and uplistings. These issuers previously filed a 20-F, 10-K, 6-K, or 8-K and were public somewhere. Six offerings were self-underwritten best-efforts offerings for which proceeds were not guaranteed and quoted in the OTC markets, not an exchange. The number of IPOs is 327.
+
+*Who is China-based.* Rule 5210(l) covers companies with their principal place of business in mainland China, Hong Kong, or Macau. The business address listed on EDGAR filings is not a good predictor of company headquarters: the business address is often missing, or a U.S. address for service of process is listed. I work with prospectuses for these companies. I classify companies with headquarters in China if the prospectus lists the principal executive offices address as mainland China, Hong Kong, or Macau. If the prospectus does not list the principal executive offices address as mainland China, Hong Kong, or Macau, I look for other references to where the company does business in the prospectus. If there are no other references to where the company does business in the prospectus, I use information from the EDGAR filing and references to "PRC" and "Hong Kong" to make my determination. I tested the classifier on three samples:
+
+- 30 random issuers matched to China by keyword rule; 25 of these keyword matches were correct, and the classifier matched 29 of them to China;
+- 30 random non-Chinese issuers detected by the classifier: 0 false negatives;
+- all 49 IPOs priced after the proposal: the classification matches the prospectus in every case, with the exception of one borderline case (BGIN Blockchain, a Singapore company).
+
+The other errors can be removed manually. The head office rule does not flag companies that are merely incorporated in mainland China, Hong Kong, or Macau. The main drawback of the head office rule is that it does not cover companies chartered in Hong Kong but with other head offices. This issue will be resolved in the next version of the classifier by adding a check to capture companies chartered in Hong Kong. My final sample includes 152 China-based IPOs and 175 other foreign IPOs.
+
+*Deal size.* Gross proceeds are disclosed on the front cover of the final prospectus. Gross proceeds are calculated as price times shares if not disclosed elsewhere. Disclosed amounts of less than \$1 million are mistakes and are excluded.
+
+*Underwriters.* Final IPO prospectus underwriters are identified above the line "Prospectus dated ...". I compare prospectus underwriter names to a list of about 110 banks and choose as lead underwriter the first name on the prospectus list. This helps identify the lead underwriter in 59% of China-based IPOs and 71% of IPOs based elsewhere. In other IPOs, underwriter logos are the only source of underwriter names.
+
+*Prices.* Daily opening and closing stock prices come from Yahoo! Finance, converted to IPO shares using Yahoo!'s information on historical stock splits. Many of the stocks in the sample later executed reverse stock splits. Daily prices from IPO day are available for 266 of the 327 IPOs in the sample; most of the remaining IPOs were delisted.
+
+## Empirical strategy
+
+*IPOs.* I count the number of IPOs priced per month $m$ for the period January 2022 through October 2026 for Chinese ($C = 1$) and non-Chinese ($C = 0$) issuers, and estimate
+
+$$
+\mathbb{E}[N_{gm}] = \exp\left(\alpha_m + \beta C_g + \delta_1 C_g \cdot \text{Interim}_m + \delta_2 C_g \cdot \text{Post}_m\right) \qquad\qquad (1)
+$$
+
+where Interim represents September 2025 to June 13, 2026, and Post represents June 14, 2026, and after. Month fixed effects control for other shared features of firms in a given month during both periods, including the December 2025 float requirement and other NYSE American and broad market events. $\exp(\delta) - 1$ represents the percentage change in China IPOs relative to other foreign IPOs. Standard errors are robust to heteroskedasticity. An event study replaces the Interim and Post interactions with China × quarter dummies, excluding 2025Q2, the most recent completed quarter before the proposal announcement.
+
+The main assumption underlying the identification strategy is that the month-to-month dynamics of China and other foreign IPOs would be the same without this policy. The average number of IPOs by China and other foreign firms per month before the policy was implemented was 3.18. Event study estimates for 2023 and the first half of 2025 are imprecise but indicate no decrease in China IPOs before the policy and a rise in the fraction of IPOs attributable to Chinese firms. The fraction of China IPOs was rising in 2022. I provide additional estimates using 2023 and 2024 as baseline years for comparison.
+
+*The pipeline.* I study outcomes for issuers who had started the securities registration process but not yet settled or withdrawn their registration as of the proposal date. My sample consists of issuers that filed an F-1 registration statement but had not settled or withdrawn their registration and filed an F-1 or amendment in the 12 months prior to the proposal date. I follow these issuers through November 2026 to observe whether they price or withdraw their registration and use Fisher's exact test and a linear probability model with a China × Small interaction to test for differences in withdrawal rates by China status and anticipated deal size (over or under \$25 million, using information from previous F-1 filings and fee exhibits).
+
+*Underwriters.* I classify a bank as a small-cap underwriter for China if, before completing this deal, it had underwritten or co-underwritten at least three IPOs for companies based in China with deal sizes of less than \$25 million that represented at least half of all its underwritings for China IPOs. I document monthly IPOs by specialists for three time periods, by issuer type.
+
+*Aftermarket.* I measure first-day stock market performance against the offer price; ramp, the maximum price over the first 60 trading days divided by the first-day closing price; and 120-day returns against the first-day closing price. A ramp-and-dump IPO is one with a ramp ratio of 3 or more and a drop of 70 percent or more from the high price within a year. Measuring against the first-day closing price eliminates the need to adjust for stock splits when measuring ramp and drop.
+
+## Results
+
+### IPO volume
+
+China initial public offerings did not go forward as planned. Preimplementation failures of China IPOs occurred.
+
+<p class="table-label" id="table-2">Table 2: IPOs per month and Poisson difference-in-differences estimates</p>
+
+| Panel A: IPOs per month | China-based IPOs | Other foreign IPOs |
+| --- | ---: | ---: |
+| Before proposal (Jan 2022 – Aug 2025) | 3.18 | 3.18 |
+| Proposal to effective date (Sep 2025 – 13 Jun 2026) | 0.89 | 2.67 |
+| After effective date (14 Jun – Oct 2026) | 0.25 | 2.00 |
+
+| Panel B: Poisson DiD, change relative to other foreign IPOs | Interim | Post |
+| --- | ---: | ---: |
+| Baseline, 2022–2026 | −67% (p = 0.001) | −88% (p = 0.009) |
+| Sample from 2023 | −71% (p &lt; 0.001) | −89% (p = 0.006) |
+| Sample from 2024 | −74% (p &lt; 0.001) | −90% (p = 0.003) |
+
+The interim estimate describes patterns during the study period. Eight IPOs involving China-based companies took place in September and October 2025 and had deal values under \$25 million. Two IPOs involving China-based companies took place in December 2025 and January 2026. No IPOs involving China-based companies took place from mid-January to June 26, 2026. IPOs involving China-based companies completed quickly before the rule went into effect, but other planned IPOs involving China-based companies were canceled. Few IPOs involving China-based companies took place after the study period, resulting in a large confidence interval for the post-period estimate. The interim estimate is more informative than the post-period estimate.
+
+<Figure n={1} title="China/HK IPOs relative to other foreign IPOs, by quarter" params="Poisson, month fixed effects, 2025Q2 = 0, 95% confidence intervals" id="figure-1">
+  <img src={u('/papers/nasdaq-china-ipo-rule/fig1-event-study-by-quarter.png')} width="1500" height="630" loading="lazy" alt="Quarterly event-study estimates from 2022Q1 to 2026Q4 of China and Hong Kong IPOs relative to other foreign IPOs, as log ratios against 2025Q2 with 95% confidence intervals. Before the September 2025 proposal the estimates sit around zero; after it they fall, to about −1 in 2025Q4 and about −1.5 to −2 in 2026, with wide intervals. Triangles mark quarters with no China IPOs." />
+  <Fragment slot="caption">
+    <p>Quarterly proportion of IPOs from China and other countries with Poisson fixed effects for month, 2025Q2 = 0, and 95% confidence intervals. Triangles mark quarters with no IPOs from China.</p>
+  </Fragment>
+</Figure>
+
+### Deal size
+
+Before the announcement, the median initial public offering for Chinese companies was \$8.0 million, and 85% of initial public offerings for Chinese companies were below \$25 million (104 of 123 Chinese initial public offerings with known deal sizes). All ten initial public offerings for Chinese companies during the pendency period were below \$25 million. Both initial public offerings for Chinese companies after the effective date were more than \$25 million: DSC Holdings's initial public offering on the Nasdaq Global Market with Deutsche Bank and CICC was \$51 million, and Londian Wason New Energy's initial public offering with Cantor Fitzgerald, Huatai, CMB International, and US Tiger was \$94 million. With only two initial public offerings for Chinese companies after the effective date, I cannot evaluate clustering of initial public offerings for Chinese companies around \$25 million. My data show a decline in initial public offerings for Chinese companies between \$5 million and \$20 million, not an increase to \$25 million.
+
+One option is available to small Chinese issuers. Three Chinese issuers (GreenVector Holdings, RUI Holdings, and Advance JV Group) filed final prospectuses in July through September 2026 offering shares of common stock at \$1 to \$2 per share, conditional on quotation on OTCQB. The OTC market is exempt from the rule. There were two offerings by Chinese issuers in the three and a half years prior to the rule proposal.
+
+### The pipeline
+
+Of 182 issuers in the pipeline on 3 September 2025, 99 were Chinese issuers.
+
+<p class="table-label" id="table-3">Table 3: Outcomes for issuers in the pipeline on 3 September 2025</p>
+
+| Outcome by November 2026 | China-based | Other foreign |
+| --- | ---: | ---: |
+| Priced before 14 Jun 2026 | 11 | 14 |
+| Priced after 14 Jun 2026 | 1 | 1 |
+| Withdrew the F-1 | 25 (25.3%) | 11 (13.3%) |
+| Neither | 62 | 57 |
+| Total | 99 | 83 |
+
+Issuers from China were twice as likely to withdraw (Fisher p = 0.061). Twenty-one of 72 issuers from China seeking less than \$25 million withdrew (29%). A linear probability model showed an interaction effect of Chinese and small issuers on the likelihood of withdrawal of 9 percentage points (p = 0.43). Interpretation of these statistics is limited by the large "neither" category. Many F-1 filings are archived in the EDGAR database for long periods, making it impossible to distinguish issuers that have withdrawn from issuers that have not in the EDGAR database.
+
+### Underwriters
+
+The Chinese IPO market is a small, specialized market served by several firms. Among Chinese IPOs before the announcement with a known lead underwriter, D. Boral Capital (formerly EF Hutton) was the lead underwriter in 13% of cases, Craft Capital in 11%, US Tiger Securities in 6%, and WestPark Capital and Goldman Sachs in 5% each. Five lead underwriters captured 40% of the market, and the Herfindahl index for lead underwriters in Chinese IPOs was 518. Six firms were specialists in Chinese IPOs: D. Boral Capital, Craft Capital, WestPark Capital, Dominari Securities, Revere Securities, and Bancroft Capital. Three firms received letters from the House Select Committee in March 2026.
+
+<p class="table-label" id="table-4">Table 4: IPOs per month by the six specialist underwriters</p>
+
+| Period | China-based issuers | Other issuers |
+| --- | ---: | ---: |
+| Before proposal | 1.00 | 0.34 |
+| Proposal to effective date | 0.32 | 0.75 |
+| After effective date | 0 | 0.22 |
+
+The specialists' last deals with Chinese firms included deals with Acco Group (17 October 2025, Craft and Revere) and Texxon Holding (22 October 2025, D. Boral). The specialists' other recent deals included underwritten IPOs of smaller firms that are not covered by regulations, valued at \$5–7 million, including Fitness Champs and Republic Power (Singapore), Megan Holdings (Malaysia), KNOREX (Singapore), and Agencia Comercial Spirits (Taiwan). The six banks have completed one IPO since the effective date, Ticketplus (August 2026, \$29 million). Neither post-rule China IPO used a specialist. Compensation for underwriting did not vary significantly between China and other deals; the discount on smaller IPOs in China was 6.95%, and the discount on other smaller IPOs was 6.3%, versus 2.5–4% on larger IPOs.
+
+<Figure n={2} title="IPOs underwritten by the six China small-cap specialists" params="deals per month, by period and issuer class" id="figure-2">
+  <img src={u('/papers/nasdaq-china-ipo-rule/fig2-specialist-underwriters.png')} width="975" height="600" loading="lazy" alt="Stacked bars of IPOs per month by the six specialist underwriters in three periods. Before the proposal, about 1.0 China, Hong Kong and Macau deals and 0.34 other deals a month; from the proposal to the rule, about 0.32 China deals and 0.75 other deals; after the rule, no China deals and about 0.22 other deals." />
+  <Fragment slot="caption">
+    <p>IPOs per month underwritten by the six specialists combined (D. Boral, Craft, WestPark, Dominari, Revere, Bancroft), by period and issuer class. An IPO handled by more than one specialist is counted once for each specialist on the deal.</p>
+  </Fragment>
+</Figure>
+
+### Aftermarket
+
+The regulation was introduced based on a belief that small IPOs in China have higher rates of market manipulation. The data provided in this study only provide limited evidence to support this belief.
+
+Small China IPOs outperformed other small IPOs in the first 60 days of trading (Mann-Whitney p = 0.01). Small China IPOs and other small IPOs showed comparable rates of full ramp-and-dump behavior, though these differences were not statistically significant (Fisher p = 0.49). Both small China IPOs and other small IPOs saw a 50% decline in value over six months. The other eight ramp-and-dump cases involved micro IPOs in other Asian countries with initial IPO prices of \$4–7.50: Primech, Mobile-health Network, and HomesToLife (Singapore); VCI Global (Malaysia); PicoCELA and rYojbaba (Japan); Jyong Biotech (Taiwan); and XCHG (Germany headquarters, operations in China). Deals led by the six IPO specialists showed comparable rates of full ramp-and-dump behavior to other China IPOs: 2 of 27 versus 15%.
+
+<p class="table-label" id="table-5">Table 5: Aftermarket performance of IPOs priced before the proposal</p>
+
+| IPOs before the proposal | With prices | First-day return (median) | 60-day run-up (median) | Ramp-and-dump | 120-day return (median) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| China-based, under \$25M | 90 | +2% | 1.47x | 13% (12) | −48% |
+| Other foreign, under \$25M | 82 | −8% | 1.22x | 10% (8) | −52% |
+| China-based, \$25M and above | 22 | +7% | 1.19x | 14% (3) | −46% |
+| Other foreign, \$25M and above | 34 | −1% | 1.12x | 0% | −18% |
+
+## Robustness and limitations
+
+*Definition of China-based issuers.* The primary results are not sensitive to alternative definitions. Limiting the sample to issuers with China or Hong Kong operations, irrespective of their official headquarters location, results in −68% (interim) and −88% (post). Limiting the sample to any issuers with the word China in their name results in −60% (interim) and −90% (post). Limiting the sample to issuers with a mailing address in China listed in their EDGAR filings results in −42% (p = 0.12, interim) and −61% (p = 0.24, post). The lower estimates under this definition are likely due to the fact that about half of all China-based issuers do not have a mailing address in China listed in their EDGAR filings and are therefore not included in the sample, creating attenuation bias. This is a caveat for researchers using EDGAR header data on China-based issuers.
+
+*Limited post-effective information.* There have been two initial public offerings by Chinese firms in the about four and a half months since the effective date. Very little is known about the post-effective period. Most of what is known about this rule comes from the nine months between the announcement date and the effective date.
+
+*Concurrent events.* Nasdaq's December 2025 float rule and other Listing Rule IM-5101-4 and NYSE American listing rule changes have implications for other small issuers. Month fixed effects help control for other common factors affecting other small issuers. Other factors affecting Chinese issuers more than other small issuers that are unrelated to Listing Rule 5210(l) can bias the estimated effect of Rule 5210(l). A decrease in Chinese IPOs in September 2025, three months before the float rule, reduces the risk that other factors will bias the estimated effect of Rule 5210(l).
+
+*Measurement.* Underwriters of IPO firms are identified for 59–71% of sample firms using text-image data on the names of underwriting banks in IPO registration statements. Data on IPO prices from Yahoo Finance exclude firms that have been delisted. This sample-selection issue for post-IPO performance likely biases the prevalence of ramp-and-dump strategies downward for all groups of firms. In eight IPOs, the first-day return appears unusually high or low (over +400% or under −80%), most likely because of unreported stock splits. Run-up and drop, which are measured against the first-day close, are unaffected by stock splits. Future research should use CRSP daily stock data, which include data on stock splits and delisted firms.
+
+*The pipeline.* "Neither" includes issuers applying to withdraw and issuers that have withdrawn but not registered a withdrawal. Other data, such as the date of the most recent amendment, may help narrow the comparison of withdrawals.
+
+## Conclusion
+
+Rule 5210(l) worked as planned to some extent: initial public offerings by Chinese firms on Nasdaq no longer take place. Initial public offerings by Chinese firms on Nasdaq fell sharply before the new rule was adopted nine months later and stopped after a brief period of initial public offerings by Chinese firms. Investment banks that previously made initial public offerings for Chinese firms began offering initial public offerings in other Asian countries and stopped offering initial public offerings for Chinese firms altogether.
+
+Overall, evidence indicates downsides to the geographic rule. Before the rule, aftermarket outcomes for small Chinese issuers were similar to those for small issuers from Singapore, Malaysia, and Japan, which the rule does not cover. All small IPOs from China and other countries fell roughly 50% over six months and were equally likely to be targeted by aftermarket flipping. Other rules that set minimum offering size and float requirements for all issuers might mitigate such risks. A Nasdaq rule adopted in December 2025 sets a minimum float requirement. These and other rules may help explain the decline in foreign IPOs, especially those by small companies, in 2026.
+
+Two topics for further research on small Chinese firms include redirection of their IPOs to other markets, including the U.S. OTC market and Hong Kong, and continued development of self-underwritten OTC offerings, particularly among Chinese firms in late 2026. Also of interest is whether higher aftermarket risks in specialist markets apply to IPOs of small firms in other Asian countries. Longer CRSP post-IPO data could be useful in studying this issue.

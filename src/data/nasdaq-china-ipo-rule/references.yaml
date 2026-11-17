@@ -1,0 +1,57 @@
+# References for /nasdaq-china-ipo-rule, from the paper (November 2026).
+# This paper cites (Author Year) without a comma, listing up to three names.
+citeStyle: plain
+sourcesTitle: Regulatory and other sources
+references:
+  - id: aggarwal2006
+    authors: ["Aggarwal, R. K.", "Wu, G."]
+    year: 2006
+    title: Stock market manipulations
+    journal: Journal of Business
+    volume: 79
+    issue: 4
+    pages: 1915–1954
+  - id: carter1990
+    authors: ["Carter, R.", "Manaster, S."]
+    year: 1990
+    title: Initial public offerings and underwriter reputation
+    journal: Journal of Finance
+    volume: 45
+    issue: 4
+    pages: 1045–1067
+  - id: lee2015
+    authors: ["Lee, C. M. C.", "Li, K. K.", "Zhang, R."]
+    cite: Lee, Li, and Zhang
+    year: 2015
+    title: "Shell games: The long-term performance of Chinese reverse-merger firms"
+    journal: The Accounting Review
+    volume: 90
+    issue: 4
+    pages: 1547–1589
+  - id: leuz2026
+    authors: ["Leuz, C.", "Meyer, S.", "Muhn, M.", "Soltes, E.", "Hackethal, A."]
+    year: 2026
+    title: "Who falls prey to the Wolf of Wall Street? Investor participation in market manipulation"
+    journal: Management Science
+    volume: 72
+    issue: 8
+    pages: 6603–6631
+  - id: macey2008
+    authors: ["Macey, J.", "O'Hara, M.", "Pompilio, D."]
+    cite: Macey, O'Hara, and Pompilio
+    year: 2008
+    title: "Down and out in the stock market: The law and economics of the delisting process"
+    journal: Journal of Law and Economics
+    volume: 51
+    issue: 4
+    pages: 683–713
+sources:
+  - "SEC: notice of filing of SR-NASDAQ-2025-069"
+  - "Greenberg Traurig: SEC approves Nasdaq's $25 million IPO requirement for China-based companies"
+  - "Securities Law Blog: Nasdaq proposes to modify listing standards for China-based companies"
+  - "Cooley: exchange listings rule watchlist (effective date, NYSE American)"
+  - "FindKnowDo: SEC order details and Nasdaq statistics"
+  - "Olshan: FINRA and the stock exchanges take aim at underwriters (FINRA RN 22-25)"
+  - "Caixin: US lawmakers probe underwriters over Chinese IPO manipulation claims"
+  - "House Select Committee on the CCP: letter to Dominari Securities"
+  - "SFC and HKEX: joint statement on IPO misconduct"
