@@ -64,6 +64,7 @@ export const research: Entry[] = [
     bullets: [
       'Built a dataset of 939 foreign issuers that filed Form F-1s with the SEC between January 2022 and October 2026, classifying China-based issuers from their prospectuses, and estimated a Poisson difference-in-differences model with month fixed effects.',
       'IPOs by mainland Chinese, Hong Kong and Macau issuers fell 67% relative to other foreign IPOs between the proposal and the effective date, and 88% after it; small Chinese IPOs showed similar ramp-and-dump rates to other small foreign IPOs (13% versus 10%, p = 0.49).',
+      'Code and data: github.com/vpuzrina/nasdaq-china-ipo-rule.',
     ],
     cvHide: true,
     paper: 'nasdaq-china-ipo-rule',
