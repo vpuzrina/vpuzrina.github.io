@@ -1,0 +1,78 @@
+/* Shared by the two Cobre figures (CarPaths, Placebo) */
+.cpth-controls { display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; margin-bottom: 0.4rem; }
+.cpth-radio {
+  border: 0; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.9rem;
+  font-family: var(--mono); font-size: var(--fs-mono);
+}
+.cpth-radio legend { float: left; color: var(--muted); padding: 0; margin-right: 0.2rem; }
+.cpth-radio label {
+  color: var(--muted); cursor: pointer; padding: 0.15rem 0; white-space: nowrap;
+  border-bottom: 1px solid transparent; transition: color var(--t), border-color var(--t);
+}
+.cpth-radio label:hover { color: var(--text); }
+.cpth-radio label.on { color: var(--text); border-bottom-color: var(--accent); }
+.cpth-radio input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cpth-radio label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.cpth-firms { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.cpth-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem; background: none; border: 0;
+  border-bottom: 1px solid transparent; padding: 0.15rem 0;
+  font-family: var(--mono); font-size: var(--fs-mono); color: var(--muted); cursor: pointer;
+}
+.cpth-btn[aria-pressed='true'] { color: var(--text); border-bottom-color: var(--accent); }
+.cpth-btn[aria-pressed='false'] svg { opacity: 0.35; }
+.cpth-btn:hover { color: var(--text); }
+.cpth-btn svg line { stroke-width: 2; }
+.cpth-btn svg line.f0, .cpth-svg .line.f0 path { stroke: var(--text); }
+.cpth-btn svg line.f1, .cpth-svg .line.f1 path { stroke: var(--muted); stroke-dasharray: 5 3; }
+
+.cpth-ev { margin: 0.2rem 0 0.6rem; color: var(--muted); font-size: var(--fs-mono); }
+
+.cpth-grid { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; gap: 1.5rem; align-items: start; }
+.cpth-svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; cursor: crosshair; }
+.cpth-svg:focus { outline: none; }
+.cpth-svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.cpth-svg text { font-family: var(--mono); fill: var(--muted); }
+.cpth-svg .tick, .cpth-svg .axis { font-size: 11px; }
+.cpth-svg .grid { stroke: var(--rule); }
+.cpth-svg .zero, .cpth-svg .axisline { stroke: var(--muted); }
+.cpth-svg .win { fill: var(--surface); }
+.cpth-svg .hover { fill: color-mix(in srgb, var(--accent) 12%, transparent); }
+.cpth-svg .day0 { stroke: var(--accent); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.cpth-svg .line path { fill: none; stroke-width: 1.75; stroke-linejoin: round; }
+.cpth-svg .line.f0 circle { fill: var(--text); }
+.cpth-svg .line.f1 circle { fill: var(--muted); }
+.cpth-svg .line circle.sel { fill: var(--accent); }
+
+.cpth-side { font-family: var(--mono); font-size: var(--fs-mono); }
+.cpth-read { border-collapse: collapse; width: 100%; margin-bottom: 0.9rem; font-variant-numeric: tabular-nums; }
+.cpth-read caption { text-align: left; color: var(--text); font-weight: 600; padding-bottom: 0.3rem; }
+.cpth-read th, .cpth-read td { padding: 0.32rem 0; border-bottom: 1px solid var(--rule); font-weight: 400; }
+.cpth-read thead th { color: var(--muted); text-align: right; }
+.cpth-read tbody th { text-align: left; color: var(--muted); padding-right: 0.5rem; }
+.cpth-read td { text-align: right; padding-left: 0.6rem; color: var(--text); white-space: nowrap; }
+.cpth-read thead td { border-bottom: 1px solid var(--rule); }
+.cpth-note { margin: 0; line-height: 1.45; }
+
+.cpth-table { margin-top: 0.5rem; font-size: var(--fs-small); overflow-x: auto; }
+.cpth-table summary { cursor: pointer; color: var(--muted); font-size: var(--fs-mono); }
+.cpth-table table { border-collapse: collapse; margin-top: 0.4rem; font-variant-numeric: tabular-nums; }
+.cpth-table th, .cpth-table td { padding: 0.25rem 1rem 0.25rem 0; text-align: left; font-weight: 400; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.cpth-table td { text-align: right; }
+
+@media (max-width: 720px) {
+  .cpth-grid { grid-template-columns: 1fr; gap: 1rem; }
+  /* the 640-unit drawing shrinks to ~360px on a phone; scale the text back up */
+  .cpth-svg .tick, .cpth-svg .axis, .cpth-svg .lab { font-size: 19px; }
+  .cpth-side { max-width: 24rem; }
+}
+
+/* Placebo histogram */
+.cpth-svg.plc { cursor: default; }
+.cpth-svg .bin { fill: color-mix(in srgb, var(--muted) 45%, transparent); }
+.cpth-svg .other { stroke: var(--text); stroke-width: 1; opacity: 0.45; }
+.cpth-svg .real { stroke: var(--accent); stroke-width: 2.25; }
+.cpth-svg .lab { font-size: 12px; fill: var(--accent); }
+@media (max-width: 720px) { .cpth-svg .lab { font-size: 20px; } }
