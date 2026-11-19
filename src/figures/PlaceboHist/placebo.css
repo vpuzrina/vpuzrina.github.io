@@ -1,0 +1,13 @@
+.ph { max-width: 44rem; }
+.ph-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.ph-svg text { font-family: var(--mono); fill: var(--muted); }
+.ph-svg .tick { font-size: 11px; }
+.ph-svg .axis-label { font-size: 10.5px; }
+.ph-svg .axis { stroke: var(--muted); }
+.ph-svg .bin { fill: color-mix(in srgb, var(--muted) 55%, transparent); }
+.ph-svg .ev line { stroke: var(--accent); stroke-width: 1.5; }
+.ph-svg .ev text { fill: var(--accent); font-size: 11px; }
+.ph .cp-table td.hit { color: var(--accent); }
+@media (max-width: 640px) {
+  .ph-svg .tick, .ph-svg .axis-label, .ph-svg .ev text { font-size: 17px; }
+}

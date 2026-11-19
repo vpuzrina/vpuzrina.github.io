@@ -13,6 +13,10 @@ reader: true
 
 import Figure from '../../components/Figure.astro';
 import { u } from '../../lib/url';
+import CarPaths from '../../figures/CarPaths/CarPaths';
+import PlaceboHist from '../../figures/PlaceboHist/PlaceboHist';
+import carPaths from '../../data/cobre-panama/car-paths.json';
+import placebo from '../../data/cobre-panama/placebo.json';
 
 I evaluate stock market performance during political and legal developments affecting the Panama Cobre Panamá mine for 2023–2026 for First Quantum Minerals, the parent company of Cobre Panamá, and other copper mining and related companies, including mine finance company Franco-Nevada and other copper miners and smelters. Using daily stock price data on 15 publicly traded firms and a copper market model, I estimate and test for abnormal returns associated with five major events using a single-firm quantile test, multiple-firm tests that control for a single event date, and a placebo test of 639 other days without news about Cobre Panamá. First Quantum had abnormal returns of −43.6% over two days after a referendum announcement in October 2023, worth about US\$6.1 billion, and roughly 12% more on each of the 2023 closure order and the September 2026 closure recommendation. Franco-Nevada had abnormal returns of −12.1% on the referendum announcement, worth about US\$3.1 billion, well above the US\$1.17 billion it later wrote off. Other copper miners and smelters showed no significant abnormal returns in placebo tests. A limited number of events and firms makes it difficult to detect significant abnormal returns in this group of firms.
 
@@ -112,10 +116,10 @@ The owner's reaction is significant. First Quantum's share price fell 43.6% more
 
 The E6 rows in Table 3 provide the clearest evidence. The Supreme Court ruling barely moved the price of First Quantum shares (−1.8%; not statistically significant), partly because the stock had already fallen through the week of court sessions. An announcement that night about the president's decision to close the mine led to another 10.6% drop in the stock price the next day. Investors appear to have treated the Supreme Court ruling as expected and the closure announcement as new information.
 
-<Figure n={1} title="Cumulative abnormal returns of First Quantum and Franco-Nevada" params="day −5 to +10 around E2, E6 and F6 · market model with home index and copper, estimated on days −250 to −30" id="figure-1">
-  <img src={u('/papers/cobre-panama/fig1-car-first-quantum-franco-nevada.png')} width="1600" height="600" loading="lazy" alt="Three panels of cumulative abnormal returns from day −5 to day +10. Around the referendum (E2), First Quantum falls to about −75% and Franco-Nevada to about −19%. Around the court ruling and closure order (E6), First Quantum falls to about −43% and Franco-Nevada to about −13%. Around the 2026 closure recommendation (F6), First Quantum falls to about −19% and Franco-Nevada stays near −3%." />
+<Figure n={1} title="Cumulative abnormal returns of First Quantum and Franco-Nevada" params="day −5 to +10 · market model with home index and copper, estimated on days −250 to −30 · choose an event, drag the day slider" id="figure-1">
+  <CarPaths client:visible id="fig1" days={carPaths.days} events={carPaths.events} firms={carPaths.firms} />
   <Fragment slot="caption">
-    <p>Cumulative abnormal returns of First Quantum and Franco-Nevada from day −5 to day +10 around three key events. Market model with home index and copper, estimated on days −250 to −30.</p>
+    <p>Cumulative abnormal returns of First Quantum and Franco-Nevada from day −5 to day +10 around each core event. Market model with home index and copper, estimated on days −250 to −30.</p>
   </Fragment>
 </Figure>
 
@@ -177,10 +181,10 @@ The placebo test is the most direct test. My test for each group involves compar
 | E2, other rivals | −3.8% | 10.9% |
 | F3, integrated smelters | −4.1% | 6.6% |
 
-<Figure n={2} title="Placebo test: group CARs on 639 random dates against the real events" params="mean CAR over [0, +1] by group · grey: random dates without Cobre Panamá news · lines: E2, E6, F6" id="figure-2">
-  <img src={u('/papers/cobre-panama/fig2-placebo-distribution.png')} width="1600" height="945" loading="lazy" alt="Six histograms, one per group, of mean two-day CARs on 639 random dates without Cobre Panamá news, with the real E2, E6 and F6 events marked as vertical lines. For the owner and the stream holder, the event lines sit far to the left of the grey distributions. For the rival miners and the smelters, the event lines sit inside the distributions." />
+<Figure n={2} title="Placebo test: group CARs on 639 random dates against the real events" params="mean CAR over [0, +1] by group · grey: 639 random dates without Cobre Panamá news · lines: the five core events · choose a group" id="figure-2">
+  <PlaceboHist client:visible id="fig2" groups={placebo.groups} events={placebo.events} />
   <Fragment slot="caption">
-    <p>Distribution of group CARs over [0, +1] on 639 random dates without Cobre Panamá news (grey), with the real events E2, E6 and F6 marked.</p>
+    <p>Distribution of group CARs over [0, +1] on 639 random dates without Cobre Panamá news (grey), with the real core events marked.</p>
   </Fragment>
 </Figure>
 
